@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "dry/monads"
+require "vident/typed/attributes"
+
 module TypedOperation
   class Base
     include Dry::Monads[:result, :do]
