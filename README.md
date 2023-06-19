@@ -1,7 +1,4 @@
 # TypedOperation
-Short description and motivation.
-
-## Usage
 
 An implementation of a Command pattern, which is callable, and can be partially applied (curried).
 
@@ -95,6 +92,26 @@ Or install it yourself as:
 ```bash
 $ gem install typed_operation
 ```
+
+## Add an `ApplicationOperation` to your project
+
+```ruby
+bin/rails g typed_operation:install
+```
+
+## Generate a new Operation
+
+```ruby
+bin/rails g typed_operation TestOperation
+```
+
+You can optionally specify the directory to generate the operation in:
+
+```ruby
+bin/rails g typed_operation TestOperation --path=app/operations
+```
+
+The default path is `app/operations`.
 
 ## Contributing
 Contribution directions go here.

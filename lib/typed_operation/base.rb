@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "dry/monads"
+require "vident/typed"
 require "vident/typed/attributes"
 
 module TypedOperation
