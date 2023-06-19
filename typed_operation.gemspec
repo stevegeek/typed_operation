@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.email = ["stevegeek@gmail.com"]
   spec.homepage = "https://github.com/stevegeek/typed_operation"
   spec.summary = "TypedOperation is a command pattern implementation"
-  spec.description = "TypedOperation is a command pattern implementation"
+  spec.description = "TypedOperation is a command pattern implementation where inputs can be defined with runtime type checks. Operations can be partially applied."
   spec.license = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
@@ -19,5 +19,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "rails", ">= 6.0", "< 8.0"
   spec.add_dependency "vident-typed", "~> 0.1.0"
+  spec.add_dependency "dry-initializer", "~> 3.0"
   spec.add_dependency "dry-monads", "> 1", "< 2"
 end
