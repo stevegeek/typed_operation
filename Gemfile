@@ -6,5 +6,7 @@ gemspec
 
 gem "sqlite3"
 
+gem "standard"
+
 # Start debugger with binding.b [https://github.com/ruby/debug]
 # gem "debug", ">= 1.0.0"

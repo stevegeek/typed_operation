@@ -4,7 +4,6 @@ require "typed_operation/base"
 require "typed_operation/partially_applied"
 require "typed_operation/prepared"
 
-
 module TypedOperation
   # Your code goes here...
 end

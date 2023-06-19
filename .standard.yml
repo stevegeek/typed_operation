@@ -1,0 +1,3 @@
+ignore:
+  - 'lib/generators/typed_operation/install/templates/**/*'
+  - 'lib/generators/typed_operation/operation/templates/**/*'

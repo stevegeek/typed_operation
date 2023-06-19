@@ -1,0 +1,13 @@
+Install Generator
+=================
+
+Description:
+------------
+This generator installs a `ApplicationOperation` class which is your base class for all Operations.
+
+Command:
+--------
+rails generate typed_operation:install
+
+This will create the following file:
+app/operations/application_operation.rb

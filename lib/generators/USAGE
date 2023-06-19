@@ -1,0 +1,25 @@
+Operation Generator
+===================
+
+Description:
+------------
+This generator creates an 'TypedOperation' class that inherits from ApplicationOperation.
+
+Command:
+--------
+rails generate typed_operation NAME [options]
+
+Arguments:
+----------
+NAME: The class name of the Operation class to be generated, e.g. 'MyOperation'.
+
+Options:
+--------
+--path=path/to/directory: The path to the directory in which the operation class should be generated. The generated class will be namespaced according to the provided path.
+
+Example:
+--------
+rails generate typed_operation MyOperation --path=app/operations
+
+This will create the following file:
+app/operations/my_operation.rb

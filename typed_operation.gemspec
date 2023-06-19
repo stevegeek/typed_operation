@@ -1,14 +1,14 @@
 require_relative "lib/typed_operation/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "typed_operation"
-  spec.version     = TypedOperation::VERSION
-  spec.authors     = ["Stephen Ierodiaconou"]
-  spec.email       = ["stevegeek@gmail.com"]
-  spec.homepage    = "https://github.com/stevegeek/typed_operation"
-  spec.summary     = "TypedOperation is a command pattern implementation"
+  spec.name = "typed_operation"
+  spec.version = TypedOperation::VERSION
+  spec.authors = ["Stephen Ierodiaconou"]
+  spec.email = ["stevegeek@gmail.com"]
+  spec.homepage = "https://github.com/stevegeek/typed_operation"
+  spec.summary = "TypedOperation is a command pattern implementation"
   spec.description = "TypedOperation is a command pattern implementation"
-  spec.license     = "MIT"
+  spec.license = "MIT"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/stevegeek/typed_operation"
