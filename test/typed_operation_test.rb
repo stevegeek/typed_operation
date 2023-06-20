@@ -30,6 +30,10 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_equal "It worked!", result.value!
   end
 
+  def test_raises_on_invalid_param_type
+    assert_raises(::TypedOperation::ParameterError) { TestOperation.new(foo: 1, bar: "2", baz: "3") }
+  end
+
   def test_partially_applied
     partially_applied = TestOperation.with(foo: "1").with(bar: "2")
     assert_instance_of TypedOperation::PartiallyApplied, partially_applied
@@ -52,10 +56,11 @@ class TypedOperationTest < ActiveSupport::TestCase
   end
 
   def test_prepared_operation_returns_an_instance_of_the_operation_with_attributes_set
-    operation = TestOperation.with(foo: "1").with(bar: "2").with(baz: "3").operation
+    operation = TestOperation.with(foo: "1").with(bar: "2").with(baz: 3).operation
     assert_instance_of TestOperation, operation
     assert_equal "1", operation.foo
     assert_equal "2", operation.bar
+    assert_equal "3", operation.baz
   end
 
   def test_operation_invocation_as_proc

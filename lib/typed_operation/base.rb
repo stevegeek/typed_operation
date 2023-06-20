@@ -35,7 +35,11 @@ module TypedOperation
     end
 
     def initialize(**attributes)
-      prepare_attributes(attributes)
+      begin
+        prepare_attributes(attributes)
+      rescue ::Dry::Struct::Error => e
+        raise ParameterError, e.message
+      end
       prepare if respond_to?(:prepare)
     end
 
