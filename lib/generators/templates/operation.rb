@@ -4,8 +4,8 @@
 module <%= namespace_name %>
   class <%= name %> < ::ApplicationOperation
     # Replace with implementation...
-    param :my_param, String, convert: true
-    param :an_optional_param, Integer, allow_nil: true
+    param :required_param, String
+    param :an_optional_param, Integer, convert: true, allow_nil: true
 
     def prepare
       # Prepare...
@@ -20,8 +20,8 @@ end
 <% else %>
 class <%= name %> < ::ApplicationOperation
   # Replace with implementation...
-  param :my_param, String, convert: true
-  param :an_optional_param, Integer, allow_nil: true
+  param :required_param, String
+  param :an_optional_param, Integer, convert: true, allow_nil: true
 
   def prepare
     # Prepare...
