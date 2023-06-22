@@ -24,7 +24,15 @@ class InstallGeneratorGeneratorTest < Rails::Generators::TestCase
 
     assert_file "app/operations/application_operation.rb" do |content|
       assert_match(/class ApplicationOperation/, content)
-      # Add more assertions for specific content as required...
+      assert_no_match(/Monads/, content)
+    end
+  end
+
+  test "generator includes monads if included" do
+    run_generator ["--dry_monads"]
+    assert_file "app/operations/application_operation.rb" do |content|
+      assert_match(/class ApplicationOperation/, content)
+      assert_match(/Monads/, content)
     end
   end
 end

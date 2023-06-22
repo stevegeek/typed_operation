@@ -4,7 +4,7 @@ An implementation of a Command pattern, which is callable, and can be partially 
 
 Inputs to the operation are specified as typed attributes using the `param` method.
 
-Results of the operation are a type of `Dry::Monads::Result` object.
+Result format of the operation is up to you, but plays nicely with `Dry::Monads`. 
 
 ### Examples:
 
@@ -12,6 +12,8 @@ A base operation class:
 
 ```ruby
 class ApplicationOperation < ::TypedOperation::Base
+  include Dry::Monads[:result, :do]
+  
   param :initiator, ::RegisteredUser, allow_nil: true
 
   private
@@ -93,10 +95,17 @@ Or install it yourself as:
 $ gem install typed_operation
 ```
 
-## Add an `ApplicationOperation` to your project
+### Add an `ApplicationOperation` to your project
 
 ```ruby
 bin/rails g typed_operation:install
+```
+
+Use the `--dry_monads` switch to `include Dry::Monads[:result]` into your `ApplicationOperation` (don't forget to also 
+add `gem "dry-monads"` to your Gemfile)
+
+```ruby
+bin/rails g typed_operation:install --dry_monads
 ```
 
 ## Generate a new Operation
@@ -112,6 +121,8 @@ bin/rails g typed_operation TestOperation --path=app/operations
 ```
 
 The default path is `app/operations`.
+
+The generator will also create a test file.
 
 ## Contributing
 Contribution directions go here.

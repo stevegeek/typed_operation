@@ -4,7 +4,8 @@
 module <%= namespace_name %>
   class <%= name %> < ::ApplicationOperation
     # Replace with implementation...
-    param :param1, String, convert: true
+    param :my_param, String, convert: true
+    param :an_optional_param, Integer, allow_nil: true
 
     def prepare
       # Prepare...
@@ -12,13 +13,15 @@ module <%= namespace_name %>
 
     def call
       # Perform...
+      "Hello World!"
     end
   end
 end
 <% else %>
 class <%= name %> < ::ApplicationOperation
   # Replace with implementation...
-  param :param1, String, convert: true
+  param :my_param, String, convert: true
+  param :an_optional_param, Integer, allow_nil: true
 
   def prepare
     # Prepare...
@@ -26,6 +29,7 @@ class <%= name %> < ::ApplicationOperation
 
   def call
     # Perform...
+    "Hello World!"
   end
 end
 <% end %>

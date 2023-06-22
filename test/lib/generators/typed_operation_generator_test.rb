@@ -17,6 +17,7 @@ class OperationGeneratorTest < Rails::Generators::TestCase
   test "generator creates operation file" do
     run_generator ["TestOperation", "--path=app/operations"]
     assert_file "app/operations/test_operation.rb"
+    assert_file "test/operations/test_operation_test.rb"
   end
 
   test "generated file contains correct content" do
@@ -25,7 +26,12 @@ class OperationGeneratorTest < Rails::Generators::TestCase
     assert_file "app/operations/test_operation.rb" do |content|
       assert_not_includes("module App::Operations", content)
       assert_match(/class TestOperation < ::ApplicationOperation/, content)
-      assert_match(/param :param1, String, convert: true/, content)
+      assert_match(/param :my_param, String, convert: true/, content)
+    end
+
+    assert_file "test/operations/test_operation_test.rb" do |content|
+      assert_not_includes("module App::Operations", content)
+      assert_match(/class TestOperationTest < ActiveSupport::TestCase/, content)
     end
   end
 
@@ -35,7 +41,12 @@ class OperationGeneratorTest < Rails::Generators::TestCase
     assert_file "app/things/stuff/test_path_operation.rb" do |content|
       assert_match(/module Stuff/, content)
       assert_match(/class TestPathOperation < ::ApplicationOperation/, content)
-      assert_match(/param :param1, String, convert: true/, content)
+      assert_match(/param :my_param, String, convert: true/, content)
+    end
+
+    assert_file "test/things/stuff/test_path_operation_test.rb" do |content|
+      assert_match(/module Stuff/, content)
+      assert_match(/class TestPathOperationTest < ActiveSupport::TestCase/, content)
     end
   end
 end

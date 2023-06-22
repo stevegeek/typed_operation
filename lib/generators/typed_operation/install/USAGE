@@ -9,5 +9,13 @@ Command:
 --------
 rails generate typed_operation:install
 
+Options:
+--------
+--dry_monads: if specified the ApplicationOperation will include dry-monads Result and Do notation.
+
+Example:
+--------
+rails generate typed_operation:install
+
 This will create the following file:
 app/operations/application_operation.rb

@@ -1,4 +1,5 @@
 require "test_helper"
+require "dry/monads"
 
 class TypedOperationTest < ActiveSupport::TestCase
   test "it has a version number" do
@@ -6,6 +7,8 @@ class TypedOperationTest < ActiveSupport::TestCase
   end
 
   class TestOperation < ::TypedOperation::Base
+    include Dry::Monads[:result]
+
     param :foo, String
     param :bar, String
     param :baz, String, convert: true
