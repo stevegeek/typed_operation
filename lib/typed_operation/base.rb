@@ -42,7 +42,7 @@ module TypedOperation
     end
 
     def call
-      raise NotImplementedError, "You must implement #call"
+      raise InvalidOperationError, "You must implement #call"
     end
 
     def to_proc

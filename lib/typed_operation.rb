@@ -5,5 +5,7 @@ require "typed_operation/partially_applied"
 require "typed_operation/prepared"
 
 module TypedOperation
-  class ParameterError < StandardError; end
+  class InvalidOperationError < StandardError; end
+  class MissingParameterError < ArgumentError; end
+  class ParameterError < TypeError; end
 end

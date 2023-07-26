@@ -10,7 +10,10 @@ module TypedOperation
     def curry(**params)
       all_args = @applied_args.merge(params)
       # check if required attrs are in @applied_args
-      required_keys = @operation.attribute_names.select { |name| @operation.attribute_metadata(name)[:required] != false }
+      required_keys = @operation.attribute_names.select do |name|
+        meta = @operation.attribute_metadata(name)
+        meta[:required] != false && !meta[:typed_attribute_options].key?(:default)
+      end
       missing_keys = required_keys - all_args.keys
 
       if missing_keys.size > 0
@@ -26,7 +29,7 @@ module TypedOperation
     def call(...)
       prepared = curry(...)
       return prepared.operation.call if prepared.is_a?(Prepared)
-      raise "Cannot call PartiallyApplied operation #{@operation.name} (key: #{@operation.operation_key}), are you expecting it to be Prepared?"
+      raise TypedOperation::MissingParameterError, "Cannot call PartiallyApplied operation #{@operation.name} (key: #{@operation.operation_key}), are you expecting it to be Prepared?"
     end
   end
 end
