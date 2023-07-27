@@ -1,3 +1,13 @@
+## [0.5.0] - Unreleased
+
+### Breaking changes
+
+- TypedOperation now uses [Literal::Data](https://github.com/joeldrapper/literal) under the hood, instead of [vident-typed](https://github.com/stevegeek/vident-typed)
+
+### Changed
+
+- TypedOperation does not depend on Rails. Rails generator support exists but is conditionally included.
+
 ## [0.4.2] - Unreleased
 
 ### Changed

@@ -3,7 +3,7 @@
 module TypedOperation
   class Prepared < PartiallyApplied
     def operation
-      @operation.new(**@applied_args)
+      operation_class.new(**@applied_args)
     end
   end
 end

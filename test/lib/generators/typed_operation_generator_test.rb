@@ -41,7 +41,7 @@ class OperationGeneratorTest < Rails::Generators::TestCase
     assert_file "app/things/stuff/test_path_operation.rb" do |content|
       assert_match(/module Stuff/, content)
       assert_match(/class TestPathOperation < ::ApplicationOperation/, content)
-      assert_match(/param :an_optional_param, Integer, convert: true, allow_nil: true/, content)
+      assert_match(/param :an_optional_param, Integer, allow_nil: true do/, content)
     end
 
     assert_file "test/things/stuff/test_path_operation_test.rb" do |content|

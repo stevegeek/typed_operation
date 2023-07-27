@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "test_helper"
 require "dry/monads"
 
@@ -11,10 +13,12 @@ class TypedOperationTest < ActiveSupport::TestCase
 
     param :foo, String
     param :bar, String
-    param :baz, String, convert: true
+    param :baz, String do |value|
+      value.to_s
+    end
 
     param :with_default, String, default: "qux"
-    param :can_be_nil, Integer, allow_nil: true
+    param :can_be_nil, Integer, allow_nil: true, default: nil
 
     def prepare
       @local_var = 123
@@ -99,5 +103,14 @@ class TypedOperationTest < ActiveSupport::TestCase
   def test_operation_invocation_with_missing_param
     partially_applied = TestOperation.with(foo: "1")
     assert_raises(TypedOperation::MissingParameterError) { partially_applied.call }
+  end
+
+  def test_missing_param_error_is_a_argument_error
+    partially_applied = TestOperation.with(foo: "1")
+    assert_raises(ArgumentError) { partially_applied.call }
+  end
+
+  def test_operation_creation_with_missing_param
+    assert_raises(ArgumentError) { TestOperation.new(foo: "1") }
   end
 end

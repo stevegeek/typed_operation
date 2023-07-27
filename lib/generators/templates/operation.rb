@@ -5,7 +5,9 @@ module <%= namespace_name %>
   class <%= name %> < ::ApplicationOperation
     # Replace with implementation...
     param :required_param, String
-    param :an_optional_param, Integer, convert: true, allow_nil: true
+    param :an_optional_param, Integer, allow_nil: true do |value|
+     value.to_i
+    end
 
     def prepare
       # Prepare...

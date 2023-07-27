@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-require "vident/typed"
-require "vident/typed/attributes"
+require "literal"
 
 module TypedOperation
-  class Base
-    include Vident::Typed::Attributes
-
+  class Base < Literal::Data
     class << self
       def call(...)
         new(...).call
@@ -28,16 +25,44 @@ module TypedOperation
 
       # property are required by default, you can fall back to attribute or set allow_nil: true if you want optional
       def param(name, signature = :any, **options, &converter)
-        attribute(name, signature, **{allow_nil: false}.merge(options), &converter)
+        attribute(
+          name,
+          prepare_signature(signature, options),
+          default: prepare_default_value_for(name, options),
+          &converter
+        )
+      end
+
+      def required_params
+        @required ||= @literal_attributes.filter_map do |name, attribute|
+          name if required_attribute?(attribute)
+        end
+      end
+
+      private
+
+      def prepare_signature(signature, options)
+        allows_nil?(options) ? Literal::Types::UnionType.new(signature, NilClass) : signature
+      end
+
+      def prepare_default_value_for(name, options)
+        if !options[:default].nil?
+          options[:default]
+        elsif allows_nil?(options)
+          -> {}
+        end
+      end
+
+      def allows_nil?(options)
+        options[:allow_nil] == true || (options.key?(:default) && options[:default].nil?)
+      end
+
+      def required_attribute?(attribute)
+        attribute.default.nil?
       end
     end
 
-    def initialize(**attributes)
-      begin
-        prepare_attributes(attributes)
-      rescue ::Dry::Struct::Error => e
-        raise ParameterError, e.message
-      end
+    def after_initialization
       prepare if respond_to?(:prepare)
     end
 
