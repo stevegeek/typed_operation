@@ -18,7 +18,8 @@ class TypedOperationTest < ActiveSupport::TestCase
     end
 
     param :with_default, String, default: "qux"
-    param :can_be_nil, Integer, allow_nil: true, default: nil
+    param :can_be_nil, Integer, allow_nil: true
+    param :can_also_be_nil, TypedOperation::Base, default: nil
 
     def prepare
       @local_var = 123
@@ -46,6 +47,11 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_equal "qux", operation.with_default
   end
 
+  def test_operation_supports_nil_default_values
+    operation = TestOperation.new(foo: "1", bar: "2", baz: "3")
+    assert_nil operation.can_also_be_nil
+  end
+
   def test_operation_supports_nil_params
     operation = TestOperation.new(foo: "1", bar: "2", baz: "3")
     assert_nil operation.can_be_nil
@@ -54,6 +60,16 @@ class TypedOperationTest < ActiveSupport::TestCase
   def test_operation_sets_nilable_params
     operation = TestOperation.new(foo: "1", bar: "2", baz: "3", can_be_nil: 123)
     assert_equal 123, operation.can_be_nil
+  end
+
+  def test_operation_params_type_can_be_arbitrary_class
+    some_instance = TestOperation.new(foo: "1", bar: "2", baz: "3")
+    operation = TestOperation.new(foo: "1", bar: "2", baz: "3", can_also_be_nil: some_instance)
+    assert_equal some_instance, operation.can_also_be_nil
+  end
+
+  def test_operation_params_type_can_be_arbitrary_class_raises
+    assert_raises(TypeError) { TestOperation.new(foo: "1", bar: "2", baz: "3", can_also_be_nil: Set.new) }
   end
 
   def test_operation_is_prepared
