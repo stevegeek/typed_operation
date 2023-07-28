@@ -100,4 +100,66 @@ class TypedOperationTest < ActiveSupport::TestCase
     partially_applied = TestOperation.with(foo: "1")
     assert_raises(TypedOperation::MissingParameterError) { partially_applied.call }
   end
+
+  def test_operation_instance_supports_pattern_matching_params
+    operation = TestOperation.new(foo: "1", bar: "2", baz: "3")
+    assert_equal ["1", "2", "3", "qux"], operation.deconstruct
+    assert_equal({foo: "1", bar: "2", baz: "3", with_default: "qux"}, operation.deconstruct_keys(%i[foo bar baz]))
+    case operation
+    in TestOperation[foo: foo, with_default: default, **rest]
+      assert_equal "1", foo
+      assert_equal "qux", default
+      assert_equal({bar: "2", baz: "3"}, rest)
+    else
+      raise "Pattern match failed"
+    end
+    case operation
+    in String => foo, String => bar, String => baz, String => with_default
+      assert_equal "1", foo
+      assert_equal "2", bar
+      assert_equal "3", baz
+      assert_equal "qux", with_default
+    else
+      raise "Pattern match failed"
+    end
+  end
+
+  def test_operation_partially_applied_supports_pattern_matching_currently_applied_params
+    partially_applied = TestOperation.with(foo: "1", bar: "2")
+    case partially_applied
+    in TypedOperation::PartiallyApplied[foo: foo, bar: bar, **rest]
+      assert_equal "1", foo
+      assert_equal "2", bar
+      assert_equal({}, rest)
+    else
+      raise "Pattern match failed"
+    end
+    case partially_applied
+    in String => foo, String => bar
+      assert_equal "1", foo
+      assert_equal "2", bar
+    else
+      raise "Pattern match failed"
+    end
+  end
+
+  def test_operation_prepared_supports_pattern_matching_currently_applied_params
+    prepared = TestOperation.with(foo: "1", bar: "2", baz: "3")
+    case prepared
+    in TypedOperation::Prepared[foo: foo, bar: bar, **rest]
+      assert_equal "1", foo
+      assert_equal "2", bar
+      assert_equal({baz: "3"}, rest)
+    else
+      raise "Pattern match failed"
+    end
+    case prepared
+    in String => foo, String => bar, String => baz
+      assert_equal "1", foo
+      assert_equal "2", bar
+      assert_equal "3", baz
+    else
+      raise "Pattern match failed"
+    end
+  end
 end

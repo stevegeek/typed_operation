@@ -31,5 +31,13 @@ module TypedOperation
       return prepared.operation.call if prepared.is_a?(Prepared)
       raise TypedOperation::MissingParameterError, "Cannot call PartiallyApplied operation #{@operation.name} (key: #{@operation.operation_key}), are you expecting it to be Prepared?"
     end
+
+    def deconstruct
+      @applied_args.values
+    end
+
+    def deconstruct_keys(_keys)
+      @applied_args.dup
+    end
   end
 end
