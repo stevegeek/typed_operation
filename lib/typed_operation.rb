@@ -6,6 +6,8 @@ require "typed_operation/prepared"
 
 module TypedOperation
   class InvalidOperationError < StandardError; end
+
   class MissingParameterError < ArgumentError; end
+
   class ParameterError < TypeError; end
 end

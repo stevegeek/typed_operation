@@ -1,3 +1,9 @@
+## [0.4.3] - Unreleased
+
+### Added
+
+- Added ability to pattern matching on params with operation instance or partially applied operations
+
 ## [0.4.2] - 2023/07/27
 
 ### Changed
