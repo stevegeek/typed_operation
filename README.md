@@ -4,7 +4,7 @@ An implementation of a Command pattern, which is callable, and can be partially 
 
 Inputs to the operation are specified as typed attributes (uses [`literal`](https://github.com/joeldrapper/literal)).
 
-Type of result of the operation is up to you, but plays nicely with `literal` result or [`Dry::Monads`](https://dry-rb.org/gems/dry-monads/1.3/).
+Type of result of the operation is up to you, eg you could use [`literal` monads](https://github.com/joeldrapper/literal) or [`Dry::Monads`](https://dry-rb.org/gems/dry-monads/1.3/).
 
 ## Features
 
@@ -385,7 +385,7 @@ class ApplicationOperation < ::TypedOperation::Base
 end
 ```
 
-### Using with `literal` Result
+### Using with `literal` monads
 
 You can use the `literal` gem to provide a `Result` type for your operations.
 
