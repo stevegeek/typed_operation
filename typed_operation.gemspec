@@ -10,6 +10,8 @@ Gem::Specification.new do |spec|
   spec.description = "TypedOperation is a command pattern implementation where inputs can be defined with runtime type checks. Operations can be partially applied."
   spec.license = "MIT"
 
+  spec.required_ruby_version = ">= 3.1"
+
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/stevegeek/typed_operation"
 
@@ -17,7 +19,5 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
-  spec.add_dependency "rails", ">= 6.0", "< 8.0"
-  spec.add_dependency "vident-typed", "~> 0.1.0"
-  spec.add_dependency "dry-initializer", "~> 3.0"
+  # spec.add_dependency "literal", "> 0.1.0", "< 1.0.0"
 end

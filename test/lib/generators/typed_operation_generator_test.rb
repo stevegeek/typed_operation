@@ -26,7 +26,7 @@ class OperationGeneratorTest < Rails::Generators::TestCase
     assert_file "app/operations/test_operation.rb" do |content|
       assert_not_includes("module App::Operations", content)
       assert_match(/class TestOperation < ::ApplicationOperation/, content)
-      assert_match(/param :required_param, String/, content)
+      assert_match(/positional :required_positional_param, String/, content)
     end
 
     assert_file "test/operations/test_operation_test.rb" do |content|
@@ -41,7 +41,7 @@ class OperationGeneratorTest < Rails::Generators::TestCase
     assert_file "app/things/stuff/test_path_operation.rb" do |content|
       assert_match(/module Stuff/, content)
       assert_match(/class TestPathOperation < ::ApplicationOperation/, content)
-      assert_match(/param :an_optional_param, Integer, convert: true, allow_nil: true/, content)
+      assert_match(/named :an_optional_param, Integer, optional: true do/, content)
     end
 
     assert_file "test/things/stuff/test_path_operation_test.rb" do |content|

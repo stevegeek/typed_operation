@@ -1,3 +1,14 @@
+## [0.5.0] - Unreleased
+
+### Breaking changes
+
+- TypedOperation now uses [Literal::Data](https://github.com/joeldrapper/literal) under the hood, instead of [vident-typed](https://github.com/stevegeek/vident-typed)
+- param 'convert:' option has been removed, use a coercion block instead
+
+### Changed
+
+- TypedOperation does not depend on Rails. Rails generator support exists but is conditionally included.
+
 ## [0.4.3] - Unreleased
 
 ### Added
@@ -10,14 +21,14 @@
 
 - Params that have default values are no longer required to prepare the operation.
 
-## [0.4.1] - 2023/06/22
+## [0.4.1] - 2023-06-22
 
 ### Changed
 
 - Updated tests.
 - Tweaked operation templates.
 
-## [0.4.0] - 2023/06/22
+## [0.4.0] - 2023-06-22
 
 ### Removed
 
@@ -31,7 +42,7 @@
 
 - Avoided leaking the implementation detail of using dry-struct under the hood.
 
-## [0.3.0] - 2023/06/19
+## [0.3.0] - 2023-06-19
 
 ### Removed
 
@@ -52,7 +63,7 @@
 
 - Fixed 'require's.
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2023-05-04
 
 ### Added
 

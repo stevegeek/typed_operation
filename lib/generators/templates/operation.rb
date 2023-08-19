@@ -4,8 +4,11 @@
 module <%= namespace_name %>
   class <%= name %> < ::ApplicationOperation
     # Replace with implementation...
-    param :required_param, String
-    param :an_optional_param, Integer, convert: true, allow_nil: true
+    positional :required_positional_param, String
+    named :required_named_param, String
+    named :an_optional_param, Integer, optional: true do |value|
+     value.to_i
+    end
 
     def prepare
       # Prepare...
@@ -20,8 +23,11 @@ end
 <% else %>
 class <%= name %> < ::ApplicationOperation
   # Replace with implementation...
-  param :required_param, String
-  param :an_optional_param, Integer, convert: true, allow_nil: true
+  positional :required_positional_param, String
+  named :required_named_param, String
+  named :an_optional_param, Integer, optional: true do |value|
+    value.to_i
+  end
 
   def prepare
     # Prepare...
