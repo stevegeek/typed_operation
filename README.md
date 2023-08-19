@@ -21,12 +21,19 @@ Type of result of the operation is up to you, but plays nicely with `literal` re
 
 ```ruby
 class ShelveBookOperation < ::TypedOperation::Base
-  # Parameters
+  # Parameters can be specified using either the methods `positional` or `named`, or the underlying `param` method
   positional :title, String
+  # Or if you prefer:
+  # `param :title, String, positional: true
   named :description, String
+  # Or if you prefer:
+  # `param :description, String
   named :author_id, Integer, &:to_i
   named :isbn, String
-  named :shelf_code, optional(Integer), default: GENERIC_SHELF_CODE
+  named :shelf_code, optional(Integer)
+  # Or if you prefer:
+  # `param :shelf_code, Integer, optional: true
+  named :category, String, default: "unknown".freeze
 
   # to setup (optional)
   def prepare
@@ -35,18 +42,38 @@ class ShelveBookOperation < ::TypedOperation::Base
 
   # The 'work' of the operation
   def call
-    # Creat a book on the shelf
-    # ...
+    "Put away '#{title}' by author ID #{author_id}#{shelf_code ? " on shelf #{shelf_code}" : "" }"
   end
 
   private
 
   def valid_isbn?
     # ...
+    true
   end
 end
 
-ShelveBookOperation.call("The Hobbit", description: "A book about a hobbit", author_id: "1", isbn: "978-0261103283")
+shelve = ShelveBookOperation.new("The Hobbit", description: "A book about a hobbit", author_id: "1", isbn: "978-0261103283")
+# => #<ShelveBookOperation:0x0000000108b3e490 @attributes={:title=>"The Hobbit", :description=>"A book about a hobbit", :author_id=>1, :isbn=>"978-0261103283", :shelf_code=>nil, :category=>"unknown"}, ...
+
+shelve.call
+# => "Put away 'The Hobbit' by author ID 1"
+
+shelve = ShelveBookOperation.with("The Silmarillion", description: "A book about the history of Middle-earth", shelf_code: 1)
+# => #<TypedOperation::PartiallyApplied:0x0000000103e6f560 ...
+
+shelve.call(author_id: "1", isbn: "978-0261102736")
+# => "Put away 'The Silmarillion' by author ID 1 on shelf 1"
+
+curried = shelve.curry
+# => #<TypedOperation::Curried:0x0000000108d98a10 ...
+
+curried.(1).("978-0261102736")
+# => "Put away 'The Silmarillion' by author ID 1 on shelf 1"
+
+shelve.call(author_id: "1", isbn: false)
+# => Raises an error because isbn is invalid
+# :in `initialize': Expected `false` to be of type: `String`. (Literal::TypeError)
 ```
 
 ### Partially applying parameters
@@ -220,9 +247,7 @@ MyOperation.with("Steve").call(age: 20)
 
 #### Optional parameters
 
-`positional :name, optional(type), *options`
-
-`named :name, optional(type), *options`
+`.positional :name, optional(type), *options` / `.named :name, optional(type), *options`
 
 Defines an optional parameter (positional or named), by wrapping the type constraint in the `optional` method.
 
@@ -268,6 +293,22 @@ An operation can be invoked by:
 **alias: `.[]`**
 
 Note that `.with` can take both positional and keyword arguments, and can be chained.
+
+**An important caveat about partial application is that type checking is not done until the operation is instantiated**
+
+```ruby
+MyOperation.new(123)
+# => Raises an error as the type of the first parameter is incorrect:
+#    Expected `123` to be of type: `String`. (Literal::TypeError)
+
+op = MyOperation.with(123)
+# => #<TypedOperation::Prepared:0x000000010b1d3358 ...
+#     Does **not raise** an error, as the type of the first parameter is not checked until the operation is instantiated
+
+op.call # or op.operation
+# => Now raises an error as the type of the first parameter is incorrect and operation is instantiated
+```
+
 
 ### Pattern matching on an operation
 
@@ -340,6 +381,68 @@ class ApplicationOperation < ::TypedOperation::Base
 
   def operation_key
     self.class.name
+  end
+end
+```
+
+### Using with `literal` Result
+
+You can use the `literal` gem to provide a `Result` type for your operations.
+
+```ruby
+class MyOperation < ::TypedOperation::Base
+  param :account_name, String
+  param :owner, String
+
+  def call
+    create_account.bind do |account|
+      associate_owner(account).bind do
+        account
+      end
+    end
+  end
+
+  private
+
+  def create_account
+    # returns Literal::Success(account) or Literal::Failure(:cant_create)
+    Literal::Success.new(account_name)
+  end
+  
+  def associate_owner(account)
+    # ...
+    Literal::Failure.new(:cant_associate_owner)
+  end
+end
+
+MyOperation.new(account_name: "foo", owner: "bar").call
+# => Literal::Failure(:cant_associate_owner)
+
+```
+
+### Using with `Dry::Monads`
+
+As per the example in [`Dry::Monads` documentation](https://dry-rb.org/gems/dry-monads/1.0/do-notation/)
+
+```ruby
+class MyOperation < ::TypedOperation::Base
+  include Dry::Monads[:result]
+  include Dry::Monads::Do.for(:call)
+
+  param :account_name, String
+  param :owner, ::Owner
+  
+  def call
+    account = yield create_account(account_name)
+    yield associate_owner(account, owner)
+
+    Success(account)
+  end
+
+  private
+  
+  def create_account(account_name)
+    # returns Success(account) or Failure(:cant_create)
   end
 end
 ```
