@@ -9,8 +9,8 @@ module TypedOperation
     end
 
     def with(*positional, **keyword)
-      all_positional = @positional_args + positional
-      all_kw_args = @keyword_args.merge(keyword)
+      all_positional = positional_args + positional
+      all_kw_args = keyword_args.merge(keyword)
 
       validate_positional_arg_count!(all_positional.size)
 
@@ -21,7 +21,10 @@ module TypedOperation
       end
     end
     alias_method :[], :with
-    alias_method :curry, :with
+
+    def curry
+      Curried.new(operation_class, self)
+    end
 
     def call(...)
       prepared = with(...)
@@ -33,19 +36,25 @@ module TypedOperation
       raise MissingParameterError, "Cannot instantiate Operation #{operation_class.name} (key: #{operation_class.name}), as it is only partially applied."
     end
 
+    def prepared?
+      false
+    end
+
     def to_proc
       method(:call).to_proc
     end
 
     def deconstruct
-      @positional_args + @keyword_args.values
+      positional_args + keyword_args.values
     end
 
     def deconstruct_keys(keys)
-      h = @keyword_args.dup
-      @positional_args.each_with_index { |v, i| h[positional_parameters[i]] = v }
+      h = keyword_args.dup
+      positional_args.each_with_index { |v, i| h[positional_parameters[i]] = v }
       keys ? h.slice(*keys) : h
     end
+
+    attr_reader :positional_args, :keyword_args
 
     private
 

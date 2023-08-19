@@ -10,6 +10,8 @@ Gem::Specification.new do |spec|
   spec.description = "TypedOperation is a command pattern implementation where inputs can be defined with runtime type checks. Operations can be partially applied."
   spec.license = "MIT"
 
+  spec.required_ruby_version = ">= 3.1"
+
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/stevegeek/typed_operation"
 

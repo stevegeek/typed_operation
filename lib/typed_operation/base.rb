@@ -13,7 +13,10 @@ module TypedOperation
         PartiallyApplied.new(self, ...).with
       end
       alias_method :[], :with
-      alias_method :curry, :with
+
+      def curry
+        Curried.new(self)
+      end
 
       def to_proc
         method(:call).to_proc

@@ -45,9 +45,20 @@ class TypedOperationTest < ActiveSupport::TestCase
     end
   end
 
-  class TestOperation < ::TypedOperation::Base
-    include Dry::Monads[:result]
+  class TestCurryOperation < ::TypedOperation::Base
+    positional :pos1, String
+    positional :pos2, String
+    positional :pos3, optional(String)
+    named :kw1, String
+    named :kw2, String
+    named :kw3, optional(String)
 
+    def call
+      "#{pos1}/#{pos2}/#{pos3}/#{kw1}/#{kw2}/#{kw3}"
+    end
+  end
+
+  class TestOperation < ::TypedOperation::Base
     param :foo, String
     param :bar, String
     param :baz, String do |value|
@@ -63,7 +74,7 @@ class TypedOperationTest < ActiveSupport::TestCase
     end
 
     def call
-      Success("It worked!")
+      "It worked, (#{foo}/#{bar}/#{baz}/#{with_default}/#{can_be_nil}/#{can_also_be_nil})"
     end
   end
 
@@ -114,7 +125,7 @@ class TypedOperationTest < ActiveSupport::TestCase
     end
   end
 
-  def test_operation_raises_on_invalid_positional_params
+  def test_operation_raises_on_invalid_positional_params_using_optional
     assert_raises do
       Class.new(::TypedOperation::Base) do
         # This is invalid, because positional params can't be optional before required ones
@@ -154,7 +165,7 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { TestPositionalOperation.new("first", "second", "third") }
   end
 
-  def test_positional_arg_count_must_make_sense_when_currying
+  def test_positional_arg_count_must_make_sense_when_partial_application
     assert_raises(ArgumentError) { TestPositionalOperation.with("first", "second", "third") }
   end
 
@@ -220,10 +231,8 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_equal 123, operation.instance_variable_get(:@local_var)
   end
 
-  def test_operation_success
-    result = TestOperation.call(foo: "1", bar: "2", baz: "3")
-    assert_instance_of Dry::Monads::Result::Success, result
-    assert_equal "It worked!", result.value!
+  def test_operation_invocation
+    assert_equal "It worked, (1/2/3/qux//)", TestOperation.call(foo: "1", bar: "2", baz: "3")
   end
 
   def test_raises_on_invalid_param_type
@@ -236,14 +245,13 @@ class TypedOperationTest < ActiveSupport::TestCase
   end
 
   def test_partially_applied_using_aliases
-    partially_applied = TestOperation[foo: "1"].curry(bar: "2")
+    partially_applied = TestOperation[foo: "1"]
     assert_instance_of TypedOperation::PartiallyApplied, partially_applied
   end
 
   def test_prepared_call
     result = TestOperation.with(foo: "1").with(bar: "2").with(baz: "3").call
-    assert_instance_of Dry::Monads::Result::Success, result
-    assert_equal "It worked!", result.value!
+    assert_equal "It worked, (1/2/3/qux//)", result
   end
 
   def test_prepared_operation_returns_an_instance_of_the_operation_with_attributes_set
@@ -353,5 +361,24 @@ class TypedOperationTest < ActiveSupport::TestCase
 
   def test_raises_when_operation_has_no_call_method_defined
     assert_raises(::TypedOperation::InvalidOperationError) { TestInvalidOperation.call }
+  end
+
+  def test_operation_of_one_required_param_can_curry
+    curried_operation = TestPositionalOperation.curry
+    assert_instance_of TypedOperation::Curried, curried_operation
+    assert_equal ["one!", "two!"], ["one", "two"].map(&curried_operation)
+  end
+
+  def test_operation_of_multliple_required_params_can_curry
+    curried_operation = TestOperation.curry
+    res = ["1", "2", 3].reduce(curried_operation) { |curried, arg| curried.call(arg) }
+    assert_equal "It worked, (1/2/3/qux//)", res
+  end
+
+  def test_operation_can_be_partially_applied_then_curry
+    partially_applied = TestCurryOperation.with("a", kw2: "e", kw3: "f")
+    curried_operation = partially_applied.curry
+    assert_instance_of TypedOperation::Curried, curried_operation
+    assert_equal "a/b//d/e/f", curried_operation.call("b").call("d")
   end
 end
