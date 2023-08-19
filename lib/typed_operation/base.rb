@@ -23,6 +23,14 @@ module TypedOperation
         name.underscore.to_sym
       end
 
+      # Medhod to define parameters for your operation.
+
+      # Parameter for keyword argument, or a positional argument if you use positional: true
+      # Required, but you can set a default or use optional: true if you want optional
+      def param(name, signature = :any, **options, &converter)
+        AttributeBuilder.new(self, name, signature, options).define(&converter)
+      end
+
       # Alternative DSL
 
       # Parameter for positional argument
@@ -38,12 +46,6 @@ module TypedOperation
       # Wrap a type signature in a NilableType meaning it is optional to TypedOperation
       def optional(type_signature)
         NilableType.new(type_signature)
-      end
-
-      # Parameter for keyword argument, or a positional argument if you use positional: true
-      # Required, but you can set a default or use optional: true if you want optional
-      def param(name, signature = :any, **options, &converter)
-        define_literal_attribute(name, signature, options, &converter)
       end
 
       # Introspection methods
@@ -64,32 +66,15 @@ module TypedOperation
         required_parameters.filter_map { |name, attribute| name unless attribute.positional? }
       end
 
+      def optional_positional_parameters
+        positional_parameters - required_positional_parameters
+      end
+
+      def optional_keyword_parameters
+        keyword_parameters - required_keyword_parameters
+      end
+
       private
-
-      def define_literal_attribute(name, signature, options, &converter)
-        positional = options[:positional]
-        reader = options[:reader] || :public
-        type_signature = prepare_signature(signature, options)
-        default_val_or_proc = prepare_default_value_for(name, options)
-
-        attribute(name, type_signature, default: default_val_or_proc, positional: positional, reader: reader, &converter)
-      end
-
-      def prepare_signature(signature, options)
-        allows_nil?(options) ? Literal::Union.new(signature, NilClass) : signature
-      end
-
-      def prepare_default_value_for(name, options)
-        if !options[:default].nil?
-          options[:default]
-        elsif allows_nil?(options)
-          -> {}
-        end
-      end
-
-      def allows_nil?(options)
-        options[:allow_nil] == true || (options.key?(:default) && options[:default].nil?)
-      end
 
       def required_parameters
         @required_parameters ||= literal_attributes.filter do |name, attribute|
