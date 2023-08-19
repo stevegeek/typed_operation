@@ -8,7 +8,7 @@ module TypedOperation
       @keyword_args = keyword_args
     end
 
-    def curry(*positional, **keyword)
+    def with(*positional, **keyword)
       all_positional = @positional_args + positional
       all_kw_args = @keyword_args.merge(keyword)
 
@@ -20,11 +20,11 @@ module TypedOperation
         Prepared.new(operation_class, *all_positional, **all_kw_args)
       end
     end
-    alias_method :[], :curry
-    alias_method :with, :curry
+    alias_method :[], :with
+    alias_method :curry, :with
 
     def call(...)
-      prepared = curry(...)
+      prepared = with(...)
       return prepared.operation.call if prepared.is_a?(Prepared)
       raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name} (key: #{operation_class.operation_key}), are you expecting it to be Prepared?"
     end
