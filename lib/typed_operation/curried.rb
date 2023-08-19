@@ -9,8 +9,7 @@ module TypedOperation
 
     def call(arg)
       raise ArgumentError, "A prepared operation should not be curried" if @partial_operation.prepared?
-      # apply arg to next required parameter and return a new curried operation
-      # when all required parameters are applied, invoke operation
+
       next_partially_applied = if next_parameter_positional?
         @partial_operation.with(arg)
       else
