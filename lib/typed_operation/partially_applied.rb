@@ -29,6 +29,10 @@ module TypedOperation
       raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name} (key: #{operation_class.operation_key}), are you expecting it to be Prepared?"
     end
 
+    def operation
+      raise MissingParameterError, "Cannot instantiate Operation #{operation_class.name} (key: #{operation_class.operation_key}), as it is only partially applied."
+    end
+
     def to_proc
       method(:call).to_proc
     end
