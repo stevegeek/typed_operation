@@ -9,8 +9,8 @@ module TypedOperation
         new(...).call
       end
 
-      def curry(**args)
-        PartiallyApplied.new(self, **args).curry
+      def curry(...)
+        PartiallyApplied.new(self, ...).curry
       end
       alias_method :[], :curry
       alias_method :with, :curry
