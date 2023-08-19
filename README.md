@@ -6,6 +6,8 @@ Inputs to the operation are specified as typed attributes (uses [`literal`](http
 
 Type of result of the operation is up to you, eg you could use [`literal` monads](https://github.com/joeldrapper/literal) or [`Dry::Monads`](https://dry-rb.org/gems/dry-monads/1.3/).
 
+**Note the version described here (>= 0.5.0) is not yet released on Rubygems, it is waiting for a release of `literal`)**
+
 ## Features
 
 - Operations can be **partially applied** or **curried**
