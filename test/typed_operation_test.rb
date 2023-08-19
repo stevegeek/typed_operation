@@ -133,14 +133,15 @@ class TypedOperationTest < ActiveSupport::TestCase
   def test_operation_instance_supports_pattern_matching_params
     operation = TestOperation.new(foo: "1", bar: "2", baz: "3", can_be_nil: 5)
     assert_equal ["1", "2", "3", "qux", 5, nil], operation.deconstruct
-    assert_equal({foo: "1", bar: "2", baz: "3", with_default: "qux", can_be_nil: 5, can_also_be_nil: nil}, operation.deconstruct_keys(%i[foo bar baz]))
+    assert_equal({foo: "1", bar: "2", baz: "3", with_default: "qux", can_be_nil: 5, can_also_be_nil: nil}, operation.deconstruct_keys(nil))
+    assert_equal({foo: "1", can_be_nil: 5}, operation.deconstruct_keys(%i[foo can_be_nil]))
     case operation
     in TestOperation[foo: foo, with_default: default, **rest]
       assert_equal "1", foo
       assert_equal "qux", default
       assert_equal({bar: "2", baz: "3", can_be_nil: 5, can_also_be_nil: nil}, rest)
     else
-      raise "Pattern match failed"
+      raise Minitest::UnexpectedError, "Pattern match failed"
     end
     case operation
     in String => foo, String => bar, String => baz, String => with_default, Integer => can_be_nil, NilClass => can_also_be_nil
@@ -151,7 +152,7 @@ class TypedOperationTest < ActiveSupport::TestCase
       assert_equal 5, can_be_nil
       assert_nil can_also_be_nil
     else
-      raise "Pattern match failed"
+      raise Minitest::UnexpectedError, "Pattern match failed"
     end
   end
 
@@ -163,26 +164,27 @@ class TypedOperationTest < ActiveSupport::TestCase
       assert_equal "2", bar
       assert_equal({}, rest)
     else
-      raise "Pattern match failed"
+      raise Minitest::UnexpectedError, "Pattern match failed"
     end
     case partially_applied
     in String => foo, String => bar
       assert_equal "1", foo
       assert_equal "2", bar
     else
-      raise "Pattern match failed"
+      raise Minitest::UnexpectedError, "Pattern match failed"
     end
   end
 
   def test_operation_prepared_supports_pattern_matching_currently_applied_params
     prepared = TestOperation.with(foo: "1", bar: "2", baz: "3")
+
     case prepared
     in TypedOperation::Prepared[foo: foo, bar: bar, **rest]
       assert_equal "1", foo
       assert_equal "2", bar
       assert_equal({baz: "3"}, rest)
     else
-      raise "Pattern match failed"
+      raise Minitest::UnexpectedError, "Pattern match failed"
     end
     case prepared
     in String => foo, String => bar, String => baz
@@ -190,7 +192,7 @@ class TypedOperationTest < ActiveSupport::TestCase
       assert_equal "2", bar
       assert_equal "3", baz
     else
-      raise "Pattern match failed"
+      raise Minitest::UnexpectedError, "Pattern match failed"
     end
   end
 end
