@@ -1,13 +1,24 @@
 ## [0.5.0] - Unreleased
 
+### Added
+
+- Positional params are now supported
+- A new set of methods exist to define params, `.param`, `.named`, `.positional`, `.optional`
+- Class methods to get names of parameters, positional and named, optional or required.
+
 ### Breaking changes
 
 - TypedOperation now uses [Literal::Data](https://github.com/joeldrapper/literal) under the hood, instead of [vident-typed](https://github.com/stevegeek/vident-typed)
-- param 'convert:' option has been removed, use a coercion block instead
+- Param option `convert:` has been removed, use a coercion block instead
+- Param option `allow_nil:` has been removed, use `optional:` or `.optional()` instead
+- The method `.curry` now actually curries the operation, instead of partially applying (use `.with` for partial application of parameters)
+- `.operation_key` has been removed
+- Ruby >= 3.1 is now required
 
 ### Changed
 
-- TypedOperation does not depend on Rails. Rails generator support exists but is conditionally included.
+- TypedOperation does **not** depend on Rails. Rails generator support exists but is conditionally included.
+- Numerous fixes
 
 ## [0.4.3] - Unreleased
 
