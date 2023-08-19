@@ -95,6 +95,22 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_equal ["first!", "second!"], ["first", "second"].map(&TestPositionalOperation)
   end
 
+  def test_operation_raises_on_invalid_positional_params
+    assert_raises do
+      Class.new(::TypedOperation::Base) do
+        # This is invalid, because positional params can't be optional before required ones
+        positional :first, String, optional: true
+        positional :second, String
+      end
+
+      Class.new(::TypedOperation::Base) do
+        # This is invalid, because positional params can't be optional before required ones
+        positional :first, optional(String)
+        positional :second, String
+      end
+    end
+  end
+
   def test_operation_acts_as_proc_on_partially_applied
     curried_operation = TestPositionalOperation.with("first")
     assert_equal ["first/second", "first/third"], ["second", "third"].map(&curried_operation)

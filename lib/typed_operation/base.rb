@@ -77,13 +77,9 @@ module TypedOperation
       private
 
       def required_parameters
-        @required_parameters ||= literal_attributes.filter do |name, attribute|
-          required_attribute?(attribute)
+        literal_attributes.filter do |name, attribute|
+          attribute.default.nil? # Any optional parameters will have a default value/proc in their Literal::Attribute
         end
-      end
-
-      def required_attribute?(attribute)
-        attribute.default.nil?
       end
     end
 
