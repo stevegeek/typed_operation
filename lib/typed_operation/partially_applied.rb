@@ -26,7 +26,7 @@ module TypedOperation
     def call(...)
       prepared = curry(...)
       return prepared.operation.call if prepared.is_a?(Prepared)
-      raise MissingParameterError, "Cannot call PartiallyApplied operation #{@operation_class.name} (key: #{@operation_class.operation_key}), are you expecting it to be Prepared?"
+      raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name} (key: #{operation_class.operation_key}), are you expecting it to be Prepared?"
     end
 
     def deconstruct
