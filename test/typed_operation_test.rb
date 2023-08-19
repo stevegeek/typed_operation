@@ -100,10 +100,6 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_equal %i[kw2], TestKeywordAndPositionalOperation.optional_keyword_parameters
   end
 
-  def test_class_method_operation_key
-    assert_equal :"typed_operation_test/test_operation", TestOperation.operation_key
-  end
-
   def test_operation_acts_as_proc
     assert_equal ["first!", "second!"], ["first", "second"].map(&TestPositionalOperation)
   end

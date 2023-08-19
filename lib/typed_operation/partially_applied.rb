@@ -26,11 +26,11 @@ module TypedOperation
     def call(...)
       prepared = with(...)
       return prepared.operation.call if prepared.is_a?(Prepared)
-      raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name} (key: #{operation_class.operation_key}), are you expecting it to be Prepared?"
+      raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name} (key: #{operation_class.name}), are you expecting it to be Prepared?"
     end
 
     def operation
-      raise MissingParameterError, "Cannot instantiate Operation #{operation_class.name} (key: #{operation_class.operation_key}), as it is only partially applied."
+      raise MissingParameterError, "Cannot instantiate Operation #{operation_class.name} (key: #{operation_class.name}), as it is only partially applied."
     end
 
     def to_proc
@@ -65,7 +65,7 @@ module TypedOperation
 
     def validate_positional_arg_count!(count)
       if count > positional_parameters.size
-        raise ArgumentError, "Too many positional arguments provided for #{operation_class.name} (key: #{operation_class.operation_key})"
+        raise ArgumentError, "Too many positional arguments provided for #{operation_class.name} (key: #{operation_class.name})"
       end
     end
 

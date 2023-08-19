@@ -19,11 +19,7 @@ module TypedOperation
         method(:call).to_proc
       end
 
-      def operation_key
-        name.underscore.to_sym
-      end
-
-      # Medhod to define parameters for your operation.
+      # Method to define parameters for your operation.
 
       # Parameter for keyword argument, or a positional argument if you use positional: true
       # Required, but you can set a default or use optional: true if you want optional
