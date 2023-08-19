@@ -125,7 +125,7 @@ class TypedOperationTest < ActiveSupport::TestCase
     end
   end
 
-  def test_operation_raises_on_invalid_positional_params
+  def test_operation_raises_on_invalid_positional_params_using_optional
     assert_raises do
       Class.new(::TypedOperation::Base) do
         # This is invalid, because positional params can't be optional before required ones
