@@ -8,6 +8,30 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert TypedOperation::VERSION
   end
 
+  class TestPositionalOperation < ::TypedOperation::Base
+    param :first, String, positional: true
+    param :second, String, allow_nil: true, positional: true
+
+    def call
+      if second
+        "#{first}/#{second}"
+      else
+        "#{first}!"
+      end
+    end
+  end
+
+  class TestKeywordAndPositionalOperation < ::TypedOperation::Base
+    positional :pos1, String
+    positional :pos2, String, default: "pos2"
+    named :kw1, String
+    named :kw2, String, default: "kw2"
+
+    def call
+      "#{pos1}/#{pos2}/#{kw1}/#{kw2}"
+    end
+  end
+
   class TestOperation < ::TypedOperation::Base
     include Dry::Monads[:result]
 
@@ -28,6 +52,60 @@ class TypedOperationTest < ActiveSupport::TestCase
     def call
       Success("It worked!")
     end
+  end
+
+  def test_class_method_positional_parameters
+    assert_equal %i[first second], TestPositionalOperation.positional_parameters
+    assert_equal %i[pos1 pos2], TestKeywordAndPositionalOperation.positional_parameters
+  end
+
+  def test_class_method_keyword_parameters
+    assert_equal [], TestPositionalOperation.keyword_parameters
+    assert_equal %i[kw1 kw2], TestKeywordAndPositionalOperation.keyword_parameters
+  end
+
+  def test_class_method_required_positional_parameters
+    assert_equal %i[first], TestPositionalOperation.required_positional_parameters
+    assert_equal %i[pos1], TestKeywordAndPositionalOperation.required_positional_parameters
+  end
+
+  def test_class_method_required_keyword_parameters
+    assert_equal [], TestPositionalOperation.required_keyword_parameters
+    assert_equal %i[kw1], TestKeywordAndPositionalOperation.required_keyword_parameters
+  end
+
+  def test_class_method_operation_key
+    assert_equal :"typed_operation_test/test_operation", TestOperation.operation_key
+  end
+
+  def test_operation_acts_as_proc
+    assert_equal ["first!", "second!"], ["first", "second"].map(&TestPositionalOperation)
+  end
+
+  def test_operation_acts_as_proc_on_partially_applied
+    curried_operation = TestPositionalOperation.with("first")
+    assert_equal ["first/second", "first/third"], ["second", "third"].map(&curried_operation)
+  end
+
+  def test_operation_positional_args
+    operation = TestPositionalOperation.new("first", "second")
+    assert_equal "first", operation.first
+    assert_equal "second", operation.second
+  end
+
+  def test_operation_optional_positional_args
+    operation = TestPositionalOperation.new("first")
+    assert_equal "first!", operation.call
+  end
+
+  def test_operation_mix_args
+    operation = TestKeywordAndPositionalOperation.new("first", "second", kw1: "foo", kw2: "bar")
+    assert_equal "first/second/foo/bar", operation.call
+  end
+
+  def test_operation_optional_mix_args
+    operation = TestKeywordAndPositionalOperation.new("first", kw1: "bar")
+    assert_equal "first/pos2/bar/kw2", operation.call
   end
 
   def test_prepared
@@ -128,6 +206,20 @@ class TypedOperationTest < ActiveSupport::TestCase
 
   def test_operation_creation_with_missing_param
     assert_raises(ArgumentError) { TestOperation.new(foo: "1") }
+  end
+
+  def test_operation_instance_support_pattern_matching_on_mixed_arguments
+    operation = TestKeywordAndPositionalOperation.new("first", "second", kw1: "foo", kw2: "bar")
+    assert_equal ["first", "second", "foo", "bar"], operation.deconstruct
+    assert_equal({pos1: "first", pos2: "second", kw1: "foo", kw2: "bar"}, operation.deconstruct_keys(nil))
+    assert_equal({pos1: "first", kw2: "bar"}, operation.deconstruct_keys(%i[pos1 kw2]))
+  end
+
+  def test_partially_applied_operation_support_pattern_matching_on_mixed_arguments
+    operation = TestKeywordAndPositionalOperation.with("first", "second", kw2: "bar")
+    assert_equal ["first", "second", "bar"], operation.deconstruct
+    assert_equal({pos1: "first", pos2: "second", kw2: "bar"}, operation.deconstruct_keys(nil))
+    assert_equal({pos2: "second", kw2: "bar"}, operation.deconstruct_keys(%i[pos2 kw2]))
   end
 
   def test_operation_instance_supports_pattern_matching_params
