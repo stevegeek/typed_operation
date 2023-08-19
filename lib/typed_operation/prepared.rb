@@ -5,5 +5,9 @@ module TypedOperation
     def operation
       operation_class.new(*@positional_args, **@keyword_args)
     end
+
+    def prepared?
+      true
+    end
   end
 end
