@@ -131,23 +131,25 @@ class TypedOperationTest < ActiveSupport::TestCase
   end
 
   def test_operation_instance_supports_pattern_matching_params
-    operation = TestOperation.new(foo: "1", bar: "2", baz: "3")
-    assert_equal ["1", "2", "3", "qux"], operation.deconstruct
-    assert_equal({foo: "1", bar: "2", baz: "3", with_default: "qux"}, operation.deconstruct_keys(%i[foo bar baz]))
+    operation = TestOperation.new(foo: "1", bar: "2", baz: "3", can_be_nil: 5)
+    assert_equal ["1", "2", "3", "qux", 5, nil], operation.deconstruct
+    assert_equal({foo: "1", bar: "2", baz: "3", with_default: "qux", can_be_nil: 5, can_also_be_nil: nil}, operation.deconstruct_keys(%i[foo bar baz]))
     case operation
     in TestOperation[foo: foo, with_default: default, **rest]
       assert_equal "1", foo
       assert_equal "qux", default
-      assert_equal({bar: "2", baz: "3"}, rest)
+      assert_equal({bar: "2", baz: "3", can_be_nil: 5, can_also_be_nil: nil}, rest)
     else
       raise "Pattern match failed"
     end
     case operation
-    in String => foo, String => bar, String => baz, String => with_default
+    in String => foo, String => bar, String => baz, String => with_default, Integer => can_be_nil, NilClass => can_also_be_nil
       assert_equal "1", foo
       assert_equal "2", bar
       assert_equal "3", baz
       assert_equal "qux", with_default
+      assert_equal 5, can_be_nil
+      assert_nil can_also_be_nil
     else
       raise "Pattern match failed"
     end
