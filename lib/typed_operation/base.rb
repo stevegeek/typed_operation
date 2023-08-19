@@ -42,7 +42,7 @@ module TypedOperation
       private
 
       def prepare_signature(signature, options)
-        allows_nil?(options) ? Literal::Types::UnionType.new(signature, NilClass) : signature
+        allows_nil?(options) ? Literal::Union.new(signature, NilClass) : signature
       end
 
       def prepare_default_value_for(name, options)
