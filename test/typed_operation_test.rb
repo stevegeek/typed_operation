@@ -67,6 +67,9 @@ class TypedOperationTest < ActiveSupport::TestCase
     end
   end
 
+  class TestInvalidOperation < ::TypedOperation::Base
+  end
+
   def test_class_method_positional_parameters
     assert_equal %i[first second], TestPositionalOperation.positional_parameters
     assert_equal %i[pos1 pos2], TestKeywordAndPositionalOperation.positional_parameters
@@ -87,6 +90,16 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_equal %i[kw1], TestKeywordAndPositionalOperation.required_keyword_parameters
   end
 
+  def test_class_method_optional_positional_parameters
+    assert_equal %i[second], TestPositionalOperation.optional_positional_parameters
+    assert_equal %i[pos2], TestKeywordAndPositionalOperation.optional_positional_parameters
+  end
+
+  def test_class_method_optional_keyword_parameters
+    assert_equal [], TestPositionalOperation.optional_keyword_parameters
+    assert_equal %i[kw2], TestKeywordAndPositionalOperation.optional_keyword_parameters
+  end
+
   def test_class_method_operation_key
     assert_equal :"typed_operation_test/test_operation", TestOperation.operation_key
   end
@@ -102,7 +115,11 @@ class TypedOperationTest < ActiveSupport::TestCase
         positional :first, String, optional: true
         positional :second, String
       end
+    end
+  end
 
+  def test_operation_raises_on_invalid_positional_params
+    assert_raises do
       Class.new(::TypedOperation::Base) do
         # This is invalid, because positional params can't be optional before required ones
         positional :first, optional(String)
@@ -116,6 +133,16 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_equal ["first/second", "first/third"], ["second", "third"].map(&curried_operation)
   end
 
+  def test_partially_applied_as_proc_with_mixed_args
+    operation = TestAlternativeDslOperation.with("first", kw1: "bar", kw3: "123")
+    assert_equal ["first/1//bar/kw2/123", "first/2//bar/kw2/123", "first/3//bar/kw2/123"], ["1", "2", "3"].map(&operation)
+  end
+
+  def test_operation_to_proc
+    operation = TestPositionalOperation.new("first")
+    assert_equal "first!", operation.to_proc.call
+  end
+
   def test_operation_positional_args
     operation = TestPositionalOperation.new("first", "second")
     assert_equal "first", operation.first
@@ -125,6 +152,14 @@ class TypedOperationTest < ActiveSupport::TestCase
   def test_operation_optional_positional_args
     operation = TestPositionalOperation.new("first")
     assert_equal "first!", operation.call
+  end
+
+  def test_positional_arg_count_must_make_sense
+    assert_raises(ArgumentError) { TestPositionalOperation.new("first", "second", "third") }
+  end
+
+  def test_positional_arg_count_must_make_sense_when_currying
+    assert_raises(ArgumentError) { TestPositionalOperation.with("first", "second", "third") }
   end
 
   def test_operation_mix_args
@@ -221,11 +256,8 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_equal "1", operation.foo
   end
 
-  def test_operation_invocation_as_proc
-    partially_applied = TestOperation.with(foo: "1", bar: "2")
-    ["1", "2", "3"].each do |baz|
-      assert_equal Dry::Monads::Result::Success.new("It worked!"), partially_applied.call(baz: baz)
-    end
+  def test_partially_applied_operation_raises_on_operation
+    assert_raises(TypedOperation::MissingParameterError) { TestOperation.with(foo: "1").operation }
   end
 
   def test_operation_invocation_with_missing_param
@@ -321,5 +353,9 @@ class TypedOperationTest < ActiveSupport::TestCase
     else
       raise Minitest::Assertion, "Pattern match failed"
     end
+  end
+
+  def test_raises_when_operation_has_no_call_method_defined
+    assert_raises(::TypedOperation::InvalidOperationError) { TestInvalidOperation.call }
   end
 end
