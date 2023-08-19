@@ -75,11 +75,11 @@ class ApplicationOperation < ::TypedOperation::Base
   end
 
   def failed_with_value(value, message: "Operation failed", error_code: nil)
-    failed(error_code || self.class.operation_key, message, value)
+    failed(error_code || operation_key, message, value)
   end
 
   def failed_with_message(message, error_code: nil)
-    failed(error_code || self.class.operation_key, message)
+    failed(error_code || operation_key, message)
   end
 
   def failed(error_code, message = "Operation failed", value = nil)
@@ -88,6 +88,10 @@ class ApplicationOperation < ::TypedOperation::Base
 
   def failed_with_code_and_value(error_code, value, message: "Operation failed")
     failed(error_code, message, value)
+  end
+
+  def operation_key
+    self.class.operation_key
   end
 end
 ```

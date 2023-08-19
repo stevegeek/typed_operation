@@ -81,11 +81,5 @@ module TypedOperation
     def deconstruct_keys(_keys)
       attributes.to_h
     end
-
-    private
-
-    def operation_key
-      self.class.operation_key
-    end
   end
 end
