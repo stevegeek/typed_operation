@@ -66,7 +66,7 @@ This is an example of a `ApplicationOperation` in a Rails app that uses `Dry::Mo
 class ApplicationOperation < ::TypedOperation::Base
   include Dry::Monads[:result, :do]
   
-  param :initiator, ::User, allow_nil: true
+  param :initiator, ::User, optional: true
 
   private
 

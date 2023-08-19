@@ -10,7 +10,7 @@ class TypedOperationTest < ActiveSupport::TestCase
 
   class TestPositionalOperation < ::TypedOperation::Base
     param :first, String, positional: true
-    param :second, String, allow_nil: true, positional: true
+    param :second, String, optional: true, positional: true
 
     def call
       if second
@@ -42,7 +42,7 @@ class TypedOperationTest < ActiveSupport::TestCase
     end
 
     param :with_default, String, default: "qux"
-    param :can_be_nil, Integer, allow_nil: true
+    param :can_be_nil, Integer, optional: true
     param :can_also_be_nil, TypedOperation::Base, default: nil
 
     def prepare
