@@ -78,8 +78,9 @@ module TypedOperation
       attributes.values
     end
 
-    def deconstruct_keys(_keys)
-      attributes.to_h
+    def deconstruct_keys(keys)
+      h = attributes.to_h
+      keys ? h.slice(*keys) : h
     end
   end
 end
