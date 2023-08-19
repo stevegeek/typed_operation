@@ -22,13 +22,26 @@ class TypedOperationTest < ActiveSupport::TestCase
   end
 
   class TestKeywordAndPositionalOperation < ::TypedOperation::Base
-    positional :pos1, String
-    positional :pos2, String, default: "pos2"
-    named :kw1, String
-    named :kw2, String, default: "kw2"
+    param :pos1, String, positional: true
+    param :pos2, String, default: "pos2", positional: true
+    param :kw1, String
+    param :kw2, String, default: "kw2"
 
     def call
       "#{pos1}/#{pos2}/#{kw1}/#{kw2}"
+    end
+  end
+
+  class TestAlternativeDslOperation < ::TypedOperation::Base
+    positional :pos1, String
+    positional :pos2, String, default: "pos2"
+    positional :pos3, optional(String)
+    named :kw1, String
+    named :kw2, String, default: "kw2"
+    named :kw3, optional(String)
+
+    def call
+      "#{pos1}/#{pos2}/#{pos3}/#{kw1}/#{kw2}/#{kw3}"
     end
   end
 
@@ -106,6 +119,11 @@ class TypedOperationTest < ActiveSupport::TestCase
   def test_operation_optional_mix_args
     operation = TestKeywordAndPositionalOperation.new("first", kw1: "bar")
     assert_equal "first/pos2/bar/kw2", operation.call
+  end
+
+  def test_operation_alternative_dsl
+    operation = TestAlternativeDslOperation.new("first", kw1: "bar", kw3: "123")
+    assert_equal "first/pos2//bar/kw2/123", operation.call
   end
 
   def test_prepared

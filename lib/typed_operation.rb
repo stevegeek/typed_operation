@@ -1,5 +1,6 @@
 require "typed_operation/version"
 require "typed_operation/railtie" if defined?(Rails::Railtie)
+require "typed_operation/nilable_type"
 require "typed_operation/base"
 require "typed_operation/partially_applied"
 require "typed_operation/prepared"

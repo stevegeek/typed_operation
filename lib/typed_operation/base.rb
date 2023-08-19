@@ -23,6 +23,8 @@ module TypedOperation
         name.underscore.to_sym
       end
 
+      # Alternative DSL
+
       # Parameter for positional argument
       def positional(name, signature = :any, **options, &converter)
         param(name, signature, **options.merge(positional: true), &converter)
@@ -33,8 +35,13 @@ module TypedOperation
         param(name, signature, **options.merge(positional: false), &converter)
       end
 
+      # Wrap a type signature in a NilableType meaning it is optional to TypedOperation
+      def optional(type_signature)
+        NilableType.new(type_signature)
+      end
+
       # Parameter for keyword argument, or a positional argument if you use positional: true
-      # Required, but you can set a default or use allow_nil: true if you want optional
+      # Required, but you can set a default or use optional: true if you want optional
       def param(name, signature = :any, **options, &converter)
         define_literal_attribute(name, signature, options, &converter)
       end
