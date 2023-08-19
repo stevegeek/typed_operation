@@ -2,43 +2,87 @@
 
 module TypedOperation
   class PartiallyApplied
-    def initialize(operation_class, **applied_args)
+    def initialize(operation_class, *positional_args, **keyword_args)
       @operation_class = operation_class
-      @applied_args = applied_args
+      @positional_args = positional_args
+      @keyword_args = keyword_args
     end
 
-    def curry(**params)
-      all_args = @applied_args.merge(params)
-      # check if required attrs are in @applied_args
-      required_keys = @operation_class.required_params
-      missing_keys = required_keys - all_args.keys
+    def with(*positional, **keyword)
+      all_positional = positional_args + positional
+      all_kw_args = keyword_args.merge(keyword)
 
-      if missing_keys.size > 0
-        # Partially apply the arguments
-        PartiallyApplied.new(@operation_class, **all_args)
+      validate_positional_arg_count!(all_positional.size)
+
+      if partially_applied?(all_positional, all_kw_args)
+        PartiallyApplied.new(operation_class, *all_positional, **all_kw_args)
       else
-        Prepared.new(@operation_class, **all_args)
+        Prepared.new(operation_class, *all_positional, **all_kw_args)
       end
     end
-    alias_method :[], :curry
-    alias_method :with, :curry
+    alias_method :[], :with
+
+    def curry
+      Curried.new(operation_class, self)
+    end
 
     def call(...)
-      prepared = curry(...)
+      prepared = with(...)
       return prepared.operation.call if prepared.is_a?(Prepared)
-      raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name} (key: #{operation_class.operation_key}), are you expecting it to be Prepared?"
+      raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name} (key: #{operation_class.name}), are you expecting it to be Prepared?"
+    end
+
+    def operation
+      raise MissingParameterError, "Cannot instantiate Operation #{operation_class.name} (key: #{operation_class.name}), as it is only partially applied."
+    end
+
+    def prepared?
+      false
+    end
+
+    def to_proc
+      method(:call).to_proc
     end
 
     def deconstruct
-      @applied_args.values
+      positional_args + keyword_args.values
     end
 
-    def deconstruct_keys(_keys)
-      @applied_args.dup
+    def deconstruct_keys(keys)
+      h = keyword_args.dup
+      positional_args.each_with_index { |v, i| h[positional_parameters[i]] = v }
+      keys ? h.slice(*keys) : h
     end
+
+    attr_reader :positional_args, :keyword_args
 
     private
 
     attr_reader :operation_class
+
+    def required_positional_parameters
+      @required_positional_parameters ||= operation_class.required_positional_parameters
+    end
+
+    def required_keyword_parameters
+      @required_keyword_parameters ||= operation_class.required_keyword_parameters
+    end
+
+    def positional_parameters
+      @positional_parameters ||= operation_class.positional_parameters
+    end
+
+    def validate_positional_arg_count!(count)
+      if count > positional_parameters.size
+        raise ArgumentError, "Too many positional arguments provided for #{operation_class.name} (key: #{operation_class.name})"
+      end
+    end
+
+    def partially_applied?(all_positional, all_kw_args)
+      missing_positional = required_positional_parameters.size - all_positional.size
+      missing_keys = required_keyword_parameters - all_kw_args.keys
+
+      missing_positional > 0 || missing_keys.size > 0
+    end
   end
 end
