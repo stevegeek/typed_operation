@@ -29,6 +29,14 @@ module TypedOperation
       raise MissingParameterError, "Cannot call PartiallyApplied operation #{@operation_class.name} (key: #{@operation_class.operation_key}), are you expecting it to be Prepared?"
     end
 
+    def deconstruct
+      @applied_args.values
+    end
+
+    def deconstruct_keys(_keys)
+      @applied_args.dup
+    end
+
     private
 
     attr_reader :operation_class

@@ -9,7 +9,13 @@
 
 - TypedOperation does not depend on Rails. Rails generator support exists but is conditionally included.
 
-## [0.4.2] - Unreleased
+## [0.4.3] - Unreleased
+
+### Added
+
+- Added ability to pattern matching on params with operation instance or partially applied operations
+
+## [0.4.2] - 2023/07/27
 
 ### Changed
 

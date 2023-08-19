@@ -74,6 +74,14 @@ module TypedOperation
       method(:call).to_proc
     end
 
+    def deconstruct
+      attributes.values
+    end
+
+    def deconstruct_keys(_keys)
+      attributes.to_h
+    end
+
     private
 
     def operation_key
