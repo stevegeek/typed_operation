@@ -1,10 +1,11 @@
-## [0.5.0] - Unreleased
+## [1.0.0.pre1] - Unreleased
 
 ### Added
 
 - Positional params are now supported
 - A new set of methods exist to define params, `.param`, `.named`, `.positional`, `.optional`
 - Class methods to get names of parameters, positional and named, optional or required.
+- Added ability to pattern matching on params with operation instance or partially applied operations
 
 ### Breaking changes
 
@@ -19,12 +20,6 @@
 
 - TypedOperation does **not** depend on Rails. Rails generator support exists but is conditionally included.
 - Numerous fixes
-
-## [0.4.3] - Unreleased
-
-### Added
-
-- Added ability to pattern matching on params with operation instance or partially applied operations
 
 ## [0.4.2] - 2023/07/27
 
