@@ -33,12 +33,12 @@ module TypedOperation
       # Alternative DSL
 
       # Parameter for positional argument
-      def positional(name, signature = :any, **options, &converter)
+      def positional_param(name, signature = :any, **options, &converter)
         param(name, signature, **options.merge(positional: true), &converter)
       end
 
       # Parameter for a keyword or named argument
-      def named(name, signature = :any, **options, &converter)
+      def named_param(name, signature = :any, **options, &converter)
         param(name, signature, **options.merge(positional: false), &converter)
       end
 

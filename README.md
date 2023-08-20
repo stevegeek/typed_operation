@@ -23,19 +23,31 @@ Type of result of the operation is up to you, eg you could use [`literal` monads
 
 ```ruby
 class ShelveBookOperation < ::TypedOperation::Base
-  # Parameters can be specified using either the methods `positional` or `named`, or the underlying `param` method
-  positional :title, String
+  # Parameters can be specified with `positional_param`/`named_param` or directly with the
+  # underlying `param` method.
+  
+  # Note that you may also like to simply alias the param methods to your own preferred names:
+  # `positional`/`named` or `arg`/`key` for example.
+  
+  # A positional parameter (positional argument passed to the operation when creating it).
+  positional_param :title, String
   # Or if you prefer:
-  # `param :title, String, positional: true
-  named :description, String
+  #   `param :title, String, positional: true`
+  
+  # A named parameter (keyword argument passed to the operation when creating it).
+  named_param :description, String
   # Or if you prefer:
-  # `param :description, String
-  named :author_id, Integer, &:to_i
-  named :isbn, String
-  named :shelf_code, optional(Integer)
+  #   `param :description, String`
+
+  named_param :author_id, Integer, &:to_i
+  named_param :isbn, String
+  
+  # Optional parameters are specified by wrapping the type constraint in the `optional` method, or using the `optional:` option
+  named_param :shelf_code, optional(Integer)
   # Or if you prefer:
-  # `param :shelf_code, Integer, optional: true
-  named :category, String, default: "unknown".freeze
+  #   `named_param :shelf_code, Integer, optional: true`
+
+  named_param :category, String, default: "unknown".freeze
 
   # to setup (optional)
   def prepare
@@ -82,9 +94,9 @@ shelve.call(author_id: "1", isbn: false)
 
 ```ruby
 class TestOperation < ::TypedOperation::Base
-  positional :foo, String
-  named :bar, String
-  named :baz, String, &:to_s
+  param :foo, String, positional: true
+  param :bar, String
+  param :baz, String, &:to_s
 
   def call = "It worked! (#{foo}, #{bar}, #{baz})"
 end
@@ -137,9 +149,9 @@ TestOperation.with("1").with(bar: "2").with(baz: 3).operation
 #      "Cannot instantiate Operation TestOperation (key: test_operation), as it is only partially applied. (TypedOperation::MissingParameterError)"
 ```
 
-## Usage
+## Documentation
 
-### Subclassing `TypedOperation::Base`
+### Create an operation (subclass `TypedOperation::Base`)
 
 Create an operation by subclassing `TypedOperation::Base` and specifying the parameters the operation requires.
 
@@ -149,35 +161,67 @@ The operation can also implement:
 
 - `#prepare` - called when the operation is initialized, and after the parameters have been set
 
-### Specifying parameters
+### Specifying parameters (using `.param`)
 
-Parameters are specified using the provided DSL methods (`.positional`, `.named`, and the type constraint `.optional`), 
-or using the underlying `param` method.
+Parameters are specified using the provided class methods (`.positional_param` and `.named_param`), 
+or using the underlying `.param` method.
 
-#### Positional parameters
+Type constraints can be modified to make the parameter optional using `.optional`.
 
-`.positional :name, type, *options`
+#### Your own aliases
+
+Note that you may also like to alias the param methods to your own preferred names in a common base operation class.
+
+Some possible aliases are:
+- `positional`/`named`
+- `arg`/`key`
+ 
+For example:
+
+```ruby
+class ApplicationOperation < ::TypedOperation::Base
+  class << self
+    alias_method :arg, :positional_param
+    alias_method :key, :named_param
+  end
+end
+
+class MyOperation < ApplicationOperation
+  arg :name, String
+  key :age, Integer
+end
+
+MyOperation.new("Steve", age: 20)
+```
+
+#### Positional parameters (`positional: true` or `.positional_param`)
 
 Defines a positional parameter (positional argument passed to the operation when creating it).
 
-A name is provided for the accessor method, and a type constraint is provided for the type of the parameter
-(the type is a type signature compatible with `literal`).
+The following are equivalent:
 
-The options are:
-- `default:` - a default value for the parameter (can be a proc or value)
+- `param <param_name>, <type>, positional: true, <**options>`
+- `positional_param <param_name>, <type>, <**options>`
+
+The `<para_name>` is a symbolic name, used to create the accessor method, and when deconstructing to a hash.
+
+The `<type>` constraint provides the expected type of the parameter (the type is a type signature compatible with `literal`).
+
+The `<options>` are:
+- `default:` - a default value for the parameter (can be a proc or a frozen value)
 - `optional:` - a boolean indicating whether the parameter is optional (default: false). Note you may prefer to use the 
   `.optional` method instead of this option.
 
-Note with positional parameters when arguments are provided to the operation, they are matched in order of definition.
-
-Also note that you cannot define required positional parameters after optional ones.
+**Note** when positional arguments are provided to the operation, they are matched in order of definition or positional
+params. Also note that you cannot define required positional parameters after optional ones.
 
 Eg
 
 ```ruby
 class MyOperation < ::TypedOperation::Base
-  positional :name, String
-  positional :age, Integer, default: 0
+  positional_param :name, String, positional: true
+  # Or alternatively => `param :name, String, positional: true` 
+  positional_param :age, Integer, default: -> { 0 }
   
   def call
     puts "Hello #{name} (#{age})"
@@ -191,25 +235,24 @@ MyOperation.with("Steve").call(20)
 # => "Hello Steve (20)"
 ```
 
-#### Named parameters
-
-`named :name, type, *options`
+#### Named (keyword) parameters
 
 Defines a named parameter (keyword argument passed to the operation when creating it).
 
-A name is provided for the accessor method, and a type constraint is provided for the type of the parameter
+The following are equivalent:
+- `param <param_name>, <type>, <**options>`
+- `named_param <param_name>, <type>, <**options>`
 
-The options are:
-- `default:` - a default value for the parameter (can be a proc or value)
-- `optional:` - a boolean indicating whether the parameter is optional (default: false). Note you may prefer to use the 
-  `.optional` method instead of this option.
+The `<para_name>` is a symbol, used as parameter name for the keyword arguments in the operation constructor, to
+create the accessor method and when deconstructing to a hash.
 
-Note with named parameters when arguments are provided to the operation, they are passed as keyword arguments.  
+The type constraint and options are the same as for positional parameters.
 
 ```ruby
 class MyOperation < ::TypedOperation::Base
-  named :name, String
-  named :age, Integer, default: 0
+  named_param :name, String
+  # Or alternatively => `param :name, String` 
+  named_param :age, Integer, default: -> { 0 }
   
   def call
     puts "Hello #{name} (#{age})"
@@ -229,8 +272,8 @@ You can use both positional and named parameters in the same operation.
 
 ```ruby
 class MyOperation < ::TypedOperation::Base
-  positional :name, String
-  named :age, Integer, default: 0
+  positional_param :name, String
+  named_param :age, Integer, default: -> { 0 }
   
   def call
     puts "Hello #{name} (#{age})"
@@ -247,13 +290,28 @@ MyOperation.with("Steve").call(age: 20)
 # => "Hello Steve (20)"
 ```
 
-#### Optional parameters
+#### Optional parameters (using `optional:` or `.optional`)
 
-`.positional :name, optional(type), *options` / `.named :name, optional(type), *options`
+Optional parameters are ones that do not need to be specified for the operation to be instantiated.
 
-Defines an optional parameter (positional or named), by wrapping the type constraint in the `optional` method.
+An optional parameter can be specified by:
+- using the `optional:` option
+- using the `.optional` method around the type constraint
 
-This method effectively makes the type signature a union of the provided type and `NilClass`.
+```ruby
+class MyOperation < ::TypedOperation::Base
+  param :name, String
+  param :age, Integer, optional: true
+  param :nickname, optional(String)
+  # ...
+end
+
+MyOperation.new(name: "Steve")
+MyOperation.new(name: "Steve", age: 20)
+MyOperation.new(name: "Steve", nickname: "Steve-o")
+```
+
+This `.optional` class method effectively makes the type signature a union of the provided type and `NilClass`.
 
 #### Coercing parameters
 
@@ -266,33 +324,24 @@ param :choice, Union(FalseClass, TrueClass) do |v|
 end
 ```
 
-#### Default values
+#### Default values (with `default:`)
 
 You can specify a default value for a parameter using the `default:` option.
 
-The default value can be a proc or a value. If the value is specified as `nil` then the default value is literally nil and the parameter is optional.
+The default value can be a proc or a frozen value. If the value is specified as `nil` then the default value is literally nil and the parameter is optional.
 
 ```ruby
-param :name, String, default: "Steve"
+param :name, String, default: "Steve".freeze
 param :age, Integer, default: -> { rand(100) }
 ```
 
-### Calling an operation
+If using the directive `# frozen_string_literal: true` then you string values are frozen by default.
 
-An operation can be invoked by:
+### Partially applying (fixing parameters) on an operation (using `.with`)
 
-- instantiating it with at least required params and then calling the `#call` method on the instance
-- once a partially applied operation has been prepared (all required parameters have been set), the call
-  method on TypedOperation::Prepared can be used to instantiate and call the operation.
-- once an operation is curried, the `#call` method on last TypedOperation::Curried in the chain will invoke the operation
-- calling `#call` on a partially applied operation and passing in any remaining required parameters
+`.with(...)` creates a partially applied operation with the provided parameters.
 
-
-### Partially applying (fixing parameters) on an operation
-
-`.with(...)`: create a partially applied operation with the provided parameters set
-
-**alias: `.[]`**
+It is aliased to `.[]` for an alternative syntax.
 
 Note that `.with` can take both positional and keyword arguments, and can be chained.
 
@@ -311,6 +360,17 @@ op.call # or op.operation
 # => Now raises an error as the type of the first parameter is incorrect and operation is instantiated
 ```
 
+### Calling an operation (using `.call`)
+
+An operation can be invoked by:
+
+- instantiating it with at least required params and then calling the `#call` method on the instance
+- once a partially applied operation has been prepared (all required parameters have been set), the call
+  method on TypedOperation::Prepared can be used to instantiate and call the operation.
+- once an operation is curried, the `#call` method on last TypedOperation::Curried in the chain will invoke the operation
+- calling `#call` on a partially applied operation and passing in any remaining required parameters
+
+See the many examples in this document.
 
 ### Pattern matching on an operation
 
@@ -331,17 +391,47 @@ end
 
 ### Introspection of parameters & other methods
 
-- `.to_proc`: Get a proc that calls `.call(...)`
-- `#to_proc`: Get a proc that calls the `#call` method on an operation instance
-- `.prepared?`: Check if an operation is prepared
-- `.operation`: Get an operation instance from a Prepared operation. Will raise if called on a PartiallyApplied operation
+#### `.to_proc`
 
-- `.positional_parameters`: List of the names of the positional parameters, in order
-- `.keyword_parameters`: List of the names of the keyword parameters
-- `.required_positional_parameters`: List of the names of the required positional parameters, in order
-- `.required_keyword_parameters`: List of the names of the required keyword parameters
-- `.optional_positional_parameters`: List of the names of the optional positional parameters, in order
-- `.optional_keyword_parameters`: List of the names of the optional keyword parameters
+Get a proc that calls `.call(...)`
+
+
+#### `#to_proc`
+
+Get a proc that calls the `#call` method on an operation instance
+
+#### `.prepared?`
+
+Check if an operation is prepared
+
+#### `.operation`
+
+Return an operation instance from a Prepared operation. Will raise if called on a PartiallyApplied operation
+
+#### `.positional_parameters`
+
+List of the names of the positional parameters, in order
+
+#### `.keyword_parameters`
+
+List of the names of the keyword parameters
+
+#### `.required_positional_parameters`
+
+List of the names of the required positional parameters, in order
+
+#### `.required_keyword_parameters`
+
+List of the names of the required keyword parameters
+
+#### `.optional_positional_parameters`
+
+List of the names of the optional positional parameters, in order
+
+#### `.optional_keyword_parameters`
+
+List of the names of the optional keyword parameters
+
 
 ### Using with Rails
 
@@ -355,12 +445,22 @@ This is an example of a `ApplicationOperation` in a Rails app that uses `Dry::Mo
 # frozen_string_literal: true
 
 class ApplicationOperation < ::TypedOperation::Base
+  # We choose to use dry-monads for our operations, so include the required modules
   include Dry::Monads[:result, :do]
   
+  class << self
+    # Setup our own preferred names for the DSL methods
+    alias_method :positional, :positional_param
+    alias_method :named, :named_param
+  end
+  
+  # Parameters common to all Operations in this application
   named :initiator, optional(::User)
 
   private
 
+  # We setup some helper methods for our operations to use
+  
   def succeeded(value)
     Success(value)
   end

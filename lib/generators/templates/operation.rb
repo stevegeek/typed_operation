@@ -4,9 +4,9 @@
 module <%= namespace_name %>
   class <%= name %> < ::ApplicationOperation
     # Replace with implementation...
-    positional :required_positional_param, String
-    named :required_named_param, String
-    named :an_optional_param, Integer, optional: true do |value|
+    positional_param :required_positional_param, String
+    param :required_named_param, String
+    param :an_optional_param, Integer, optional: true do |value|
      value.to_i
     end
 
@@ -23,9 +23,9 @@ end
 <% else %>
 class <%= name %> < ::ApplicationOperation
   # Replace with implementation...
-  positional :required_positional_param, String
-  named :required_named_param, String
-  named :an_optional_param, Integer, optional: true do |value|
+  positional_param :required_positional_param, String
+  param :required_named_param, String
+  param :an_optional_param, Integer, optional: true do |value|
     value.to_i
   end
 

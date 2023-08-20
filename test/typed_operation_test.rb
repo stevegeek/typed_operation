@@ -33,12 +33,12 @@ class TypedOperationTest < ActiveSupport::TestCase
   end
 
   class TestAlternativeDslOperation < ::TypedOperation::Base
-    positional :pos1, String
-    positional :pos2, String, default: "pos2"
-    positional :pos3, optional(String)
-    named :kw1, String
-    named :kw2, String, default: "kw2"
-    named :kw3, optional(String)
+    positional_param :pos1, String
+    positional_param :pos2, String, default: "pos2"
+    positional_param :pos3, optional(String)
+    named_param :kw1, String
+    named_param :kw2, String, default: "kw2"
+    named_param :kw3, optional(String)
 
     def call
       "#{pos1}/#{pos2}/#{pos3}/#{kw1}/#{kw2}/#{kw3}"
@@ -46,12 +46,12 @@ class TypedOperationTest < ActiveSupport::TestCase
   end
 
   class TestCurryOperation < ::TypedOperation::Base
-    positional :pos1, String
-    positional :pos2, String
-    positional :pos3, optional(String)
-    named :kw1, String
-    named :kw2, String
-    named :kw3, optional(String)
+    param :pos1, String, positional: true
+    param :pos2, String, positional: true
+    param :pos3, optional(String), positional: true
+    param :kw1, String
+    param :kw2, String
+    param :kw3, optional(String)
 
     def call
       "#{pos1}/#{pos2}/#{pos3}/#{kw1}/#{kw2}/#{kw3}"
