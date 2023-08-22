@@ -153,15 +153,21 @@ TestOperation.with("1").with(bar: "2").with(baz: 3).operation
 
 ## Documentation
 
-### Create an operation (subclass `TypedOperation::Base`)
+### Create an operation (subclass `TypedOperation::Base` or `TypedOperation::ImmutableBase`)
 
-Create an operation by subclassing `TypedOperation::Base` and specifying the parameters the operation requires.
+Create an operation by subclassing `TypedOperation::Base` or `TypedOperation::ImmutableBase` and specifying the parameters the operation requires.
+
+- `TypedOperation::Base` (uses `Literal::Struct`) is the parent class for an operation where the arguments are potentially mutable (ie not frozen).
+  No attribute writer methods are defined, so the arguments can not be changed after initialization, but the values passed in are not guaranteed to be frozen.
+- `TypedOperation::ImmutableBase` (uses `Literal::Data`) is the parent class for an operation where the arguments are immutable (frozen on initialization),
+  thus giving a somewhat stronger immutability guarantee (ie that the operation does not mutate its arguments).
 
 The subclass must implement the `#call` method which is where the operations main work is done.
 
 The operation can also implement:
 
 - `#prepare` - called when the operation is initialized, and after the parameters have been set
+
 
 ### Specifying parameters (using `.param`)
 
