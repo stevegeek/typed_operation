@@ -381,4 +381,12 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_instance_of TypedOperation::Curried, curried_operation
     assert_equal "a/b//d/e/f", curried_operation.call("b").call("d")
   end
+
+  def test_operation_instance_can_be_copied_using_with
+    operation = TestOperation.new(foo: "1", bar: "2", baz: "3")
+    operation2 = operation.with(foo: "a")
+    assert_equal "a", operation2.foo
+    assert_equal "2", operation2.bar
+    assert_equal "3", operation2.baz
+  end
 end
