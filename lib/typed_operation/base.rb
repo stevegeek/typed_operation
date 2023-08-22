@@ -9,15 +9,6 @@ module TypedOperation
         new(...).call
       end
 
-      def with(...)
-        PartiallyApplied.new(self, ...).with
-      end
-      alias_method :[], :with
-
-      def curry
-        Curried.new(self)
-      end
-
       def to_proc
         method(:call).to_proc
       end
