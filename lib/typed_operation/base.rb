@@ -4,18 +4,14 @@ require "literal"
 
 module TypedOperation
   class Base < Literal::Data
+    extend Operations::Introspection
+    extend Operations::Parameters
+    extend Operations::PartialApplication
 
-    def after_initialization
-      prepare if respond_to?(:prepare)
-    end
+    include Operations::Callable
+    include Operations::Lifecycle
+    include Operations::Deconstruct
 
-    def deconstruct
-      attributes.values
-    end
-
-    def deconstruct_keys(keys)
-      h = attributes.to_h
-      keys ? h.slice(*keys) : h
     end
   end
 end
