@@ -44,7 +44,7 @@ module TypedOperation
 
       # Wrap a type signature in a NilableType meaning it is optional to TypedOperation
       def optional(type_signature)
-        NilableType.new(type_signature)
+        Literal::Types::NilableType.new(type_signature)
       end
 
       # Introspection methods

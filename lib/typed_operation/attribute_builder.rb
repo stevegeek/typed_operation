@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "literal"
+
 module TypedOperation
   class AttributeBuilder
     def initialize(typed_operation, parameter_name, type_signature, options)
@@ -29,7 +31,7 @@ module TypedOperation
     private
 
     def prepare_type_signature_for_literal
-      @signature = NilableType.new(@signature) if needs_to_be_nilable?
+      @signature = Literal::Types::NilableType.new(@signature) if needs_to_be_nilable?
       union_with_nil_to_support_nil_default
       validate_positional_order_params! if @positional
     end
@@ -40,7 +42,7 @@ module TypedOperation
     end
 
     def type_nilable?
-      @signature.is_a?(NilableType)
+      @signature.is_a?(Literal::Types::NilableType)
     end
 
     def union_with_nil_to_support_nil_default
