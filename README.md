@@ -92,6 +92,8 @@ shelve.call(author_id: "1", isbn: false)
 
 ### Partially applying parameters
 
+Operations can also be partially applied and curried:
+
 ```ruby
 class TestOperation < ::TypedOperation::Base
   param :foo, String, positional: true
@@ -165,6 +167,35 @@ The operation can also implement:
 
 Parameters are specified using the provided class methods (`.positional_param` and `.named_param`), 
 or using the underlying `.param` method.
+
+Types are specified using the `literal` gem. In many cases this simply means providing the class of the
+expected type, but there are also some other useful types provided by `literal` (eg `Union`).
+
+These can be either accessed via the `Literal` module, eg `Literal::Types::BooleanType`:
+
+```ruby
+class MyOperation < ::TypedOperation::Base
+  param :name, String
+  param :age, Integer, optional: true
+  param :choices, Literal::Types::ArrayType.new(String)
+  param :chose, Literal::Types::BooleanType
+end
+
+MyOperation.new(name: "bob", choices: ["st"], chose: true)
+```
+
+or by including the `Literal::Types` module into your operation class, and using the aliases provided:
+
+```ruby
+class MyOperation < ::TypedOperation::Base
+  include Literal::Types
+  
+  param :name, String
+  param :age, _Nilable(Integer) # optional can also be specifed using `.optional`
+  param :choices, _Array(String)
+  param :chose, _Boolean
+end
+```
 
 Type constraints can be modified to make the parameter optional using `.optional`.
 
@@ -319,7 +350,7 @@ You can specify a block after a parameter definition to coerce the argument valu
 
 ```ruby
 param :name, String, &:to_s
-param :choice, Union(FalseClass, TrueClass) do |v|
+param :choice, Literal::Types::BooleanType do |v|
   v == "y"
 end
 ```
@@ -519,7 +550,6 @@ end
 
 MyOperation.new(account_name: "foo", owner: "bar").call
 # => Literal::Failure(:cant_associate_owner)
-
 ```
 
 ### Using with `Dry::Monads`
