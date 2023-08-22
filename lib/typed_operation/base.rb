@@ -5,14 +5,6 @@ require "literal"
 module TypedOperation
   class Base < Literal::Data
     class << self
-      def call(...)
-        new(...).call
-      end
-
-      def to_proc
-        method(:call).to_proc
-      end
-
       # Method to define parameters for your operation.
 
       # Parameter for keyword argument, or a positional argument if you use positional: true
@@ -75,14 +67,6 @@ module TypedOperation
 
     def after_initialization
       prepare if respond_to?(:prepare)
-    end
-
-    def call
-      raise InvalidOperationError, "You must implement #call"
-    end
-
-    def to_proc
-      method(:call).to_proc
     end
 
     def deconstruct
