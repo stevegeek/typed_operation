@@ -1,4 +1,4 @@
-## [1.0.0.pre2] - Unreleased
+## [1.0.0.pre2] - 2023/08/22
 
 ### Breaking changes
 
