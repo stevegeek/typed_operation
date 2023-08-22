@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "literal"
-
 module TypedOperation
   class ImmutableBase < Literal::Data
     extend Operations::Introspection
