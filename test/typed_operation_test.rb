@@ -78,6 +78,14 @@ class TypedOperationTest < ActiveSupport::TestCase
     end
   end
 
+  class MyMutableOperation < ::TypedOperation::Base
+    param :my_hash, Hash, default: -> { {} }
+  end
+
+  class MyImmutableOperation < ::TypedOperation::ImmutableBase
+    param :my_hash, Hash, default: -> { {} }
+  end
+
   class TestInvalidOperation < ::TypedOperation::Base
   end
 
@@ -388,5 +396,18 @@ class TypedOperationTest < ActiveSupport::TestCase
     assert_equal "a", operation2.foo
     assert_equal "2", operation2.bar
     assert_equal "3", operation2.baz
+  end
+
+  def test_operation_should_not_freeze_arguments
+    operation = MyMutableOperation.new(my_hash: {a: 1})
+    refute operation.my_hash.frozen?
+    operation.my_hash[:b] = 2
+    assert_equal({a: 1, b: 2}, operation.my_hash)
+  end
+
+  def test_immutable_operation_should_freeze_arguments
+    operation = MyImmutableOperation.new(my_hash: {a: 1})
+    assert operation.my_hash.frozen?
+    assert_raises(RuntimeError) { operation.my_hash[:b] = 2 }
   end
 end

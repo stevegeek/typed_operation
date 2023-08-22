@@ -1,4 +1,13 @@
-## [1.0.0.pre1] - Unreleased
+## [1.0.0.pre2] - Unreleased
+
+### Breaking changes
+
+- `TypedOperation::Base` now uses `Literal::Struct` & is the parent class for an operation where the arguments are mutable (not frozen). But not that 
+  no writer methods are defined, so the arguments can still not be changed after initialization. Just that they are not frozen. 
+- `TypedOperation::ImmutableBase` now uses `Literal::Data` & is the parent class for an operation where the arguments are immutable (frozen on initialization), 
+  thus giving stronger immutability guarantees (ie that the operation does not mutate its arguments).
+
+## [1.0.0.pre1] - 2023/08/20
 
 ### Added
 
