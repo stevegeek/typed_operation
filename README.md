@@ -498,22 +498,22 @@ class MyOperation < ::TypedOperation::Base
 
   def call
     create_account.bind do |account|
-      associate_owner(account).bind do
-        account
-      end
+      associate_owner(account).map { account }
     end
   end
 
   private
 
   def create_account
-    # returns Literal::Success(account) or Literal::Failure(:cant_create)
+    # ...
+    # Literal::Failure.new(:cant_create_account)
     Literal::Success.new(account_name)
   end
   
   def associate_owner(account)
     # ...
     Literal::Failure.new(:cant_associate_owner)
+    # Literal::Success.new("ok")
   end
 end
 
