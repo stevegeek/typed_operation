@@ -6,7 +6,7 @@ module TypedOperation
   class BaseTest < Minitest::Test
     class TestPositionalOperation < ::TypedOperation::Base
       param :first, String, positional: true
-      param :second, String, optional: true, positional: true
+      param :second, String, optional: true, positional: true, &:to_s
 
       def call
         if second
@@ -109,6 +109,16 @@ module TypedOperation
     def test_class_method_optional_keyword_parameters
       assert_equal [], TestPositionalOperation.optional_keyword_parameters
       assert_equal %i[kw2], TestKeywordAndPositionalOperation.optional_keyword_parameters
+    end
+
+    def test_positional_param_coercion_block
+      operation = TestPositionalOperation.new("first", 123)
+      assert_equal "first/123", operation.call
+    end
+
+    def test_optional_param_coercion
+      operation = TestPositionalOperation.new("first")
+      assert_equal "first!", operation.call
     end
 
     def test_operation_acts_as_proc

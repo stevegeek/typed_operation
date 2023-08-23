@@ -17,13 +17,19 @@ module TypedOperation
       end
 
       def define(&converter)
+        # If nilable, then converter should not attempt to call the type converter block if the value is nil
+        coerce_by = if type_nilable? && converter
+          ->(v) { (v == Literal::Null || v.nil?) ? v : converter.call(v) }
+        else
+          converter
+        end
         @typed_operation.attribute(
           @name,
           @signature,
           default: default_value_for_literal,
           positional: @positional,
           reader: @reader,
-          &converter
+          &coerce_by
         )
       end
 
