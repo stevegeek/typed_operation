@@ -7,6 +7,7 @@ class InstallGeneratorGeneratorTest < Rails::Generators::TestCase
   tests TypedOperation::Install::InstallGenerator
   destination Rails.root.join("tmp/generators")
   setup :prepare_destination
+  teardown :prepare_destination
 
   test "generator runs without errors" do
     assert_nothing_raised do
