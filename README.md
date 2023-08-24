@@ -49,16 +49,28 @@ class ShelveBookOperation < ::TypedOperation::Base
 
   named_param :category, String, default: "unknown".freeze
 
-  # to setup (optional)
+  # optional hook called when the operation is initialized, and after the parameters have been set
   def prepare
     raise ArgumentError, "ISBN is invalid" unless valid_isbn?
   end
 
-  # The 'work' of the operation
-  def call
+  # optionally hook in before execution ... and call super to allow subclasses to hook in too
+  def before_execute_operation
+    # ...
+    super
+  end
+
+  # The 'work' of the operation, this is the main body of the operation and must be implemented
+  def perform
     "Put away '#{title}' by author ID #{author_id}#{shelf_code ? " on shelf #{shelf_code}" : "" }"
   end
 
+  # optionally hook in after execution ... and call super to allow subclasses to hook in too
+  def after_execute_operation(result)
+    # ...
+    super
+  end
+  
   private
 
   def valid_isbn?
@@ -100,7 +112,7 @@ class TestOperation < ::TypedOperation::Base
   param :bar, String
   param :baz, String, &:to_s
 
-  def call = "It worked! (#{foo}, #{bar}, #{baz})"
+  def perform = "It worked! (#{foo}, #{bar}, #{baz})"
 end
 
 # Invoking the operation directly
@@ -162,12 +174,32 @@ Create an operation by subclassing `TypedOperation::Base` or `TypedOperation::Im
 - `TypedOperation::ImmutableBase` (uses `Literal::Data`) is the parent class for an operation where the arguments are immutable (frozen on initialization),
   thus giving a somewhat stronger immutability guarantee (ie that the operation does not mutate its arguments).
 
-The subclass must implement the `#call` method which is where the operations main work is done.
+The subclass must implement the `#perform` method which is where the operations main work is done.
 
 The operation can also implement:
 
 - `#prepare` - called when the operation is initialized, and after the parameters have been set
+- `#before_execute_operation` - optionally hook in before execution ... and call super to allow subclasses to hook in too
+- `#after_execute_operation` - optionally hook in after execution ... and call super to allow subclasses to hook in too
+  
+```ruby
+# optionally hook in before execution...
+def before_execute_operation
+  # Remember to call super
+  super
+end
 
+def perform
+  # ... implement me!
+end
+
+# optionally hook in after execution...
+def after_execute_operation(result)
+  # Remember to call super, note the result is passed in and the return value of this method is the result of the operation
+  # thus allowing you to modify the result if you wish
+  super
+end
+```
 
 ### Specifying parameters (using `.param`)
 
@@ -260,7 +292,7 @@ class MyOperation < ::TypedOperation::Base
   # Or alternatively => `param :name, String, positional: true` 
   positional_param :age, Integer, default: -> { 0 }
   
-  def call
+  def perform
     puts "Hello #{name} (#{age})"
   end
 end
@@ -291,7 +323,7 @@ class MyOperation < ::TypedOperation::Base
   # Or alternatively => `param :name, String` 
   named_param :age, Integer, default: -> { 0 }
   
-  def call
+  def perform
     puts "Hello #{name} (#{age})"
   end
 end
@@ -312,7 +344,7 @@ class MyOperation < ::TypedOperation::Base
   positional_param :name, String
   named_param :age, Integer, default: -> { 0 }
   
-  def call
+  def perform
     puts "Hello #{name} (#{age})"
   end
 end
@@ -403,9 +435,10 @@ An operation can be invoked by:
 
 - instantiating it with at least required params and then calling the `#call` method on the instance
 - once a partially applied operation has been prepared (all required parameters have been set), the call
-  method on TypedOperation::Prepared can be used to instantiate and call the operation.
+  method on `TypedOperation::Prepared` can be used to instantiate and call the operation.
 - once an operation is curried, the `#call` method on last TypedOperation::Curried in the chain will invoke the operation
 - calling `#call` on a partially applied operation and passing in any remaining required parameters
+- calling `#execute_operation` on an operation instance (this is the method that is called by `#call`)
 
 See the many examples in this document.
 
@@ -533,7 +566,7 @@ class MyOperation < ::TypedOperation::Base
   param :account_name, String
   param :owner, String
 
-  def call
+  def perform
     create_account.bind do |account|
       associate_owner(account).map { account }
     end
@@ -570,7 +603,7 @@ class MyOperation < ::TypedOperation::Base
   param :account_name, String
   param :owner, ::Owner
   
-  def call
+  def perform
     account = yield create_account(account_name)
     yield associate_owner(account, owner)
 

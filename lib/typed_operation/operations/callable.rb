@@ -18,10 +18,6 @@ module TypedOperation
       end
 
       include CallableMethods
-
-      def call
-        raise InvalidOperationError, "You must implement #call"
-      end
     end
   end
 end

@@ -1,3 +1,19 @@
+## [1.0.0.pre3] - 2023/08/24
+
+### Added
+
+- It is now possible to define two hooks, `#before_execute_operation` & `#after_execute_operation` which are called before and after the operation `#perform` method is executed. Note if you
+  implement these methods remember to call `super` in them.
+
+### Changes
+
+- You now implement `#perform` (instead of `#call`) to define the operation logic. This is so that the before and after hooks can be called around the operation logic. It is still possible to
+  use `#call` but then calling the hooks is the responsibility of the implementor. The recommended way is to use `#perform` to implement your operation logic now.
+
+### Fixes
+
+- Fixed a bug where a coercion block on an optional param was causing an error when the param was not provided.
+
 ## [1.0.0.pre2] - 2023/08/22
 
 ### Breaking changes

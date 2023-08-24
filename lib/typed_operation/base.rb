@@ -6,9 +6,10 @@ module TypedOperation
     extend Operations::Parameters
     extend Operations::PartialApplication
 
-    include Operations::Callable
     include Operations::Lifecycle
+    include Operations::Callable
     include Operations::Deconstruct
+    include Operations::Executable
 
     class << self
       def attribute(name, type, special = nil, reader: :public, writer: :public, positional: false, default: nil)

@@ -8,7 +8,17 @@ module TypedOperation
       param :first, String, positional: true
       param :second, String, optional: true, positional: true, &:to_s
 
-      def call
+      def before_execute_operation
+        @before_was_called = true
+        super
+      end
+
+      def after_execute_operation(_retval)
+        @after_was_called = true
+        super
+      end
+
+      def perform
         if second
           "#{first}/#{second}"
         else
@@ -23,7 +33,7 @@ module TypedOperation
       param :kw1, String
       param :kw2, String, default: "kw2"
 
-      def call
+      def perform
         "#{pos1}/#{pos2}/#{kw1}/#{kw2}"
       end
     end
@@ -36,7 +46,7 @@ module TypedOperation
       named_param :kw2, String, default: "kw2"
       named_param :kw3, optional(String)
 
-      def call
+      def perform
         "#{pos1}/#{pos2}/#{pos3}/#{kw1}/#{kw2}/#{kw3}"
       end
     end
@@ -56,7 +66,7 @@ module TypedOperation
         @local_var = 123
       end
 
-      def call
+      def perform
         "It worked, (#{foo}/#{bar}/#{baz}/#{with_default}/#{can_be_nil}/#{can_also_be_nil})"
       end
     end
@@ -69,7 +79,7 @@ module TypedOperation
       param :kw2, String
       param :kw3, optional(String)
 
-      def call
+      def perform
         "#{pos1}/#{pos2}/#{pos3}/#{kw1}/#{kw2}/#{kw3}"
       end
     end
@@ -119,6 +129,25 @@ module TypedOperation
     def test_optional_param_coercion
       operation = TestPositionalOperation.new("first")
       assert_equal "first!", operation.call
+    end
+
+    def test_operation_is_callable
+      operation = TestPositionalOperation.new("first", 123)
+      assert_equal "first/123", operation.call
+    end
+
+    def test_operation_call_executes_operation_and_before_and_after_callbacks
+      operation = TestPositionalOperation.new("first", 123)
+      assert_equal "first/123", operation.call
+      assert operation.instance_variable_get(:@before_was_called)
+      assert operation.instance_variable_get(:@after_was_called)
+    end
+
+    def test_operation_execute_operation_and_runs_callbacks
+      operation = TestPositionalOperation.new("first", 123)
+      assert_equal "first/123", operation.execute_operation
+      assert operation.instance_variable_get(:@before_was_called)
+      assert operation.instance_variable_get(:@after_was_called)
     end
 
     def test_operation_acts_as_proc
@@ -369,8 +398,9 @@ module TypedOperation
       end
     end
 
-    def test_raises_when_operation_has_no_call_method_defined
-      assert_raises(::TypedOperation::InvalidOperationError) { TestInvalidOperation.call }
+    def test_raises_when_operation_has_no_perform_method_defined
+      error = assert_raises(::TypedOperation::InvalidOperationError) { TestInvalidOperation.call }
+      assert_equal "Operation TypedOperation::BaseTest::TestInvalidOperation does not implement #perform", error.message
     end
 
     def test_operation_of_one_required_param_can_curry

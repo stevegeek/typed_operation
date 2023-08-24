@@ -6,8 +6,9 @@ module TypedOperation
     extend Operations::Parameters
     extend Operations::PartialApplication
 
-    include Operations::Callable
     include Operations::Lifecycle
+    include Operations::Callable
     include Operations::Deconstruct
+    include Operations::Executable
   end
 end

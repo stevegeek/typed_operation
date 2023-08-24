@@ -14,7 +14,7 @@ module <%= namespace_name %>
       # Prepare...
     end
 
-    def call
+    def perform
       # Perform...
       "Hello World!"
     end
@@ -33,7 +33,7 @@ class <%= name %> < ::ApplicationOperation
     # Prepare...
   end
 
-  def call
+  def perform
     # Perform...
     "Hello World!"
   end
