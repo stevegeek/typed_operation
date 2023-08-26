@@ -557,6 +557,123 @@ class ApplicationOperation < ::TypedOperation::Base
 end
 ```
 
+### Using with Action Policy (`action_policy` gem)
+
+Add `TypedOperation::ActionPolicyAuth` to your `ApplicationOperation` (first `require` the module):
+
+```ruby
+require "typed_operation/action_policy_auth"
+
+class ApplicationOperation < ::TypedOperation::Base
+  # ...
+  include TypedOperation::ActionPolicyAuth
+
+  # You can specify a parameter to take the authorization context object, eg a user (can also be optional if some
+  # operations don't require authorization)
+  param :initiator, ::User
+  
+  # Every operation must define what action_type it is
+  # eg:
+  #     action_type :update
+  
+  # and make a call to `authorized_via` to specify how to authorize the operation
+  # eg:
+  #      authorized_via :initiator do
+  #        # ... the permissions check
+  #      end
+end
+```
+
+for example:
+
+```ruby
+class MyUpdateOperation < ApplicationOperation
+  action_type :update
+  
+  authorized_via :initiator do
+    # ... the permissions check
+    initiator.admin?
+  end
+  
+  def perform
+    # ...
+  end
+end
+```
+
+You can instead provide a policy class implementation:
+
+```ruby
+class MyUpdateOperation < ApplicationOperation
+  action_type :update
+  
+  class MyPolicyClass < OperationPolicy
+    # The action_type defined on the operation determines which method is called on the policy class
+    def update?
+      # ... the permissions check
+      initiator.admin?
+    end
+    
+    # def my_check?
+    #   # ... the permissions check
+    # end
+  end
+  
+  authorized_via :initiator, with: MyPolicyClass
+  
+  # It is also possible to specify which policy method to call
+  #      authorized_via :initiator, with: MyPolicyClass, to: :my_check?
+end
+```
+
+#### `.verify_authorized!`
+
+To ensure that subclasses always implement authentication you can add a call to `.verify_authorized!` to your base
+operation class.
+
+This will cause the execution of any subclasses to fail if no authorization is performed.
+
+```ruby
+class MustAuthOperation < ApplicationOperation
+  verify_authorized!
+end
+
+class MyUpdateOperation < MustAuthOperation
+  def perform
+    # ...
+  end
+end
+
+MyUpdateOperation.call # => Raises an error that MyUpdateOperation does not perform any authorization
+```
+
+#### `#on_authorization_failure(err)`
+
+A hook is provided to allow you to do some work on an authorization failure.
+
+Simply override the `#on_authorization_failure(err)` method in your operation.
+
+```ruby
+class MyUpdateOperation < ApplicationOperation
+  action_type :update
+  
+  authorized_via :initiator do
+    # ... the permissions check
+    initiator.admin?
+  end
+  
+  def perform
+    # ...
+  end
+  
+  def on_authorization_failure(err)
+    # ... do something with the error, eg logging
+  end
+end
+```
+
+Note you are provided the ActionPolicy error object, but you cannot stop the error from being re-raised.
+
 ### Using with `literal` monads
 
 You can use the `literal` gem to provide a `Result` type for your operations.

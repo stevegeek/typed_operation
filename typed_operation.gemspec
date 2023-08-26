@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = "https://github.com/stevegeek/typed_operation"
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+    Dir["lib/**/*", "MIT-LICENSE", "README.md"]
   end
 
   # spec.add_dependency "literal", "> 0.1.0", "< 1.0.0"
