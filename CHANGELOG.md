@@ -1,3 +1,10 @@
+## [1.0.0.beta1] - 2023/08/26
+
+### Added
+
+- Action Policy integration. Optionally include `TypedOperation::ActionPolicyAuth` to get a operation execution authorization mechanism
+  based on [Action Policy](https://actionpolicy.evilmartians.io/). This is an optional feature and is not included by default.
+
 ## [1.0.0.pre3] - 2023/08/24
 
 ### Added
