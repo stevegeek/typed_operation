@@ -147,6 +147,28 @@ module TypedOperation
       end
     end
 
+    def test_authorized_via_raises_when_record_not_valid_param_or_method
+      assert_raises(ArgumentError) do
+        Class.new(TestAuthBaseOperation) do
+          action_type :say_hi
+
+          authorized_via(:initiator, record: :foo) { true }
+        end
+      end
+    end
+
+    def test_authorized_via_does_not_raise_when_record_is_method
+      Class.new(TestAuthBaseOperation) do
+        action_type :say_hi
+
+        def foo
+          "foo"
+        end
+
+        authorized_via(:initiator, record: :foo) { true }
+      end
+    end
+
     def test_successful_operation_without_authorization_if_its_not_needed_by_the_operation
       assert_equal TestOperationNoAuthConfigured.with(your_name: "Alice").call, "Hi Alice! I am ?"
     end

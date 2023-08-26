@@ -74,7 +74,9 @@ module TypedOperation
         end
 
         if record
-          raise ArgumentError, "to_authorize must be called with a valid param name" unless parameters.include?(record)
+          unless parameters.include?(record) || method_defined?(record) || private_instance_methods.include?(record)
+            raise ArgumentError, "to_authorize must be called with a valid param or method name"
+          end
           @_to_authorize_param = record
         end
 
