@@ -46,7 +46,7 @@ module TypedOperation
       #
       #     authorized_via :initiator, with: Policy, to: :my_action_name?
       #
-      def authorized_via(via = :initiator, with: nil, to: nil, &auth_block)
+      def authorized_via(via = :initiator, with: nil, to: nil, record: nil, &auth_block)
         # If a block is provided, you must not provide a policy class or method
         raise ArgumentError, "You must not provide a policy class or method when using a block" if auth_block && (with || to)
 
@@ -73,6 +73,11 @@ module TypedOperation
           raise ::TypedOperation::InvalidOperationError, "You must provide either a policy class or a block"
         end
 
+        if record
+          raise ArgumentError, "to_authorize must be called with a valid param name" unless parameters.include?(record)
+          @_to_authorize_param = record
+        end
+
         # Configure action policy to use the param named in via as the context when instantiating the policy
         authorize via
       end
@@ -88,6 +93,10 @@ module TypedOperation
 
       def operation_policy_class
         @_policy_class
+      end
+
+      def operation_record_to_authorize
+        @_to_authorize_param
       end
 
       def checks_authorization?
@@ -130,8 +139,10 @@ module TypedOperation
       raise "No Action Policy policy class provided, or no #{self.class.name}::Policy found for this action" unless policy
       policy_method = self.class.operation_policy_method
       raise "No policy method provided or action_type not set for #{self.class.name}" unless policy_method
+      # Record to authorize, if nil then action policy tries to work it out implicitly
+      record_to_authorize = send(self.class.operation_record_to_authorize) if self.class.operation_record_to_authorize
 
-      authorize! initiator, to: policy_method, with: policy
+      authorize! record_to_authorize, to: policy_method, with: policy
     rescue ::ActionPolicy::Unauthorized => e
       on_authorization_failure(e)
       raise e

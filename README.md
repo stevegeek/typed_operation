@@ -570,29 +570,43 @@ class ApplicationOperation < ::TypedOperation::Base
 
   # You can specify a parameter to take the authorization context object, eg a user (can also be optional if some
   # operations don't require authorization)
-  param :initiator, ::User
-  
-  # Every operation must define what action_type it is
-  # eg:
-  #     action_type :update
-  
-  # and make a call to `authorized_via` to specify how to authorize the operation
-  # eg:
-  #      authorized_via :initiator do
-  #        # ... the permissions check
-  #      end
+  param :initiator, ::User # or optional(::User)
 end
 ```
 
-for example:
+#### Specify the action with `.action_type`
+
+Every operation must define what action_type it is, eg:
 
 ```ruby
 class MyUpdateOperation < ApplicationOperation
   action_type :update
+end
+```
+
+Any symbol can be used as the `action_type` and this is by default used to determine which policy method to call.
+
+#### Configuring auth with `.authorized_via`
+
+`.authorized_via` is used to specify how to authorize the operation. You must specify the name of a parameter
+for the policy authorization context. 
+
+You can then either provide a block with the logic to perform the authorization check, or provide a policy class.
+
+The `record:` option lets you provide the name of the parameter which will be passed as the policy 'record'.
+
+For example:
+
+```ruby
+class MyUpdateOperation < ApplicationOperation
+  param :initiator, ::AdminUser
+  param :order, ::Order
   
-  authorized_via :initiator do
-    # ... the permissions check
-    initiator.admin?
+  action_type :update
+  
+  authorized_via :initiator, record: :order do
+    # ... the permissions check, admin users can edit orders that are not finalized
+    initiator.admin? && !record.finalized
   end
   
   def perform

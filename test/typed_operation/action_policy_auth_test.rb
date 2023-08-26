@@ -13,6 +13,7 @@ module TypedOperation
 
       param :your_name, String
       param :initiator, optional(User)
+      param :friend, optional(User)
 
       def perform
         "Hi #{your_name}! I am #{initiator&.name || "?"}"
@@ -66,8 +67,15 @@ module TypedOperation
       end
     end
 
+    class TestOperationWithAuthRecord < TestOperationWithRequiredAuth
+      authorized_via :initiator, record: :friend do
+        initiator.name == "Admin" && record.name == "Alice"
+      end
+    end
+
     def setup
       @admin = User.new("Admin")
+      @alice = User.new("Alice")
       @not_admin = User.new("Not Admin")
     end
 
@@ -162,6 +170,14 @@ module TypedOperation
 
     def test_it_does_not_raise_if_auth_was_defined_when_required
       assert_equal "Hi Alice! I am Admin", TestOperationWithRequiredAuthAndAuthDefined.with(your_name: "Alice", initiator: @admin).call
+    end
+
+    def test_authorizes_with_record
+      assert_equal "Hi Alice! I am Admin", TestOperationWithAuthRecord.with(your_name: "Alice", initiator: @admin, friend: @alice).call
+    end
+
+    def test_fails_to_authorize_with_record
+      assert_raises(ActionPolicy::Unauthorized) { TestOperationWithAuthRecord.with(your_name: "Alice", initiator: @admin, friend: @not_admin).call }
     end
   end
 end
