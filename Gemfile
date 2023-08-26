@@ -17,6 +17,9 @@ gem "literal", ">= 0.1.0", github: "joeldrapper/literal", branch: "main"
 
 gem "simplecov"
 
+# gem "typed_operation"
+# gem "type_fusion"
+
 # Start debugger with binding.b [https://github.com/ruby/debug]
 # gem "debug", ">= 1.0.0"
 

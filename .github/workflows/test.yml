@@ -27,3 +27,5 @@ jobs:
           bundle install --jobs 4 --retry 3
       - name: Run tests
         run: bundle exec ./bin/test
+      - name: Run tests w. Rails stuff
+        run: bundle exec ./bin/rails_test

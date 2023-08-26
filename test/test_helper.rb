@@ -1,13 +1,18 @@
-# Configure Rails Environment
-ENV["RAILS_ENV"] = "test"
-
 if ENV["NO_RAILS"]
   puts "Running tests without Rails (ie not running the generator tests)"
+
   $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
   require "typed_operation"
+
   require "minitest/autorun"
+
+  # require "typed_operation"
+  # require "type_fusion/minitest"
 else
   puts "Running tests with Rails (ie also running the generator tests)"
+
+  # Configure Rails Environment
+  ENV["RAILS_ENV"] = "test"
 
   require_relative "../test/dummy/config/environment"
   ActiveRecord::Migrator.migrations_paths = [File.expand_path("../test/dummy/db/migrate", __dir__)]

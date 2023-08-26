@@ -1,5 +1,74 @@
 #!/usr/bin/env ruby
-$: << File.expand_path("../test", __dir__)
+
+ENV["NO_RAILS"] = "true"
 
 require "bundler/setup"
-require "rails/plugin/test"
+#
+# require "type_fusion"
+#
+# TypeFusion.config do |config|
+#   # === application_name
+#   #
+#   # Set application_name to a string which is used to know where the samples
+#   # came from. Set application_name to an empty string if you wish to not
+#   # send the application name alongside the samples.
+#   #
+#   # Default: "TypeFusion"
+#   # Default when using Rails: Rails.application.class.module_parent_name
+#   #
+#   # config.application_name = "YourApplication"
+#
+#   # === endpoint
+#   #
+#   # Set endpoint to an URL where TypeFusion should send the samples to.
+#   #
+#   # Default: "https://gem.sh/api/v1/types/samples"
+#   #
+#   # config.endpoint = "https://your-domain.com/api/v1/types/samples"
+#
+#   # === type_sample_request
+#   #
+#   # Set type_sample_request to a lambda which resolves to true/false
+#   # to set if type sampling should be enabled for the whole rack request.
+#   #
+#   # Default: ->(rack_env) { [true, false, false, false].sample }
+#   #
+#   # config.type_sample_request = ->(rack_env) { [true, false, false, false].sample }
+#
+#   # === type_sample_tracepoint_path
+#   #
+#   # Set type_sample_tracepoint_path to a lambda which resolves
+#   # to true/false to check if a tracepoint_path should be sampled
+#   # or not.
+#   #
+#   # This can be useful when you want to only sample method calls for
+#   # certain gems or want to exclude a gem from being sampled.
+#   #
+#   # Example:
+#   config.type_sample_tracepoint_path = ->(tracepoint_path) {
+#     return true if tracepoint_path.include?("typed_operation")
+#
+#     false
+#   }
+#   #
+#   # Default: ->(tracepoint_path) { true }
+#   #
+#   # config.type_sample_tracepoint_path = ->(tracepoint_path) { true }
+#
+#   # === type_sample_call_rate
+#   #
+#   # Set type_sample_call_rate to 1.0 to capture 100% of method calls
+#   # within a rack request.
+#   #
+#   # Default: 0.001
+#   #
+#   config.type_sample_call_rate = 0.01
+# end
+
+path_to_tests = File.expand_path("../test", __dir__)
+# add to load path
+$: << path_to_tests
+# Get files to require
+files = Dir.glob(File.join(path_to_tests, "typed_operation/**/*.rb"))
+# Require files
+files.each { |file| require file.gsub(/^test\/|.rb$/, "") }
