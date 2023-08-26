@@ -589,7 +589,7 @@ Any symbol can be used as the `action_type` and this is by default used to deter
 #### Configuring auth with `.authorized_via`
 
 `.authorized_via` is used to specify how to authorize the operation. You must specify the name of a parameter
-for the policy authorization context. 
+for the policy authorization context. You can also specify multiple parameters if you wish.
 
 You can then either provide a block with the logic to perform the authorization check, or provide a policy class.
 
@@ -637,6 +637,22 @@ class MyUpdateOperation < ApplicationOperation
   
   # It is also possible to specify which policy method to call
   #      authorized_via :initiator, with: MyPolicyClass, to: :my_check?
+end
+```
+
+with multiple parameters:
+
+```ruby
+class MyUpdateOperation < ApplicationOperation
+  # ...
+  param :initiator, ::AdminUser
+  param :user, ::User
+  
+  authorized_via :initiator, :user do
+    initiator.active? && user.active?
+  end
+  
+  # ...
 end
 ```
 

@@ -73,6 +73,12 @@ module TypedOperation
       end
     end
 
+    class TestOperationWithAuthViaMultiple < TestOperationWithRequiredAuth
+      authorized_via :initiator, :friend do
+        initiator.name == "Admin" && friend.name == "Alice"
+      end
+    end
+
     def setup
       @admin = User.new("Admin")
       @alice = User.new("Alice")
@@ -200,6 +206,14 @@ module TypedOperation
 
     def test_fails_to_authorize_with_record
       assert_raises(ActionPolicy::Unauthorized) { TestOperationWithAuthRecord.with(your_name: "Alice", initiator: @admin, friend: @not_admin).call }
+    end
+
+    def test_authorizes_with_multiple_via
+      assert_equal "Hi Alice! I am Admin", TestOperationWithAuthViaMultiple.with(your_name: "Alice", initiator: @admin, friend: @alice).call
+    end
+
+    def test_fails_to_authorize_with_multiple_via
+      assert_raises(ActionPolicy::Unauthorized) { TestOperationWithAuthViaMultiple.with(your_name: "Alice", initiator: @admin, friend: @not_admin).call }
     end
   end
 end

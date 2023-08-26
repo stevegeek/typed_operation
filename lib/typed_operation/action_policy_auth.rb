@@ -25,33 +25,13 @@ module TypedOperation
     end
 
     module ClassMethods
-      # Ensure that the initiator is provided and authorized to perform this operation. Setup for action_policy and
-      # hooks to check permissions.
-      # Define the policy class and method to use for authorization:
-      # You can either do this via the block where you can define the auth rule inline:
-      #
-      #     authorized_via :initiator do
-      #       initiator.is_a?(Admin)
-      #     end
-      #
-      # Or by providing a policy class and method name:
-      #
-      #     class Policy < OperationPolicy
-      #       authorize :initiator
-      #
-      #       def my_action_name?
-      #         initiator.is_a?(Admin)
-      #       end
-      #     end
-      #
-      #     authorized_via :initiator, with: Policy, to: :my_action_name?
-      #
-      def authorized_via(via = :initiator, with: nil, to: nil, record: nil, &auth_block)
+      # Configure the operation to use ActionPolicy for authorization
+      def authorized_via(*via, with: nil, to: nil, record: nil, &auth_block)
         # If a block is provided, you must not provide a policy class or method
         raise ArgumentError, "You must not provide a policy class or method when using a block" if auth_block && (with || to)
 
         parameters = positional_parameters + keyword_parameters
-        raise ArgumentError, "authorize_via must be called with a valid param name" unless parameters.include?(via)
+        raise ArgumentError, "authorize_via must be called with a valid param name" unless via.all? { |param| parameters.include?(param) }
         @_authorized_via_param = via
 
         action_type_method = "#{action_type}?".to_sym if action_type
@@ -63,7 +43,7 @@ module TypedOperation
           with
         elsif auth_block
           policy_class = Class.new(OperationPolicy) do
-            authorize via
+            authorize(*via)
 
             define_method(policy_method, &auth_block)
           end
@@ -81,7 +61,10 @@ module TypedOperation
         end
 
         # Configure action policy to use the param named in via as the context when instantiating the policy
-        authorize via
+        # ::ActionPolicy::Behaviour does not provide a authorize(*ids) method, so we have call once per param
+        via.each do |param|
+          authorize param
+        end
       end
 
       def action_type(type = nil)
@@ -102,7 +85,7 @@ module TypedOperation
       end
 
       def checks_authorization?
-        @_authorized_via_param.is_a?(Symbol)
+        !(@_authorized_via_param.nil? || @_authorized_via_param.empty?)
       end
 
       # You can use this on an operation base class to ensure and subclasses always enable authorization
