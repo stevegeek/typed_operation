@@ -6,8 +6,8 @@ Gem::Specification.new do |spec|
   spec.authors = ["Stephen Ierodiaconou"]
   spec.email = ["stevegeek@gmail.com"]
   spec.homepage = "https://github.com/stevegeek/typed_operation"
-  spec.summary = "TypedOperation is a command pattern implementation"
-  spec.description = "TypedOperation is a command pattern implementation where inputs can be defined with runtime type checks. Operations can be partially applied."
+  spec.summary = "TypedOperation is a command pattern with typed parameters, which is callable, and can be partially applied."
+  spec.description = "Command pattern, which is callable, and can be partially applied, curried and has typed parameters. Authorization to execute via action_policy if desired."
   spec.license = "MIT"
 
   spec.required_ruby_version = ">= 3.1"
