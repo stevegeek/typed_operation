@@ -1,3 +1,12 @@
+
+## [1.0.0.beta2] - 2024/06/24
+
+### Added
+
+- Now uses the new Literal::Properties
+- Dropped the `#with` instance method
+- install generator now can take a `--action_policy` switch to include the Action Policy integration
+
 ## [1.0.0.beta1] - 2023/08/26
 
 ### Added

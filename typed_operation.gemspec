@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description = "Command pattern, which is callable, and can be partially applied, curried and has typed parameters. Authorization to execute via action_policy if desired."
   spec.license = "MIT"
 
-  spec.required_ruby_version = ">= 3.1"
+  spec.required_ruby_version = ">= 3.2"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/stevegeek/typed_operation"

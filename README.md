@@ -10,7 +10,7 @@ Type of result of the operation is up to you, eg you could use [`literal` monads
 
 ```ruby
 gem "literal", github: "joeldrapper/literal", branch: "main"
-gem "typed_operation", "~> 1.0.0.beta1"
+gem "typed_operation", "~> 1.0.0.beta2"
 ```
 
 ## Features
