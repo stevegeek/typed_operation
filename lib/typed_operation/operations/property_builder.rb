@@ -23,11 +23,11 @@ module TypedOperation
         else
           converter
         end
-        @typed_operation.attribute(
+        @typed_operation.prop(
           @name,
           @signature,
+          @positional ? :positional : :keyword,
           default: default_value_for_literal,
-          positional: @positional,
           reader: @reader,
           &coerce_by
         )
@@ -61,6 +61,8 @@ module TypedOperation
       def validate_positional_order_params!
         # Optional ones can always be added after required ones, or before any others, but required ones must be first
         unless type_nilable? || @typed_operation.optional_positional_parameters.empty?
+          puts type_nilable?
+          puts @typed_operation.optional_positional_parameters
           raise ParameterError, "Cannot define required positional parameter '#{@name}' after optional positional parameters"
         end
       end

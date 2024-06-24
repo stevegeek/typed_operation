@@ -12,6 +12,7 @@ rails generate typed_operation:install
 Options:
 --------
 --dry_monads: if specified the ApplicationOperation will include dry-monads Result and Do notation.
+--action_policy: if specified the ApplicationOperation will include action_policy authorization integration.
 
 Example:
 --------

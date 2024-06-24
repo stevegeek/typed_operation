@@ -564,6 +564,8 @@ end
 
 ### Using with Action Policy (`action_policy` gem)
 
+> Note, this optional feature requires the `action_policy` gem to be installed and does not yet work with `ImmutableBase`.
+
 Add `TypedOperation::ActionPolicyAuth` to your `ApplicationOperation` (first `require` the module):
 
 ```ruby
@@ -797,8 +799,11 @@ bin/rails g typed_operation:install
 Use the `--dry_monads` switch to `include Dry::Monads[:result]` into your `ApplicationOperation` (don't forget to also 
 add `gem "dry-monads"` to your Gemfile)
 
+Use the `--action_policy` switch to add the `TypedOperation::ActionPolicyAuth` module to your `ApplicationOperation`
+(and you will also need to add `gem "action_policy"` to your Gemfile).
+
 ```ruby
-bin/rails g typed_operation:install --dry_monads
+bin/rails g typed_operation:install --dry_monads --action_policy
 ```
 
 ## Generate a new Operation

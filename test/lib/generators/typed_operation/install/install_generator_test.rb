@@ -36,4 +36,12 @@ class InstallGeneratorGeneratorTest < Rails::Generators::TestCase
       assert_match(/Monads/, content)
     end
   end
+
+  test "generator includes action_policy if included" do
+    run_generator ["--action_policy"]
+    assert_file "app/operations/application_operation.rb" do |content|
+      assert_match(/class ApplicationOperation/, content)
+      assert_match(/TypedOperation::ActionPolicyAuth/, content)
+    end
+  end
 end
