@@ -8,7 +8,6 @@ module TypedOperation
 
     include Operations::Lifecycle
     include Operations::Callable
-    include Operations::Deconstruct
     include Operations::Executable
   end
 end

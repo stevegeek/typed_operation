@@ -44,15 +44,16 @@ class ShelveBookOperation < ::TypedOperation::Base
   # Or if you prefer:
   #   `param :description, String`
 
-  named_param :author_id, Integer, &:to_i
-  named_param :isbn, String
+  # `param` creates named parameters by default
+  param :author_id, Integer, &:to_i
+  param :isbn, String
   
   # Optional parameters are specified by wrapping the type constraint in the `optional` method, or using the `optional:` option
-  named_param :shelf_code, optional(Integer)
+  param :shelf_code, optional(Integer)
   # Or if you prefer:
   #   `named_param :shelf_code, Integer, optional: true`
 
-  named_param :category, String, default: "unknown".freeze
+  param :category, String, default: "unknown".freeze
 
   # optional hook called when the operation is initialized, and after the parameters have been set
   def prepare
@@ -521,7 +522,8 @@ This is an example of a `ApplicationOperation` in a Rails app that uses `Dry::Mo
 
 class ApplicationOperation < ::TypedOperation::Base
   # We choose to use dry-monads for our operations, so include the required modules
-  include Dry::Monads[:result, :do]
+  include Dry::Monads[:result]
+  include Dry::Monads::Do.for(:perform)
   
   class << self
     # Setup our own preferred names for the DSL methods
@@ -711,40 +713,6 @@ end
 
 Note you are provided the ActionPolicy error object, but you cannot stop the error from being re-raised.
 
-### Using with `literal` monads
-
-You can use the `literal` gem to provide a `Result` type for your operations.
-
-```ruby
-class MyOperation < ::TypedOperation::Base
-  param :account_name, String
-  param :owner, String
-
-  def perform
-    create_account.bind do |account|
-      associate_owner(account).map { account }
-    end
-  end
-
-  private
-
-  def create_account
-    # ...
-    # Literal::Failure.new(:cant_create_account)
-    Literal::Success.new(account_name)
-  end
-  
-  def associate_owner(account)
-    # ...
-    Literal::Failure.new(:cant_associate_owner)
-    # Literal::Success.new("ok")
-  end
-end
-
-MyOperation.new(account_name: "foo", owner: "bar").call
-# => Literal::Failure(:cant_associate_owner)
-```
-
 ### Using with `Dry::Monads`
 
 As per the example in [`Dry::Monads` documentation](https://dry-rb.org/gems/dry-monads/1.0/do-notation/)
@@ -752,14 +720,14 @@ As per the example in [`Dry::Monads` documentation](https://dry-rb.org/gems/dry-
 ```ruby
 class MyOperation < ::TypedOperation::Base
   include Dry::Monads[:result]
-  include Dry::Monads::Do.for(:call)
+  include Dry::Monads::Do.for(:perform, :create_account)
 
   param :account_name, String
   param :owner, ::Owner
   
   def perform
     account = yield create_account(account_name)
-    yield associate_owner(account, owner)
+    yield AnotherOperation.call(account, owner)
 
     Success(account)
   end

@@ -2,13 +2,13 @@
 
 module TypedOperation
   module Operations
-    class AttributeBuilder
+    class PropertyBuilder
       def initialize(typed_operation, parameter_name, type_signature, options)
         @typed_operation = typed_operation
         @name = parameter_name
         @signature = type_signature
-        @optional = options[:optional]
-        @positional = options[:positional]
+        @optional = options[:optional] # Wraps signature in NilableType
+        @positional = options[:positional] # Changes kind to positional
         @reader = options[:reader] || :public
         @default_key = options.key?(:default)
         @default = options[:default]
@@ -51,7 +51,7 @@ module TypedOperation
       end
 
       def union_with_nil_to_support_nil_default
-        @signature = Literal::Union.new(@signature, NilClass) if has_default_value_nil?
+        @signature = Literal::Types::UnionType.new(@signature, NilClass) if has_default_value_nil?
       end
 
       def has_default_value_nil?
@@ -61,8 +61,6 @@ module TypedOperation
       def validate_positional_order_params!
         # Optional ones can always be added after required ones, or before any others, but required ones must be first
         unless type_nilable? || @typed_operation.optional_positional_parameters.empty?
-          puts type_nilable?
-          puts @typed_operation.optional_positional_parameters
           raise ParameterError, "Cannot define required positional parameter '#{@name}' after optional positional parameters"
         end
       end

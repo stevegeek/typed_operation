@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "dry-monads"
 
 module TypedOperation
   class BaseTest < Minitest::Test
@@ -165,11 +166,12 @@ module TypedOperation
     end
 
     def test_operation_raises_on_invalid_positional_params_using_optional
-      assert_raises do
+      assert_raises(::TypedOperation::ParameterError) do
         Class.new(::TypedOperation::Base) do
           # This is invalid, because positional params can't be optional before required ones
           positional_param :first, optional(String)
-          positional_param :second, String
+          positional_param :second, Literal::Types::NilableType.new(String)
+          positional_param :third, String # required after optional is not possible
         end
       end
     end
@@ -422,12 +424,10 @@ module TypedOperation
       assert_equal "a/b//d/e/f", curried_operation.call("b").call("d")
     end
 
-    def test_operation_instance_can_be_copied_using_with
-      operation = TestOperation.new(foo: "1", bar: "2", baz: "3")
-      operation2 = operation.with(foo: "a")
-      assert_equal "a", operation2.foo
-      assert_equal "2", operation2.bar
-      assert_equal "3", operation2.baz
+    def test_operation_instance_can_be_copied_using_dup
+      operation = TestKeywordAndPositionalOperation.new("1", "2", kw1: "1", kw2: "2")
+      operation2 = operation.dup
+      assert_equal "1/2/1/2", operation2.call
     end
 
     def test_operation_should_not_freeze_arguments
@@ -435,6 +435,32 @@ module TypedOperation
       refute operation.my_hash.frozen?
       operation.my_hash[:b] = 2
       assert_equal({a: 1, b: 2}, operation.my_hash)
+    end
+
+    def test_with_dry_maybe_monad_partially_apply_then_curry
+      operation_class = Class.new(::TypedOperation::Base) do
+        positional_param :v1, Integer
+        positional_param :v2, Integer
+
+        def perform
+          ::Dry::Monads::Maybe(v1 + v2)
+        end
+      end
+
+      operation = operation_class.with(1)
+      operation2 = operation_class.with(3)
+      m = ::Dry::Monads::Maybe::Some.new(2)
+      assert_equal m.bind(&operation.curry).bind(&operation2.curry), Dry::Monads::Maybe::Some.new(6)
+      m = Dry::Monads::Maybe::None.instance
+      assert_equal m.bind(&operation.curry).bind(&operation2.curry), Dry::Monads::Maybe::None.instance
+    end
+
+    def test_can_dup
+      operation = TestOperation.new(foo: "1", bar: "2", baz: "3")
+      operation2 = operation.dup
+      assert_equal "1", operation2.foo
+      assert_equal "2", operation2.bar
+      assert_equal "3", operation2.baz
     end
   end
 end

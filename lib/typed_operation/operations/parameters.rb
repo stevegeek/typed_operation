@@ -4,10 +4,15 @@ module TypedOperation
   module Operations
     # Method to define parameters for your operation.
     module Parameters
+      # Override literal `prop` to prevent creating writers (Literal::Data does this by default)
+      def self.prop(name, type, kind = :keyword, reader: :public, writer: :public, default: nil)
+        super(name, type, kind, reader:, writer: false, default:)
+      end
+
       # Parameter for keyword argument, or a positional argument if you use positional: true
       # Required, but you can set a default or use optional: true if you want optional
       def param(name, signature = :any, **options, &converter)
-        AttributeBuilder.new(self, name, signature, options).define(&converter)
+        PropertyBuilder.new(self, name, signature, options).define(&converter)
       end
 
       # Alternative DSL
