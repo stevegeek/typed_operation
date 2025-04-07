@@ -5,8 +5,12 @@ module TypedOperation
     # Method to define parameters for your operation.
     module Parameters
       # Override literal `prop` to prevent creating writers (Literal::Data does this by default)
-      def self.prop(name, type, kind = :keyword, reader: :public, writer: :public, default: nil)
-        super(name, type, kind, reader:, writer: false, default:)
+      def prop(name, type, kind = :keyword, reader: :public, writer: :public, default: nil)
+        if self < ImmutableBase
+          super(name, type, kind, reader:, default:)
+        else
+          super(name, type, kind, reader:, writer: false, default:)
+        end
       end
 
       # Parameter for keyword argument, or a positional argument if you use positional: true

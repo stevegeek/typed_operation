@@ -34,7 +34,7 @@ module TypedOperation
         raise ArgumentError, "authorize_via must be called with a valid param name" unless via.all? { |param| parameters.include?(param) }
         @_authorized_via_param = via
 
-        action_type_method = "#{action_type}?".to_sym if action_type
+        action_type_method = :"#{action_type}?" if action_type
         # If an method name is provided, use it
         policy_method = to || action_type_method || raise(::TypedOperation::InvalidOperationError, "You must provide an action type or policy method name")
         @_policy_method = policy_method

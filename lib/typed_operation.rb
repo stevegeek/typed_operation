@@ -1,7 +1,3 @@
-if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
-  require "polyfill-data"
-end
-
 require "literal"
 
 require "typed_operation/version"

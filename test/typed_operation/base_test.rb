@@ -462,5 +462,17 @@ module TypedOperation
       assert_equal "2", operation2.bar
       assert_equal "3", operation2.baz
     end
+
+    def test_not_frozen
+      operation = TestOperation.new(foo: "1", bar: "2", baz: "3")
+      refute operation.frozen?
+    end
+
+    def test_cannot_write_property
+      operation = TestOperation.new(foo: "1", bar: "2", baz: "3")
+      assert_raises do
+        operation.foo = 2
+      end
+    end
   end
 end

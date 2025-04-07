@@ -1,3 +1,6 @@
+require "simplecov"
+SimpleCov.start
+
 if ENV["NO_RAILS"]
   puts "Running tests without Rails (ie not running the generator tests)"
 

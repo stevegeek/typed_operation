@@ -7,6 +7,6 @@
   },
   "forwardPorts": [3000],
   "postCreateCommand": "bundle install && bundle exec appraisal install",
-  "postStartCommand": "bin/test",
+  "postStartCommand": "bundle exec rake test",
   "remoteUser": "vscode"
 }
