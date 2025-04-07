@@ -1,4 +1,10 @@
 
+## [1.0.0.beta3] - 2025/04/08
+
+### Breaking changes
+
+- Literal updated to release version so ImmutableBase now only freezes itself, not its properties too.
+
 ## [1.0.0.beta2] - 2024/06/24
 
 ### Added

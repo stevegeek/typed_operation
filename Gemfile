@@ -10,7 +10,7 @@ gem "standard"
 gem "simplecov"
 
 gem "rails"
-gem "sqlite3", "< 2.0"
+gem "sqlite3"
 gem "dry-monads"
 gem "action_policy"
 
