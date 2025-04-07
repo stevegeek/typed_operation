@@ -4,7 +4,7 @@ An implementation of a Command pattern, which is callable, and can be partially 
 
 Inputs to the operation are specified as typed attributes (uses [`literal`](https://github.com/joeldrapper/literal)).
 
-Type of result of the operation is up to you, eg you could use [`literal` monads](https://github.com/joeldrapper/literal) or [`Dry::Monads`](https://dry-rb.org/gems/dry-monads/1.3/).
+Type of result of the operation is up to you, eg you could use [`Dry::Monads`](https://dry-rb.org/gems/dry-monads/1.3/).
 
 ## Features
 
@@ -170,8 +170,10 @@ Create an operation by subclassing `TypedOperation::Base` or `TypedOperation::Im
 
 - `TypedOperation::Base` (uses `Literal::Struct`) is the parent class for an operation where the arguments are potentially mutable (ie not frozen).
   No attribute writer methods are defined, so the arguments can not be changed after initialization, but the values passed in are not guaranteed to be frozen.
-- `TypedOperation::ImmutableBase` (uses `Literal::Data`) is the parent class for an operation where the arguments are immutable (frozen on initialization),
-  thus giving a somewhat stronger immutability guarantee (ie that the operation does not mutate its arguments).
+- `TypedOperation::ImmutableBase` (uses `Literal::Data`) is the parent class for an operation where the operation instance is frozen on initialization,
+  thus giving a somewhat stronger immutability guarantee.
+
+> Note: you cannot include `TypedOperation::ActionPolicyAuth` into a `TypedOperation::ImmutableBase`.
 
 The subclass must implement the `#perform` method which is where the operations main work is done.
 
