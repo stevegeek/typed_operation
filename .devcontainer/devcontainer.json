@@ -1,0 +1,12 @@
+{
+  "name": "typed_operation Gem Development",
+  "dockerComposeFile": "compose.yml",
+  "service": "typed_operation-dev-env",
+  "containerEnv": {
+    "RAILS_ENV": "development"
+  },
+  "forwardPorts": [3000],
+  "postCreateCommand": "bundle install && bundle exec appraisal install",
+  "postStartCommand": "bin/test",
+  "remoteUser": "vscode"
+}

@@ -6,13 +6,6 @@ Inputs to the operation are specified as typed attributes (uses [`literal`](http
 
 Type of result of the operation is up to you, eg you could use [`literal` monads](https://github.com/joeldrapper/literal) or [`Dry::Monads`](https://dry-rb.org/gems/dry-monads/1.3/).
 
-**Note the version described here (~ 1.0.0) is pre-release on Rubygems (v1.0.0 is waiting for a release of `literal`). To use it now you can simply require `literal` from github in your Gemfile:**
-
-```ruby
-gem "literal", github: "joeldrapper/literal", branch: "main"
-gem "typed_operation", "~> 1.0.0.beta2"
-```
-
 ## Features
 
 - Operations can be **partially applied** or **curried**

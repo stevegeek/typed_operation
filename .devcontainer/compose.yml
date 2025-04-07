@@ -1,0 +1,10 @@
+name: "typed_operation"
+
+services:
+  typed_operation-dev-env:
+    container_name: typed_operation-dev-env
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    ports:
+      - "3000"

@@ -9,8 +9,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [ "3.2", "3.3" ]
-        rails: [ "7.0" ]
+        ruby: [ "3.2", "3.3", "3.4" ]
+        rails: [ "7.2", "8.0" ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Ruby

@@ -13,3 +13,4 @@ Gemfile.lock
 *.gem
 /coverage/
 .tool-versions
+gemfiles/*.lock
