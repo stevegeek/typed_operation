@@ -3,6 +3,8 @@
 module TypedOperation
   module Operations
     class PropertyBuilder
+      include Literal::Types
+
       def initialize(typed_operation, parameter_name, type_signature, options)
         @typed_operation = typed_operation
         @name = parameter_name
@@ -51,7 +53,7 @@ module TypedOperation
       end
 
       def union_with_nil_to_support_nil_default
-        @signature = Literal::Types::UnionType.new(@signature, NilClass) if has_default_value_nil?
+        @signature = _Union(@signature, NilClass) if has_default_value_nil?
       end
 
       def has_default_value_nil?
