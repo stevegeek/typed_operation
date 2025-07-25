@@ -1,0 +1,15 @@
+description: "A Ruby gem that implements the Command pattern with strong typing, partial application, and currying capabilities"
+version: "1.0.0"
+files:
+  - path: 1_overview.md
+    title: "Architecture Overview"
+    description: "High-level architecture, design principles, and key components"
+  - path: 2_core-concepts.md
+    title: "Core Concepts"
+    description: "Parameter system, type constraints, and operation lifecycle"
+  - path: 3_advanced-features.md
+    title: "Advanced Features"
+    description: "Partial application, currying, pattern matching, and functional composition"
+  - path: 4_integrations.md
+    title: "Framework Integrations"
+    description: "Rails, Dry::Monads, and Action Policy integration patterns"
