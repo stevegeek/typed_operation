@@ -788,6 +788,29 @@ The default path is `app/operations`.
 
 The generator will also create a test file.
 
+## Documentation Website
+
+The documentation website is built with Jekyll and the Just the Docs theme.
+
+### Running the documentation site locally
+
+```bash
+cd website
+bundle install
+bundle exec jekyll serve
+```
+
+Then visit `http://localhost:4000`.
+
+### Building the documentation site
+
+```bash
+cd website
+bundle exec jekyll build
+```
+
+The built site will be in the `website/_site` directory.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/stevegeek/typed_operation. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/stevegeek/typed_operation/blob/master/CODE_OF_CONDUCT.md).
