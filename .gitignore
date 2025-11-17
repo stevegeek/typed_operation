@@ -12,5 +12,7 @@
 Gemfile.lock
 *.gem
 /coverage/
+/tmp/
+badges/
 .tool-versions
 gemfiles/*.lock

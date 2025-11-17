@@ -1,5 +1,8 @@
 # TypedOperation
 
+![Coverage](badges/coverage_badge_total.svg)
+![RubyCritic](badges/rubycritic_badge_score.svg)
+
 An implementation of a Command pattern, which is callable, and can be partially applied.
 
 Inputs to the operation are specified as typed attributes (uses [`literal`](https://github.com/joeldrapper/literal)).

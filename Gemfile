@@ -8,6 +8,10 @@ gem "literal", "~> 1.0"
 
 gem "standard"
 gem "simplecov", require: false, group: :test
+gem "rubycritic", require: false
+gem "simplecov-small-badge", require: false
+gem "rubycritic-small-badge", require: false
+gem "repo-small-badge", require: false
 
 gem "rails"
 gem "sqlite3"

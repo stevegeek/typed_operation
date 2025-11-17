@@ -1,5 +1,33 @@
-require "simplecov"
-SimpleCov.start
+# Configure SimpleCov if COVERAGE is set
+if ENV["COVERAGE"]
+  require "simplecov"
+  require "simplecov_small_badge"
+
+  SimpleCov.start do
+    add_filter "/test/"
+    enable_coverage :branch
+
+    # Define groups for the coverage report
+    add_group "Core", "lib/typed_operation"
+    add_group "Rails", "lib/typed_operation/rails"
+
+    # Configure formatters - HTML and Badge
+    SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCovSmallBadge::Formatter
+    ])
+  end
+
+  # Configure the badge
+  SimpleCovSmallBadge.configure do |config|
+    config.rounded_border = true
+    config.background = "#ffffcc"
+    config.output_path = "badges/"
+  end
+
+  # Output a message to indicate coverage is being measured
+  puts "SimpleCov enabled with badge generation"
+end
 
 if ENV["NO_RAILS"]
   puts "Running tests without Rails (ie not running the generator tests)"
