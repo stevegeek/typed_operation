@@ -16,7 +16,6 @@ module TypedOperation
       end
 
       def before_execute_operation
-        # noop
       end
 
       def after_execute_operation(retval)

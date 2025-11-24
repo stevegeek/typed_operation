@@ -36,10 +36,8 @@ module TypedOperation
         @_authorized_via_param = via
 
         action_type_method = :"#{action_type}?" if action_type
-        # If an method name is provided, use it
         policy_method = to || action_type_method || raise(::TypedOperation::InvalidOperationError, "You must provide an action type or policy method name")
         @_policy_method = policy_method
-        # If a policy class is provided, use it
         @_policy_class = if with
           with
         elsif auth_block

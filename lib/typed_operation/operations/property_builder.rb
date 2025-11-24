@@ -13,8 +13,8 @@ module TypedOperation
         @typed_operation = typed_operation
         @name = parameter_name
         @signature = type_signature
-        @optional = options[:optional] # Wraps signature in NilableType
-        @positional = options[:positional] # Changes kind to positional
+        @optional = options[:optional]
+        @positional = options[:positional]
         @reader = options[:reader] || :public
         @default_key = options.key?(:default)
         @default = options[:default]
@@ -47,7 +47,6 @@ module TypedOperation
         validate_positional_order_params! if @positional
       end
 
-      # If already wrapped in a Nilable then don't wrap again
       def needs_to_be_nilable?
         @optional && !type_nilable?
       end
