@@ -2,8 +2,12 @@
 
 module TypedOperation
   module Operations
+    # Builds typed properties for operations, handling optional parameters,
+    # defaults, and type conversions with Literal types.
     class PropertyBuilder
       include Literal::Types
+
+      NULL_PROC = -> {}
 
       def initialize(typed_operation, parameter_name, type_signature, options)
         @typed_operation = typed_operation
@@ -21,7 +25,7 @@ module TypedOperation
       def define(&converter)
         # If nilable, then converter should not attempt to call the type converter block if the value is nil
         coerce_by = if type_nilable? && converter
-          ->(v) { (v == Literal::Null || v.nil?) ? v : converter.call(v) }
+          ->(value) { (value == Literal::Null || value.nil?) ? value : converter.call(value) }
         else
           converter
         end
@@ -72,8 +76,12 @@ module TypedOperation
       end
 
       def default_value_for_literal
-        if has_default_value_nil? || type_nilable?
-          -> {}
+        if has_default_value_nil?
+          NULL_PROC
+        elsif default_provided?
+          @default
+        elsif type_nilable?
+          NULL_PROC
         else
           @default
         end
