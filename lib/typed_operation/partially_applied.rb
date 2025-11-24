@@ -31,11 +31,11 @@ module TypedOperation
     def call(...)
       prepared = with(...)
       return prepared.operation.call if prepared.is_a?(Prepared)
-      raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name} (key: #{operation_class.name}), are you expecting it to be Prepared?"
+      raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name}, are you expecting it to be Prepared?"
     end
 
     def operation
-      raise MissingParameterError, "Cannot instantiate Operation #{operation_class.name} (key: #{operation_class.name}), as it is only partially applied."
+      raise MissingParameterError, "Cannot instantiate Operation #{operation_class.name}, as it is only partially applied."
     end
 
     def prepared?
@@ -51,9 +51,9 @@ module TypedOperation
     end
 
     def deconstruct_keys(keys)
-      h = keyword_args.dup
-      positional_args.each_with_index { |v, i| h[positional_parameters[i]] = v }
-      keys ? h.slice(*keys) : h
+      hash = keyword_args.dup
+      positional_args.each_with_index { |value, index| hash[positional_parameters[index]] = value }
+      keys ? hash.slice(*keys) : hash
     end
 
     attr_reader :positional_args, :keyword_args
@@ -76,7 +76,7 @@ module TypedOperation
 
     def validate_positional_arg_count!(count)
       if count > positional_parameters.size
-        raise ArgumentError, "Too many positional arguments provided for #{operation_class.name} (key: #{operation_class.name})"
+        raise ArgumentError, "Too many positional arguments provided for #{operation_class.name}"
       end
     end
 
