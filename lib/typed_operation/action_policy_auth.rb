@@ -28,7 +28,6 @@ module TypedOperation
     module ClassMethods
       # Configure the operation to use ActionPolicy for authorization
       def authorized_via(*via, with: nil, to: nil, record: nil, &auth_block)
-        # If a block is provided, you must not provide a policy class or method
         raise ArgumentError, "You must not provide a policy class or method when using a block" if auth_block && (with || to)
 
         parameters = positional_parameters + keyword_parameters
@@ -111,29 +110,31 @@ module TypedOperation
 
     # Redefine it as private
     def execute_operation
-      if self.class.verify_authorized? && !self.class.checks_authorization?
-        raise ::TypedOperation::MissingAuthentication, "Operation #{self.class.name} must authorize. Remember to use `.authorize_via`"
+      operation_class = self.class
+      checks_auth = operation_class.checks_authorization?
+      if operation_class.verify_authorized? && !checks_auth
+        raise ::TypedOperation::MissingAuthentication, "Operation #{operation_class.name} must authorize. Remember to use `.authorize_via`"
       end
-      operation_check_authorized! if self.class.checks_authorization?
+      operation_check_authorized! if checks_auth
       super
     end
 
     def operation_check_authorized!
-      policy = self.class.operation_policy_class
-      raise "No Action Policy policy class provided, or no #{self.class.name}::Policy found for this action" unless policy
-      policy_method = self.class.operation_policy_method
-      raise "No policy method provided or action_type not set for #{self.class.name}" unless policy_method
+      operation_class = self.class
+      policy = operation_class.operation_policy_class
+      raise "No Action Policy policy class provided, or no #{operation_class.name}::Policy found for this action" unless policy
+      raise "No policy method provided or action_type not set for #{operation_class.name}" unless operation_class.operation_policy_method
       # Record to authorize, if nil then action policy tries to work it out implicitly
-      record_to_authorize = send(self.class.operation_record_to_authorize) if self.class.operation_record_to_authorize
+      record_to_authorize = send(operation_class.operation_record_to_authorize) if operation_class.operation_record_to_authorize
 
-      authorize! record_to_authorize, to: policy_method, with: policy
-    rescue ::ActionPolicy::Unauthorized => e
-      on_authorization_failure(e)
-      raise e
+      authorize! record_to_authorize, to: operation_class.operation_policy_method, with: policy
+    rescue ::ActionPolicy::Unauthorized => error
+      on_authorization_failure(error)
+      raise error
     end
 
     # A hook for subclasses to override to do something on an authorization failure
-    def on_authorization_failure(authorization_error)
+    def on_authorization_failure(_authorization_error)
       # noop
     end
   end
