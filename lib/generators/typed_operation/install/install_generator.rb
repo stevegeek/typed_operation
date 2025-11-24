@@ -3,7 +3,10 @@
 require "rails/generators/base"
 
 module TypedOperation
+  # Contains installation-related generators for TypedOperation.
   module Install
+    # Rails generator for installing TypedOperation into a Rails application.
+    # Creates an ApplicationOperation base class with optional dry-monads or action_policy support.
     class InstallGenerator < Rails::Generators::Base
       class_option :dry_monads, type: :boolean, default: false
       class_option :action_policy, type: :boolean, default: false

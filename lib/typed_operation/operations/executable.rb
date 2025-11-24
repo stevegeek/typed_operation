@@ -2,6 +2,8 @@
 
 module TypedOperation
   module Operations
+    # Defines the execution lifecycle for operations with before/after hooks.
+    # Operations must implement #perform to define their core logic.
     module Executable
       def call
         execute_operation

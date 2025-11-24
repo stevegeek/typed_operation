@@ -24,6 +24,7 @@ module TypedOperation
       base.extend ClassMethods
     end
 
+    # Class-level methods for configuring authorization on operations.
     module ClassMethods
       # Configure the operation to use ActionPolicy for authorization
       def authorized_via(*via, with: nil, to: nil, record: nil, &auth_block)

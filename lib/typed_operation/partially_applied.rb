@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module TypedOperation
+  # Represents an operation with some, but not all, required parameters provided.
+  # Allows incrementally building operation arguments before execution.
   class PartiallyApplied
     def initialize(operation_class, *positional_args, **keyword_args)
       @operation_class = operation_class

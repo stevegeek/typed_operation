@@ -2,6 +2,7 @@
 
 module TypedOperation
   module Operations
+    # Hooks into Literal's initialization lifecycle to call #prepare if defined.
     module Lifecycle
       # This is called by Literal on initialization of underlying Struct/Data
       def after_initialize

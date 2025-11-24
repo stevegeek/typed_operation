@@ -2,6 +2,7 @@
 
 module TypedOperation
   module Operations
+    # Enables partial application of operation parameters via #with and currying via #curry.
     module PartialApplication
       def with(...)
         PartiallyApplied.new(self, ...).with

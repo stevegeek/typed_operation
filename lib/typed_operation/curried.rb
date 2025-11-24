@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module TypedOperation
+  # Wraps an operation to support automatic currying, allowing parameters to be
+  # provided one at a time. Returns a new Curried instance until all required
+  # parameters are satisfied, then executes the operation.
   class Curried
     def initialize(operation_class, partial_operation = nil)
       @operation_class = operation_class

@@ -1,4 +1,5 @@
 module TypedOperation
+  # Rails integration for TypedOperation, registers generators.
   class Railtie < ::Rails::Railtie
     generators do
       require "generators/typed_operation/install/install_generator"

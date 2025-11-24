@@ -15,6 +15,8 @@ require "typed_operation/base"
 require "typed_operation/partially_applied"
 require "typed_operation/prepared"
 
+# TypedOperation provides a framework for defining type-safe, composable operations
+# with support for partial application, currying, and parameter validation.
 module TypedOperation
   class InvalidOperationError < StandardError; end
 
