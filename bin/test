@@ -70,5 +70,6 @@ path_to_tests = File.expand_path("../test", __dir__)
 $: << path_to_tests
 # Get files to require
 files = Dir.glob(File.join(path_to_tests, "typed_operation/**/*.rb"))
+files += Dir.glob(File.join(path_to_tests, "documentation/**/*.rb"))
 # Require files
 files.each { |file| require file.gsub(/^test\/|.rb$/, "") }
