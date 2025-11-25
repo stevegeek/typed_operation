@@ -3,9 +3,7 @@
 require "test_helper"
 require "date"
 
-# Tests for examples from error-handling.md
 class ErrorHandlingTest < Minitest::Test
-  # Custom exception classes
   class TransferOperation < TypedOperation::Base
     class InsufficientFundsError < StandardError; end
     class AccountFrozenError < StandardError; end
@@ -49,7 +47,6 @@ class ErrorHandlingTest < Minitest::Test
     assert_equal 150, result[:to]
   end
 
-  # Validation in prepare hook
   class UpdateProfileOperation < TypedOperation::Base
     class InvalidUrlError < StandardError; end
 
@@ -87,7 +84,6 @@ class ErrorHandlingTest < Minitest::Test
     assert_equal "https://example.com", result[:website]
   end
 
-  # Result types for expected failures
   class ProcessPaymentOperation < TypedOperation::Base
     include Dry::Monads[:result]
 
@@ -127,7 +123,6 @@ class ErrorHandlingTest < Minitest::Test
     assert_equal 50, result.value!
   end
 
-  # Combining exceptions and results
   class BookingOperation < TypedOperation::Base
     include Dry::Monads[:result]
 
@@ -179,7 +174,6 @@ class ErrorHandlingTest < Minitest::Test
     assert_equal Date.today + 1, result.value![:start_date]
   end
 
-  # Wrapping exceptions in results
   class FetchDataOperation < TypedOperation::Base
     include Dry::Monads[:result]
 

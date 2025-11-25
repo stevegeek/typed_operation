@@ -4,6 +4,8 @@ module TypedOperation
   # Represents an operation with some, but not all, required parameters provided.
   # Allows incrementally building operation arguments before execution.
   class PartiallyApplied
+    include Operations::Composition
+
     def initialize(operation_class, *positional_args, **keyword_args)
       @operation_class = operation_class
       @positional_args = positional_args
@@ -56,11 +58,9 @@ module TypedOperation
       keys ? hash.slice(*keys) : hash
     end
 
-    attr_reader :positional_args, :keyword_args
+    attr_reader :positional_args, :keyword_args, :operation_class
 
     private
-
-    attr_reader :operation_class
 
     def required_positional_parameters
       @required_positional_parameters ||= operation_class.required_positional_parameters

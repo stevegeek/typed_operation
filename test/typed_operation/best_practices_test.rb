@@ -2,9 +2,7 @@
 
 require "test_helper"
 
-# Tests for examples from best-practices.md
 class BestPracticesTest < Minitest::Test
-  # Composing operations with Do notation
   class ValidateDataOperation < TypedOperation::Base
     include Dry::Monads[:result]
 
@@ -55,7 +53,6 @@ class BestPracticesTest < Minitest::Test
     assert_equal :empty_data, result.failure
   end
 
-  # Partial application for pipelines
   class FormatMessageOperation < TypedOperation::Base
     param :prefix, String
     param :message, String
@@ -73,7 +70,6 @@ class BestPracticesTest < Minitest::Test
     assert_equal "WARNING: Check this", warning_formatter.call(message: "Check this")
   end
 
-  # Parameter coercion example
   class CoerceParamsOperation < TypedOperation::Base
     param :count, Integer, &:to_i
     param :enabled, _Boolean
@@ -90,7 +86,6 @@ class BestPracticesTest < Minitest::Test
     assert_kind_of Integer, result[:count]
   end
 
-  # Optional parameters with defaults
   class SearchOperation < TypedOperation::Base
     include Literal::Types
 
@@ -131,7 +126,6 @@ class BestPracticesTest < Minitest::Test
     assert_equal "name", result[:sort_by]
   end
 
-  # Conditional composition
   class ApplyDiscountOperation < TypedOperation::Base
     include Dry::Monads[:result]
 
@@ -184,7 +178,6 @@ class BestPracticesTest < Minitest::Test
     assert_equal 100, result.value!
   end
 
-  # Builder pattern with partial application
   class BuildConfigOperation < TypedOperation::Base
     param :environment, String
     param :debug, _Boolean, default: false

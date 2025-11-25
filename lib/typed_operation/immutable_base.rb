@@ -7,6 +7,7 @@ module TypedOperation
     extend Operations::Introspection
     extend Operations::Parameters
     extend Operations::PartialApplication
+    extend Operations::Composition
 
     include Operations::Lifecycle
     include Operations::Callable

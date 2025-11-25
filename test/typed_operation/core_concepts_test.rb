@@ -2,9 +2,7 @@
 
 require "test_helper"
 
-# Tests for examples from core documentation
 class CoreConceptsTest < Minitest::Test
-  # From getting-started.md - Basic operation
   class GreetUserOperation < TypedOperation::Base
     param :name, String
     param :greeting, String, default: "Hello"
@@ -24,7 +22,6 @@ class CoreConceptsTest < Minitest::Test
     assert_equal "Hi, Bob!", result
   end
 
-  # From parameters.md - Optional parameters
   class CreateUserOperation < TypedOperation::Base
     include Literal::Types
 
@@ -47,14 +44,12 @@ class CoreConceptsTest < Minitest::Test
     assert_nil result[:role]
   end
 
-  # From parameters.md - Type validation
   def test_type_validation_raises_error
     assert_raises Literal::TypeError do
-      GreetUserOperation.call(name: 123) # Integer instead of String
+      GreetUserOperation.call(name: 123)
     end
   end
 
-  # From executing-operations.md - Different calling styles
   def test_calling_with_positional_hash
     result = GreetUserOperation.call(name: "Charlie")
     assert_equal "Hello, Charlie!", result
@@ -66,7 +61,6 @@ class CoreConceptsTest < Minitest::Test
     assert_equal "Hello, David!", result
   end
 
-  # From defining-operations.md - Lifecycle hooks
   class OperationWithHooks < TypedOperation::Base
     param :value, Integer
 
@@ -100,7 +94,6 @@ class CoreConceptsTest < Minitest::Test
     assert operation.after_called
   end
 
-  # From parameters.md - Coercion
   class CoerceOperation < TypedOperation::Base
     param :user_id, Integer, &:to_i
 
@@ -115,7 +108,6 @@ class CoreConceptsTest < Minitest::Test
     assert_kind_of Integer, result
   end
 
-  # From parameters.md - Array types
   class ArrayParamOperation < TypedOperation::Base
     include Literal::Types
 
@@ -133,7 +125,7 @@ class CoreConceptsTest < Minitest::Test
 
   def test_array_parameter_type_validation
     assert_raises Literal::TypeError do
-      ArrayParamOperation.call(tags: [1, 2, 3]) # Integers instead of Strings
+      ArrayParamOperation.call(tags: [1, 2, 3])
     end
   end
 end

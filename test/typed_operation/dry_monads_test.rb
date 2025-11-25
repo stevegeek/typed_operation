@@ -2,9 +2,7 @@
 
 require "test_helper"
 
-# Tests for examples from dry-monads.md integration
 class DryMonadsTest < Minitest::Test
-  # Basic Success/Failure example
   class ValidateAgeOperation < TypedOperation::Base
     include Dry::Monads[:result]
 
@@ -33,7 +31,6 @@ class DryMonadsTest < Minitest::Test
     assert_equal :too_young, result.failure
   end
 
-  # Do notation example
   class CreateAccountOperation < TypedOperation::Base
     include Dry::Monads[:result]
     include Dry::Monads::Do.for(:perform)
@@ -62,7 +59,6 @@ class DryMonadsTest < Minitest::Test
     assert_equal :too_young, result.failure
   end
 
-  # Structured error messages
   class AuthenticateOperation < TypedOperation::Base
     include Dry::Monads[:result]
 
@@ -102,7 +98,6 @@ class DryMonadsTest < Minitest::Test
     assert_equal "valid@example.com", result.value![:email]
   end
 
-  # Pattern matching with Results
   def test_pattern_matching_with_result
     result = ValidateAgeOperation.call(age: 25)
 
@@ -129,7 +124,6 @@ class DryMonadsTest < Minitest::Test
     assert_equal "Too young", message
   end
 
-  # value_or method
   def test_value_or_with_success
     result = ValidateAgeOperation.call(age: 25)
     value = result.value_or(18)
@@ -144,7 +138,6 @@ class DryMonadsTest < Minitest::Test
     assert_equal 18, value
   end
 
-  # either method
   def test_either_with_success
     result = ValidateAgeOperation.call(age: 25)
 

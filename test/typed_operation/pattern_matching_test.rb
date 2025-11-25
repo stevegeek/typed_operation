@@ -2,9 +2,7 @@
 
 require "test_helper"
 
-# Tests for examples from pattern-matching.md
 class PatternMatchingTest < Minitest::Test
-  # Basic pattern matching example
   class UserOperation < TypedOperation::Base
     param :email, String
     param :age, Integer
@@ -40,7 +38,6 @@ class PatternMatchingTest < Minitest::Test
     assert_equal "Minor: teen@example.com", result
   end
 
-  # Pattern matching with specific values
   class StatusOperation < TypedOperation::Base
     param :status, String
     param :message, String
@@ -65,7 +62,6 @@ class PatternMatchingTest < Minitest::Test
     assert_equal "Success: Done", result
   end
 
-  # Pattern matching in method
   class ProcessResult
     def self.handle(operation)
       case operation
@@ -87,7 +83,6 @@ class PatternMatchingTest < Minitest::Test
     assert_equal :failed, ProcessResult.handle(error_op)
   end
 
-  # Pattern matching with regex (using hash destructuring)
   def test_pattern_matching_with_regex
     operation = UserOperation.new(email: "test@example.com", age: 30)
 

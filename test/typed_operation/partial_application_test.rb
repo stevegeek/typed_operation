@@ -2,9 +2,7 @@
 
 require "test_helper"
 
-# Tests for examples from partial-application.md
 class PartialApplicationTest < Minitest::Test
-  # Basic partial application example
   class SendEmailOperation < TypedOperation::Base
     param :from, String
     param :to, String
@@ -39,7 +37,6 @@ class PartialApplicationTest < Minitest::Test
     assert_equal "user2@example.com", result2[:to]
   end
 
-  # Currying example
   class AddOperation < TypedOperation::Base
     positional_param :a, Integer
     positional_param :b, Integer
@@ -51,8 +48,6 @@ class PartialApplicationTest < Minitest::Test
 
   def test_currying_basic
     curried = AddOperation.curry
-
-    # Apply parameters one at a time (curry takes raw values, not keyword hashes)
     result = curried.call(5).call(3)
     assert_equal 8, result
   end
@@ -65,7 +60,6 @@ class PartialApplicationTest < Minitest::Test
     assert_equal 10, add_five.call(5)
   end
 
-  # Chaining partial applications
   class NotificationOperation < TypedOperation::Base
     param :template, String
     param :recipient, String
@@ -87,7 +81,6 @@ class PartialApplicationTest < Minitest::Test
     assert_equal "high", result[:priority]
   end
 
-  # State checking
   def test_partially_applied_returns_correct_class
     partial = SendEmailOperation.with(from: "test@example.com")
 
