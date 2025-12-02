@@ -5,12 +5,13 @@ module TypedOperation
     # Provides composition methods for chaining operations together.
     # Included in operation classes and composed operations (ChainedOperation, Pipeline).
     module Composition
-      # Smart sequential composition - introspects the next operation's signature.
-      # If it has keyword params → splats the value as **kwargs
-      # If it has a single positional param → passes value as-is
+      # Smart sequential composition with context accumulation.
+      # - Accumulates results into a context hash across chain steps
+      # - Introspects next operation's params and extracts from context
+      # - Extra kwargs are merged in (sugar for .with)
       # Raises if operation has mixed positional and keyword params.
-      def then(operation = nil, &block)
-        SmartChain.new(self, operation || block)
+      def then(operation = nil, **extra_kwargs, &block)
+        SmartChain.new(self, operation || block, extra_kwargs)
       end
 
       # Explicit kwargs splatting - always splats value as **kwargs.
@@ -23,7 +24,7 @@ module TypedOperation
         SequenceChain.new(self, operation || block)
       end
 
-      # Monadic bind - explicit chaining with blocks for custom logic.
+      # Monadic bind - chaining with blocks for custom logic.
       # Block receives unwrapped success value and MUST return a Result.
       def and_then(&block)
         SequenceChain.new(self, block)
