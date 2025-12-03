@@ -21,6 +21,8 @@ require "typed_operation/chains/splat_chain"
 require "typed_operation/chains/smart_chain"
 require "typed_operation/chains/map_chain"
 require "typed_operation/chains/fallback_chain"
+require "typed_operation/context"
+require "typed_operation/pipeline"
 
 # TypedOperation provides a framework for defining type-safe, composable operations
 # with support for partial application, currying, and parameter validation.
