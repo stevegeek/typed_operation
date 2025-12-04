@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TypedOperation
-  # Sequential composition chain used by .and_then and .then_value
+  # Sequential composition chain used by .then_passes
   # Passes the success value (context) to the right operation/block.
   # The result is merged back into context.
   # Short-circuits on failure.

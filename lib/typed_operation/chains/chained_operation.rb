@@ -5,7 +5,7 @@ module TypedOperation
   #
   # Values flow through chains as-is - no implicit splatting.
   # If you need to convert a value to kwargs for the next operation,
-  # use .and_then { |v| NextOp.call(**v) } or .transform to reshape first.
+  # use .then_passes { |v| NextOp.call(**v) } or .transform to reshape first.
   class ChainedOperation
     include Operations::Composition
 

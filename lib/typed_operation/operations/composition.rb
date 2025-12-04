@@ -14,21 +14,18 @@ module TypedOperation
         SmartChain.new(self, operation || block, extra_kwargs)
       end
 
-      # Explicit kwargs splatting - always splats value as **kwargs.
-      def then_splat(operation = nil, &block)
+      # Spreads the context as **kwargs to the next operation.
+      #: (?untyped) ?{ (untyped) -> untyped } -> SplatChain
+      def then_spreads(operation = nil, &block)
         SplatChain.new(self, operation || block)
       end
 
-      # Explicit value passing - always passes value as single positional arg.
-      def then_value(operation = nil, &block)
+      # Passes the context as a single positional argument to the next operation.
+      #: (?untyped) ?{ (untyped) -> untyped } -> SequenceChain
+      def then_passes(operation = nil, &block)
         SequenceChain.new(self, operation || block)
       end
 
-      # Monadic bind - chaining with blocks for custom logic.
-      # Block receives unwrapped success value and MUST return a Result.
-      def and_then(&block)
-        SequenceChain.new(self, block)
-      end
 
       # Functor mapping - transform success values without changing the monad.
       # Block receives unwrapped value and return is automatically wrapped in Success.
