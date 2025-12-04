@@ -10,7 +10,6 @@ module TypedOperation
     extend Operations::Composition
 
     include Operations::Lifecycle
-    include Operations::Callable
     include Operations::Executable
   end
 end

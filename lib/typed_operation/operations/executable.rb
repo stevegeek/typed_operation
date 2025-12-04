@@ -5,9 +5,21 @@ module TypedOperation
     # Defines the execution lifecycle for operations with before/after hooks.
     # Operations must implement #perform to define their core logic.
     module Executable
+      def self.included(base)
+        base.extend(ClassMethods)
+      end
+
+      module ClassMethods
+        def call(...) = new(...).call
+
+        def to_proc = method(:call).to_proc
+      end
+
       def call
         execute_operation
       end
+
+      def to_proc = method(:call).to_proc
 
       def execute_operation
         before_execute_operation
