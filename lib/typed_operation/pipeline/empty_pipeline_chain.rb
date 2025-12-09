@@ -6,6 +6,7 @@ module TypedOperation
     # Handles empty pipelines - just passes through input as Success.
     class EmptyPipelineChain
       include Result::Mixin
+
       #: (*untyped, **untyped) -> untyped
       def call(*args, **kwargs)
         value = if kwargs.any?

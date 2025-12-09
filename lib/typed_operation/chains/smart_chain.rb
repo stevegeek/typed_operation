@@ -6,6 +6,7 @@ module TypedOperation
   # Accumulates context across chain steps and extracts required params for each operation.
   class SmartChain < ChainedOperation
     include Result::Mixin
+
     # @rbs @extra_kwargs: Hash[Symbol, untyped]
     # @rbs @uses_kwargs: bool
     # @rbs @required_params: Array[Symbol]
