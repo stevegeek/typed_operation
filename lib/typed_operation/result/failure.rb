@@ -41,16 +41,20 @@ module TypedOperation
       end
 
       # Pattern matching support - array destructuring.
-      #: () -> [untyped]
+      #: () -> Array[untyped]
       def deconstruct
-        [@error]
+        @error.is_a?(::Array) ? @error : [@error]
       end
 
       # Pattern matching support - hash destructuring.
+      # Delegates to the inner error if it responds to deconstruct_keys.
       #: (Array[Symbol]?) -> Hash[Symbol, untyped]
       def deconstruct_keys(keys)
-        h = {error: @error, failure: @error}
-        keys ? h.slice(*keys) : h
+        if @error.respond_to?(:deconstruct_keys)
+          @error.deconstruct_keys(keys)
+        else
+          {error: @error, failure: @error}
+        end
       end
 
       #: (untyped) -> bool

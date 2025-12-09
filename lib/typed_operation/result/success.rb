@@ -38,16 +38,20 @@ module TypedOperation
       end
 
       # Pattern matching support - array destructuring.
-      #: () -> [untyped]
+      #: () -> Array[untyped]
       def deconstruct
-        [@value]
+        @value.is_a?(::Array) ? @value : [@value]
       end
 
       # Pattern matching support - hash destructuring.
+      # Delegates to the inner value if it responds to deconstruct_keys.
       #: (Array[Symbol]?) -> Hash[Symbol, untyped]
       def deconstruct_keys(keys)
-        h = {value: @value}
-        keys ? h.slice(*keys) : h
+        if @value.respond_to?(:deconstruct_keys)
+          @value.deconstruct_keys(keys)
+        else
+          {value: @value}
+        end
       end
 
       #: (untyped) -> bool
