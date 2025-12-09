@@ -6,6 +6,7 @@ module TypedOperation
   # Accumulates context across chain steps and extracts required params for each operation.
   class SmartChain < ChainedOperation
     include Result::Mixin
+    include CallableResolver
 
     # @rbs @extra_kwargs: Hash[Symbol, untyped]
     # @rbs @uses_kwargs: bool
@@ -137,7 +138,7 @@ module TypedOperation
           "Cannot chain to operation with both positional and keyword params. Use .transform to adapt."
       end
 
-      keywords.any?
+      super
     end
 
     #: (_Callable) -> Array[Symbol]
@@ -154,17 +155,6 @@ module TypedOperation
         operation.keyword_args
       else
         {}
-      end
-    end
-
-    #: (_Callable) -> untyped
-    def extract_operation_class(operation)
-      case operation
-      when Class then operation
-      when TypedOperation::PartiallyApplied then operation.operation_class
-      when TypedOperation::ChainedOperation then extract_operation_class(operation.instance_variable_get(:@left))
-      when Proc then nil
-      else operation.class
       end
     end
   end
