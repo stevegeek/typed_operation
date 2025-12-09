@@ -6,6 +6,7 @@ require "date"
 class ErrorHandlingTest < Minitest::Test
   class TransferOperation < TypedOperation::Base
     class InsufficientFundsError < StandardError; end
+
     class AccountFrozenError < StandardError; end
 
     param :from_balance, Integer
@@ -59,7 +60,7 @@ class ErrorHandlingTest < Minitest::Test
     end
 
     def perform
-      { bio: bio, website: website }
+      {bio: bio, website: website}
     end
   end
 
@@ -112,7 +113,7 @@ class ErrorHandlingTest < Minitest::Test
     result = ProcessPaymentOperation.call(balance: 100, amount: 50, card_expired: true)
 
     assert result.failure?
-    code, message = result.failure
+    code, _ = result.failure
     assert_equal :invalid_card, code
   end
 
@@ -138,7 +139,7 @@ class ErrorHandlingTest < Minitest::Test
     def perform
       return Failure(:room_unavailable) unless room_available
 
-      Success({ start_date: start_date, end_date: end_date })
+      Success({start_date: start_date, end_date: end_date})
     end
   end
 
@@ -184,9 +185,9 @@ class ErrorHandlingTest < Minitest::Test
       raise StandardError, "Not found" if simulate_error == :not_found
       raise StandardError, "Connection failed" if simulate_error == :connection
 
-      Success({ id: id, data: "Data for #{id}" })
+      Success({id: id, data: "Data for #{id}"})
     rescue => e
-      code = simulate_error == :not_found ? :not_found : :database_error
+      code = (simulate_error == :not_found) ? :not_found : :database_error
       Failure([code, e.message])
     end
   end

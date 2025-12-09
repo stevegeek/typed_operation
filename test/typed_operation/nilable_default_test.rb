@@ -5,16 +5,16 @@ require "test_helper"
 module TypedOperation
   class NilableDefaultTest < Minitest::Test
     class TestNilableWithDefault < ::TypedOperation::Base
-      param :name, _Nilable(String), default: "foo".freeze
-      
+      param :name, _Nilable(String), default: "foo"
+
       def perform
         name
       end
     end
 
     class TestOptionalWithDefault < ::TypedOperation::Base
-      param :name, String, optional: true, default: "bar".freeze
-      
+      param :name, String, optional: true, default: "bar"
+
       def perform
         name
       end

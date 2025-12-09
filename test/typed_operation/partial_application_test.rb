@@ -10,7 +10,7 @@ class PartialApplicationTest < Minitest::Test
     param :body, String
 
     def perform
-      { from: from, to: to, subject: subject, body: body }
+      {from: from, to: to, subject: subject, body: body}
     end
   end
 
@@ -66,7 +66,7 @@ class PartialApplicationTest < Minitest::Test
     param :priority, String
 
     def perform
-      { template: template, recipient: recipient, priority: priority }
+      {template: template, recipient: recipient, priority: priority}
     end
   end
 

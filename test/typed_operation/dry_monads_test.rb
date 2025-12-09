@@ -40,7 +40,7 @@ class DryMonadsTest < Minitest::Test
 
     def perform
       validated_age = yield ValidateAgeOperation.call(age: age)
-      Success({ email: email, age: validated_age })
+      Success({email: email, age: validated_age})
     end
   end
 
@@ -69,7 +69,7 @@ class DryMonadsTest < Minitest::Test
       return Failure([:not_found, "User not found"]) if email != "valid@example.com"
       return Failure([:invalid_password, "Wrong password"]) if password != "secret"
 
-      Success({ email: email })
+      Success({email: email})
     end
   end
 
@@ -102,11 +102,11 @@ class DryMonadsTest < Minitest::Test
     result = ValidateAgeOperation.call(age: 25)
 
     message = case result
-              in Dry::Monads::Success(age)
-                "Age #{age} is valid"
-              in Dry::Monads::Failure(:too_young)
-                "Too young"
-              end
+    in Dry::Monads::Success(age)
+      "Age #{age} is valid"
+    in Dry::Monads::Failure(:too_young)
+      "Too young"
+    end
 
     assert_equal "Age 25 is valid", message
   end
@@ -115,11 +115,11 @@ class DryMonadsTest < Minitest::Test
     result = ValidateAgeOperation.call(age: 16)
 
     message = case result
-              in Dry::Monads::Success(age)
-                "Age #{age} is valid"
-              in Dry::Monads::Failure(:too_young)
-                "Too young"
-              end
+    in Dry::Monads::Success(age)
+      "Age #{age} is valid"
+    in Dry::Monads::Failure(:too_young)
+      "Too young"
+    end
 
     assert_equal "Too young", message
   end

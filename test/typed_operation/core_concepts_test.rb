@@ -30,7 +30,7 @@ class CoreConceptsTest < Minitest::Test
     param :role, optional(String)
 
     def perform
-      { email: email, name: name, role: role }
+      {email: email, name: name, role: role}
     end
   end
 

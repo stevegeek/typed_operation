@@ -40,10 +40,10 @@ class BestPracticesTest < Minitest::Test
   end
 
   def test_composed_operations_success
-    result = ProcessDataOperation.call(data: { name: "Test" })
+    result = ProcessDataOperation.call(data: {name: "Test"})
 
     assert result.success?
-    assert_equal({ "name" => "Test" }, result.value!)
+    assert_equal({"name" => "Test"}, result.value!)
   end
 
   def test_composed_operations_failure
@@ -75,7 +75,7 @@ class BestPracticesTest < Minitest::Test
     param :enabled, _Boolean
 
     def perform
-      { count: count, enabled: enabled }
+      {count: count, enabled: enabled}
     end
   end
 

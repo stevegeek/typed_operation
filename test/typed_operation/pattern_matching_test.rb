@@ -16,11 +16,11 @@ class PatternMatchingTest < Minitest::Test
     operation = UserOperation.new(email: "test@example.com", age: 25)
 
     result = case operation
-             in { email:, age: 18.. }
-               "Adult: #{email}"
-             in { email: }
-               "Minor: #{email}"
-             end
+    in {email:, age: 18..}
+      "Adult: #{email}"
+    in {email:}
+      "Minor: #{email}"
+    end
 
     assert_equal "Adult: test@example.com", result
   end
@@ -29,11 +29,11 @@ class PatternMatchingTest < Minitest::Test
     operation = UserOperation.new(email: "teen@example.com", age: 16)
 
     result = case operation
-             in { email:, age: 18.. }
-               "Adult: #{email}"
-             in { email: }
-               "Minor: #{email}"
-             end
+    in {email:, age: 18..}
+      "Adult: #{email}"
+    in {email:}
+      "Minor: #{email}"
+    end
 
     assert_equal "Minor: teen@example.com", result
   end
@@ -51,13 +51,13 @@ class PatternMatchingTest < Minitest::Test
     operation = StatusOperation.new(status: "success", message: "Done")
 
     result = case operation
-             in { status: "success", message: }
-               "Success: #{message}"
-             in { status: "error", message: }
-               "Error: #{message}"
-             else
-               "Unknown"
-             end
+    in {status: "success", message:}
+      "Success: #{message}"
+    in {status: "error", message:}
+      "Error: #{message}"
+    else
+      "Unknown"
+    end
 
     assert_equal "Success: Done", result
   end
@@ -65,9 +65,9 @@ class PatternMatchingTest < Minitest::Test
   class ProcessResult
     def self.handle(operation)
       case operation
-      in { status: "success" }
+      in {status: "success"}
         :ok
-      in { status: "error" }
+      in {status: "error"}
         :failed
       else
         :unknown
@@ -87,13 +87,13 @@ class PatternMatchingTest < Minitest::Test
     operation = UserOperation.new(email: "test@example.com", age: 30)
 
     result = case operation
-             in { email: /admin/i, age: }
-               "Admin with age #{age}"
-             in { email:, age: 18.. }
-               "Regular adult: #{email}"
-             else
-               "Other"
-             end
+    in {email: /admin/i, age:}
+      "Admin with age #{age}"
+    in {email:, age: 18..}
+      "Regular adult: #{email}"
+    else
+      "Other"
+    end
 
     assert_equal "Regular adult: test@example.com", result
   end
@@ -102,13 +102,13 @@ class PatternMatchingTest < Minitest::Test
     operation = UserOperation.new(email: "admin@example.com", age: 30)
 
     result = case operation
-             in { email: /admin/i, age: }
-               "Admin with age #{age}"
-             in { email:, age: 18.. }
-               "Regular adult: #{email}"
-             else
-               "Other"
-             end
+    in {email: /admin/i, age:}
+      "Admin with age #{age}"
+    in {email:, age: 18..}
+      "Regular adult: #{email}"
+    else
+      "Other"
+    end
 
     assert_equal "Admin with age 30", result
   end
