@@ -1,10 +1,13 @@
+# rbs_inline: enabled
 # frozen_string_literal: true
 
 module TypedOperation
-  # Kwargs splatting chain created by .then_splat
+  # Kwargs spreading chain created by .then_spreads
   # Always splats the full context as **kwargs to the next operation.
   # Accumulates result into context.
   class SplatChain < ChainedOperation
+    include Result::Mixin
+
     def call(...)
       result = @left.call(...)
       return result if result.failure?
@@ -19,7 +22,7 @@ module TypedOperation
       right_value = right_result.value!
       merged = merge_into_context(context, right_value)
 
-      Dry::Monads::Success(merged)
+      Success(merged)
     end
 
     private

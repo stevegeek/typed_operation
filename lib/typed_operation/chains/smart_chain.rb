@@ -1,3 +1,4 @@
+# rbs_inline: enabled
 # frozen_string_literal: true
 
 module TypedOperation
@@ -29,7 +30,7 @@ module TypedOperation
       right_value = right_result.value!
       merged = merge_into_context(context, right_value)
 
-      Dry::Monads::Success(merged)
+      Success(merged)
     end
 
     private

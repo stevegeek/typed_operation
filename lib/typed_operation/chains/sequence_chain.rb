@@ -6,6 +6,8 @@ module TypedOperation
   # The result is merged back into context.
   # Short-circuits on failure.
   class SequenceChain < ChainedOperation
+    include Result::Mixin
+
     def call(...)
       result = @left.call(...)
       return result if result.failure?
@@ -20,7 +22,7 @@ module TypedOperation
       right_value = right_result.value!
       merged = merge_into_context(context, right_value)
 
-      Dry::Monads::Success(merged)
+      Success(merged)
     end
 
     private

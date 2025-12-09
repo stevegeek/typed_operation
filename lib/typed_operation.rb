@@ -2,6 +2,8 @@ require "literal"
 
 require "typed_operation/version"
 require "typed_operation/railtie" if defined?(Rails::Railtie)
+require "typed_operation/result"
+require "typed_operation/configuration"
 require "typed_operation/operations/introspection"
 require "typed_operation/operations/parameters"
 require "typed_operation/operations/partial_application"

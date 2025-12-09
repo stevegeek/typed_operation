@@ -5,6 +5,8 @@ module TypedOperation
   # Block receives context, return value replaces context (wrapped in Success).
   # Short-circuits on failure.
   class MapChain < ChainedOperation
+    include Result::Mixin
+
     def call(...)
       result = @left.call(...)
       return result if result.failure?
@@ -14,7 +16,7 @@ module TypedOperation
 
       # Transform replaces context entirely (no merge)
       transformed = @right.call(context)
-      Dry::Monads::Success(transformed)
+      Success(transformed)
     end
 
     private
