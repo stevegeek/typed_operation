@@ -159,7 +159,6 @@ class PipelineTest < Minitest::Test
       step NotifyOperation
     end
 
-    # Use compose or + to merge pipelines
     full_pipeline = validation_pipeline.compose(persistence_pipeline)
 
     result = full_pipeline.call({input: "test"})
@@ -179,7 +178,6 @@ class PipelineTest < Minitest::Test
       step NotifyOperation
     end
 
-    # Use + operator
     full_pipeline = validation_pipeline + persistence_pipeline
 
     result = full_pipeline.call({input: "test"})
@@ -197,7 +195,6 @@ class PipelineTest < Minitest::Test
 
     assert_respond_to pipeline, :call
 
-    # Use append to add a step, returns new Pipeline
     extended_pipeline = pipeline.append(SaveOperation)
 
     result = extended_pipeline.call({input: "test"})
@@ -211,7 +208,6 @@ class PipelineTest < Minitest::Test
       step :transform, TransformOperation
     end
 
-    # Use to_chain to escape to chain-land
     chain = pipeline.to_chain
       .then(SaveOperation)
       .then(NotifyOperation)
@@ -227,7 +223,6 @@ class PipelineTest < Minitest::Test
       step :validate, ValidateInputOperation
     end
 
-    # Append with name and condition
     extended = pipeline.append(
       NotifyOperation,
       name: :notify,
@@ -319,14 +314,12 @@ class PipelineTest < Minitest::Test
   end
 
   def test_pipeline_with_context_object
-    # Operation that works with Context
     context_aware_op = Class.new(TypedOperation::Base) do
       include Dry::Monads[:result]
 
       positional_param :ctx, TypedOperation::Context
 
       def perform
-        # Can use dot access
         Success(TypedOperation::Context.new(
           input: ctx.input,
           processed: true
@@ -342,13 +335,11 @@ class PipelineTest < Minitest::Test
     result = pipeline.call(ctx)
 
     assert result.success?
-    # Result could be a Context or Hash depending on operation
     value = result.value!
     assert value[:processed]
   end
 
   def test_pipeline_with_context_dot_access
-    # Demonstrates the nicer dot syntax available with Context
     ctx = TypedOperation::Context.new(input: "test", user_id: 123)
 
     assert_equal "test", ctx.input
@@ -356,5 +347,76 @@ class PipelineTest < Minitest::Test
 
     ctx.validated = true
     assert ctx.validated?
+  end
+
+  class KwargsValidateOperation < TypedOperation::Base
+    include Dry::Monads[:result]
+
+    param :input, String
+
+    def perform
+      return Failure([:invalid_input, "Input too short"]) if input.length < 3
+      Success(input: input, validated: true)
+    end
+  end
+
+  class KwargsTransformOperation < TypedOperation::Base
+    include Dry::Monads[:result]
+    include Literal::Types
+
+    param :input, String
+    param :validated, _Boolean, default: false
+
+    def perform
+      Success(output: input.upcase, validated: validated)
+    end
+  end
+
+  def test_pipeline_with_kwargs_operations
+    pipeline = TypedOperation::Pipeline.build do
+      step :validate, KwargsValidateOperation
+      step :transform, KwargsTransformOperation
+    end
+
+    result = pipeline.call(input: "test")
+
+    assert result.success?
+    assert_equal "TEST", result.value![:output]
+    assert result.value![:validated]
+  end
+
+  def test_pipeline_with_positional_operation_receiving_hash
+    pipeline = TypedOperation::Pipeline.build do
+      step :validate, ValidateInputOperation
+      step :transform, TransformOperation
+    end
+
+    result = pipeline.call({input: "test"})
+
+    assert result.success?
+    assert_equal "TEST", result.value![:output]
+  end
+
+  class PositionalConsumerOperation < TypedOperation::Base
+    include Dry::Monads[:result]
+
+    positional_param :data, Hash
+
+    def perform
+      Success(consumed: data.keys.sort, original_data: data)
+    end
+  end
+
+  def test_pipeline_kwargs_then_positional_operation
+    pipeline = TypedOperation::Pipeline.build do
+      step :validate, KwargsValidateOperation
+      step :consume, PositionalConsumerOperation
+    end
+
+    result = pipeline.call(input: "test")
+
+    assert result.success?, "Expected success but got: #{result.inspect}"
+    assert_includes result.value![:consumed], :input
+    assert_includes result.value![:consumed], :validated
   end
 end

@@ -12,6 +12,7 @@ module TypedOperation
       # @rbs @condition: (^(untyped) -> bool)?
       # @rbs @failure_handler: (^(untyped, Symbol) -> untyped)?
       # @rbs @first_step: bool
+      # @rbs @uses_kwargs: bool
 
       #: (untyped, name: Symbol, condition: (^(untyped) -> bool)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void
       def initialize(operation, name:, condition:, failure_handler:, first_step: false)
@@ -20,6 +21,7 @@ module TypedOperation
         @condition = condition
         @failure_handler = failure_handler
         @first_step = first_step
+        @uses_kwargs = uses_kwargs?(operation)
       end
 
       #: (*untyped, **untyped) -> untyped
@@ -62,7 +64,11 @@ module TypedOperation
           return Success(context)
         end
 
-        result = @operation.call(context)
+        result = if @uses_kwargs && context.is_a?(Hash)
+          @operation.call(**context)
+        else
+          @operation.call(context)
+        end
         handle_failure(result)
       end
 
@@ -80,6 +86,27 @@ module TypedOperation
         when Hash then input
         when nil then {}
         else input
+        end
+      end
+
+      #: (untyped) -> bool
+      def uses_kwargs?(operation)
+        op_class = extract_operation_class(operation)
+        return false unless op_class.respond_to?(:positional_parameters)
+
+        positional = op_class.positional_parameters
+        keywords = op_class.keyword_parameters
+
+        keywords.any? && positional.empty?
+      end
+
+      #: (untyped) -> untyped
+      def extract_operation_class(operation)
+        case operation
+        when Class then operation
+        when TypedOperation::PartiallyApplied then operation.operation_class
+        when Proc then nil
+        else operation.class
         end
       end
     end
