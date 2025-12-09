@@ -4,14 +4,12 @@
 module TypedOperation
   module Result
     # Represents a successful result. Immutable value object.
-    #
-    # @rbs generic Value
     class Success
-      # @rbs @value: Value
+      # @rbs @value: untyped
 
-      attr_reader :value #: Value
+      attr_reader :value #: untyped
 
-      #: (Value) -> void
+      #: (untyped) -> void
       def initialize(value)
         @value = value
         freeze
@@ -28,7 +26,7 @@ module TypedOperation
       end
 
       # Returns the wrapped value.
-      #: () -> Value
+      #: () -> untyped
       def value!
         @value
       end
@@ -40,13 +38,13 @@ module TypedOperation
       end
 
       # Pattern matching support - array destructuring.
-      #: () -> [Value]
+      #: () -> [untyped]
       def deconstruct
         [@value]
       end
 
       # Pattern matching support - hash destructuring.
-      #: (Array[Symbol]?) -> Hash[Symbol, Value]
+      #: (Array[Symbol]?) -> Hash[Symbol, untyped]
       def deconstruct_keys(keys)
         h = {value: @value}
         keys ? h.slice(*keys) : h

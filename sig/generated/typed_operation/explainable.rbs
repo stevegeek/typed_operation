@@ -1,0 +1,10 @@
+# Generated from lib/typed_operation/explainable.rb with RBS::Inline
+
+module TypedOperation
+  # Include this module in your operation base class to enable the `.explain` method
+  # for runtime tracing and debugging.
+  module Explainable
+    # : (Module) -> void
+    def self.included: (Module) -> void
+  end
+end

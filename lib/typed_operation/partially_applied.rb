@@ -7,15 +7,15 @@ module TypedOperation
   class PartiallyApplied
     include Operations::Composition
 
-    # @rbs @operation_class: singleton(TypedOperation::Base)
+    # @rbs @operation_class: untyped
     # @rbs @positional_args: Array[untyped]
     # @rbs @keyword_args: Hash[Symbol, untyped]
 
     attr_reader :positional_args #: Array[untyped]
     attr_reader :keyword_args #: Hash[Symbol, untyped]
-    attr_reader :operation_class #: singleton(TypedOperation::Base)
+    attr_reader :operation_class #: untyped
 
-    #: (singleton(TypedOperation::Base), *untyped, **untyped) -> void
+    #: (untyped, *untyped, **untyped) -> void
     def initialize(operation_class, *positional_args, **keyword_args)
       @operation_class = operation_class
       @positional_args = positional_args

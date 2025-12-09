@@ -1,0 +1,25 @@
+module TypedOperation
+  # Interface for anything that can be used as a type matcher (responds to ===)
+  interface _Matchable
+    def ===: (untyped) -> boolish
+  end
+
+  # Interface for values that can be inspected (all Ruby objects have this)
+  interface _Inspectable
+    def inspect: () -> String
+  end
+
+  # Interface for callable operations and procs that can be chained
+  interface _Callable
+    def call: (*untyped, **untyped) -> untyped
+    def is_a?: (Module) -> bool
+    def class: () -> Class
+  end
+
+  # Interface for result objects with monadic behavior
+  interface _Result[out Value, out Error]
+    def success?: () -> bool
+    def failure?: () -> bool
+    def value!: () -> Value
+  end
+end

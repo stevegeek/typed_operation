@@ -1,0 +1,40 @@
+# Generated from lib/typed_operation/pipeline/step_wrapper.rb with RBS::Inline
+
+module TypedOperation
+  class Pipeline
+    # Wraps a step operation to handle conditions and error attribution.
+    class StepWrapper
+      include Result::Mixin
+
+      @operation: untyped
+
+      @name: Symbol
+
+      @condition: (^(untyped) -> bool)?
+
+      @failure_handler: (^(untyped, Symbol) -> untyped)?
+
+      @first_step: bool
+
+      # : (untyped, name: Symbol, condition: (^(untyped) -> bool)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void
+      def initialize: (untyped, name: Symbol, condition: (^(untyped) -> bool)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void
+
+      # : (*untyped, **untyped) -> untyped
+      def call: (*untyped, **untyped) -> untyped
+
+      private
+
+      # : (*untyped, **untyped) -> untyped
+      def call_first_step: (*untyped, **untyped) -> untyped
+
+      # : (untyped) -> untyped
+      def call_subsequent_step: (untyped) -> untyped
+
+      # : (untyped) -> untyped
+      def handle_failure: (untyped) -> untyped
+
+      # : (untyped) -> untyped
+      def normalize_input: (untyped) -> untyped
+    end
+  end
+end

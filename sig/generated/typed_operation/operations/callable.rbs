@@ -1,0 +1,23 @@
+# Generated from lib/typed_operation/operations/callable.rb with RBS::Inline
+
+module TypedOperation
+  module Operations
+    # Provides class-level and instance-level call methods for operations,
+    # enabling functional-style invocation and proc conversion.
+    module Callable
+      # : (Module) -> void
+      def self.included: (Module) -> void
+
+      # Methods available at both class and instance level for calling operations.
+      module CallableMethods
+        # : (*untyped, **untyped) -> untyped
+        def call: (*untyped, **untyped) -> untyped
+
+        # : () -> Proc
+        def to_proc: () -> Proc
+      end
+
+      include CallableMethods
+    end
+  end
+end

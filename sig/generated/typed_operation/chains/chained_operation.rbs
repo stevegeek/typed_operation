@@ -1,0 +1,22 @@
+# Generated from lib/typed_operation/chains/chained_operation.rb with RBS::Inline
+
+module TypedOperation
+  # Base class for operation chains.
+  #
+  # Values flow through chains as-is - no implicit splatting.
+  # If you need to convert a value to kwargs for the next operation,
+  # use .then_passes { |v| NextOp.call(**v) } or .transform to reshape first.
+  class ChainedOperation
+    include Operations::Composition
+
+    @left: _Callable
+
+    @right: _Callable
+
+    # : (_Callable, _Callable) -> void
+    def initialize: (_Callable, _Callable) -> void
+
+    # : (*untyped, **untyped) -> _Result[untyped, untyped]
+    def call: (*untyped, **untyped) -> _Result[untyped, untyped]
+  end
+end

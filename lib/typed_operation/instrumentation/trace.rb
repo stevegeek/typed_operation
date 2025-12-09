@@ -39,7 +39,7 @@ module TypedOperation
         self
       end
 
-      #: () -> Float?
+      #: () -> (Float | Integer | nil)
       def duration_ms
         return nil unless end_time
         ((end_time - start_time) * 1000).round(2)

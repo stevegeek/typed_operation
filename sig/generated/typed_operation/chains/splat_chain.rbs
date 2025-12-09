@@ -1,0 +1,21 @@
+# Generated from lib/typed_operation/chains/splat_chain.rb with RBS::Inline
+
+module TypedOperation
+  # Kwargs spreading chain created by .then_spreads
+  # Always splats the full context as **kwargs to the next operation.
+  # Accumulates result into context.
+  class SplatChain < ChainedOperation
+    include Result::Mixin
+
+    # : (*untyped, **untyped) -> _Result[untyped, untyped]
+    def call: (*untyped, **untyped) -> _Result[untyped, untyped]
+
+    private
+
+    # : (untyped) -> Hash[Symbol, untyped]
+    def to_context: (untyped) -> Hash[Symbol, untyped]
+
+    # : (Hash[Symbol, untyped], untyped) -> Hash[Symbol, untyped]
+    def merge_into_context: (Hash[Symbol, untyped], untyped) -> Hash[Symbol, untyped]
+  end
+end

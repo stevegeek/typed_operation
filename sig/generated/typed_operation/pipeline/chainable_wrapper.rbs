@@ -1,0 +1,18 @@
+# Generated from lib/typed_operation/pipeline/chainable_wrapper.rb with RBS::Inline
+
+module TypedOperation
+  class Pipeline
+    # Wrapper that exposes full Composition methods while delegating to Pipeline.
+    class ChainableWrapper
+      include Operations::Composition
+
+      @pipeline: Pipeline
+
+      # : (Pipeline) -> void
+      def initialize: (Pipeline) -> void
+
+      # : (*untyped, **untyped) -> untyped
+      def call: (*untyped, **untyped) -> untyped
+    end
+  end
+end

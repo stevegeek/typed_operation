@@ -9,11 +9,11 @@ module TypedOperation
 
       # @rbs @operation: untyped
       # @rbs @name: Symbol
-      # @rbs @condition: (^(untyped) -> boolish)?
+      # @rbs @condition: (^(untyped) -> bool)?
       # @rbs @failure_handler: (^(untyped, Symbol) -> untyped)?
       # @rbs @first_step: bool
 
-      #: (untyped, name: Symbol, condition: (^(untyped) -> boolish)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void
+      #: (untyped, name: Symbol, condition: (^(untyped) -> bool)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void
       def initialize(operation, name:, condition:, failure_handler:, first_step: false)
         @operation = operation
         @name = name
@@ -37,7 +37,7 @@ module TypedOperation
       def call_first_step(*args, **kwargs)
         context = kwargs.any? ? kwargs : (args.first || {})
 
-        if @condition && !@condition.call(context)
+        if (condition = @condition) && !condition.call(context)
           return Success(context)
         end
 
@@ -58,7 +58,7 @@ module TypedOperation
       def call_subsequent_step(input)
         context = normalize_input(input)
 
-        if @condition && !@condition.call(context)
+        if (condition = @condition) && !condition.call(context)
           return Success(context)
         end
 

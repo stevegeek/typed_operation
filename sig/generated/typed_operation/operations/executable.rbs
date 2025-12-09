@@ -1,0 +1,40 @@
+# Generated from lib/typed_operation/operations/executable.rb with RBS::Inline
+
+module TypedOperation
+  module Operations
+    # Defines the execution lifecycle for operations with before/after hooks.
+    # Operations must implement #perform to define their core logic.
+    module Executable
+      # : (Module) -> void
+      def self.included: (Module) -> void
+
+      module ClassMethods
+        def new: (*untyped, **untyped) -> untyped
+
+        # : (*untyped, **untyped) -> untyped
+        def call: (*untyped, **untyped) -> untyped
+
+        # : () -> Proc
+        def to_proc: () -> Proc
+      end
+
+      # : () -> untyped
+      def call: () -> untyped
+
+      # : () -> Proc
+      def to_proc: () -> Proc
+
+      # : () -> untyped
+      def execute_operation: () -> untyped
+
+      # : () -> void
+      def before_execute_operation: () -> void
+
+      # : (untyped) -> untyped
+      def after_execute_operation: (untyped) -> untyped
+
+      # : () -> untyped
+      def perform: () -> untyped
+    end
+  end
+end

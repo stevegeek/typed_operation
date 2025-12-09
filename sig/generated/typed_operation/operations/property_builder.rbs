@@ -1,0 +1,63 @@
+# Generated from lib/typed_operation/operations/property_builder.rb with RBS::Inline
+
+module TypedOperation
+  module Operations
+    # Builds typed properties for operations, handling optional parameters,
+    # defaults, and type conversions with Literal types.
+    #
+    # @rbs generic D -- type of default value
+    class PropertyBuilder[D]
+      include Literal::Types
+
+      @default: untyped
+
+      @has_default: bool
+
+      @reader: Symbol
+
+      @positional: bool?
+
+      @optional: bool?
+
+      @signature: untyped
+
+      @name: Symbol
+
+      @typed_operation: untyped
+
+      # : (singleton(Base) | singleton(ImmutableBase), Symbol, Literal::Types::_Matchable, Hash[Symbol, untyped]) -> void
+      def initialize: (singleton(Base) | singleton(ImmutableBase), Symbol, Literal::Types::_Matchable, Hash[Symbol, untyped]) -> void
+
+      # : () { (untyped) -> untyped } -> void
+      # : () -> void
+      def define: () { (untyped) -> untyped } -> void
+                | () -> void
+
+      private
+
+      # : () -> void
+      def prepare_type_signature: () -> void
+
+      # : () -> bool
+      def needs_to_be_nilable?: () -> bool
+
+      # : () -> bool
+      def type_nilable?: () -> bool
+
+      # : () -> void
+      def union_with_nil_to_support_nil_default: () -> void
+
+      # : () -> void
+      def validate_positional_order!: () -> void
+
+      # : () -> bool
+      def default_provided?: () -> bool
+
+      # : () -> bool
+      def has_nil_default?: () -> bool
+
+      # : () -> (D | Proc | nil)
+      def resolved_default: () -> (D | Proc | nil)
+    end
+  end
+end

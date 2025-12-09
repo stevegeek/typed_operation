@@ -1,0 +1,40 @@
+# Generated from lib/typed_operation/pipeline/builder.rb with RBS::Inline
+
+module TypedOperation
+  class Pipeline
+    # Builder class for the Pipeline DSL.
+    class Builder
+      @steps: Array[Hash[Symbol, untyped]]
+
+      @failure_handler: (^(untyped, Symbol) -> untyped)?
+
+      attr_reader steps: Array[Hash[Symbol, untyped]]
+
+      attr_reader failure_handler: (^(untyped, Symbol) -> untyped)?
+
+      # : () -> void
+      def initialize: () -> void
+
+      # Define a step in the pipeline.
+      # : (Symbol | untyped, ?untyped, ?if: (^(untyped) -> boolish)?) -> void
+      def step: (Symbol | untyped, ?untyped, ?if: (^(untyped) -> boolish)?) -> void
+
+      # Define a transform step that maps the success value.
+      # : () { (untyped) -> untyped } -> void
+      def transform: () { (untyped) -> untyped } -> void
+
+      # Define a fallback for error recovery.
+      # : (?untyped) ?{ (untyped) -> untyped } -> void
+      def fallback: (?untyped) ?{ (untyped) -> untyped } -> void
+
+      # Define a failure handler for the pipeline.
+      # : () { (untyped, Symbol) -> untyped } -> void
+      def on_failure: () { (untyped, Symbol) -> untyped } -> void
+
+      private
+
+      # : (untyped) -> Symbol
+      def derive_name: (untyped) -> Symbol
+    end
+  end
+end

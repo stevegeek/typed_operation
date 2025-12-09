@@ -1,0 +1,7 @@
+# Generated from lib/typed_operation/railtie.rb with RBS::Inline
+
+module TypedOperation
+  # Rails integration for TypedOperation, registers generators.
+  class Railtie < ::Rails::Railtie
+  end
+end

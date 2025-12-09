@@ -12,6 +12,9 @@ module TypedOperation
       end
 
       module ClassMethods
+        # @rbs!
+        #   def new: (*untyped, **untyped) -> untyped
+
         #: (*untyped, **untyped) -> untyped
         def call(...) = new(...).call
 

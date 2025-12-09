@@ -1,0 +1,90 @@
+# Generated from lib/typed_operation/instrumentation.rb with RBS::Inline
+
+module TypedOperation
+  # Provides runtime tracing and debugging capabilities for operations.
+  #
+  # Usage:
+  #   # Trace a single operation call
+  #   result = MyOperation.explain(param: value)
+  #   # Prints execution tree to stdout, returns the operation result
+  #
+  #   # Trace with partial application
+  #   result = MyOperation.with(partial: value).explain(rest: value)
+  #
+  #   # Trace a block of code (captures all instrumented operations)
+  #   TypedOperation::Instrumentation.explaining do
+  #     MyOperation.call(params)
+  #     AnotherOperation.call(other_params)
+  #   end
+  #
+  #   # Configure output and color
+  #   TypedOperation::Instrumentation.with_output(my_io, color: false) do
+  #     MyOperation.explain(param: value)
+  #   end
+  module Instrumentation
+    THREAD_KEY: Symbol
+
+    CHAIN_CONTEXT_KEY: Symbol
+
+    OUTPUT_KEY: Symbol
+
+    COLOR_KEY: Symbol
+
+    # Execute a block with custom output and color settings.
+    # : [T] (IO, ?color: bool?) { () -> T } -> T
+    def self.with_output: [T] (IO, ?color: bool?) { () -> T } -> T
+
+    # Execute a block with tracing enabled, printing the trace tree afterward.
+    # : [T] () { () -> T } -> T
+    def self.explaining: [T] () { () -> T } -> T
+
+    # : () -> IO
+    def self.output: () -> IO
+
+    # : () -> bool
+    def self.color: () -> bool
+
+    # : () -> Trace?
+    def self.current_trace: () -> Trace?
+
+    # : () -> bool
+    def self.tracing?: () -> bool
+
+    # : (Trace) -> void
+    def self.push_trace: (Trace) -> void
+
+    # : () -> Trace?
+    def self.pop_trace: () -> Trace?
+
+    # : () -> void
+    def self.clear_trace!: () -> void
+
+    # : (pass_mode: Symbol, ?extracted_params: Array[Symbol]?, ?fallback_used: bool) -> void
+    def self.set_chain_context: (pass_mode: Symbol, ?extracted_params: Array[Symbol]?, ?fallback_used: bool) -> void
+
+    # : () -> Hash[Symbol, untyped]?
+    def self.take_chain_context: () -> Hash[Symbol, untyped]?
+
+    # Placeholder class for block-based tracing
+    class BlockExecution
+    end
+
+    # Module to be prepended to operation classes to enable tracing.
+    # This is automatically included when using `explain`.
+    module Traceable
+      # : () -> untyped
+      def execute_operation: () -> untyped
+
+      private
+
+      # : () -> Hash[Symbol, untyped]
+      def extract_params_for_trace: () -> Hash[Symbol, untyped]
+    end
+
+    # Class methods added to operations for the `explain` entry point.
+    module Explainable
+      # : (*untyped, **untyped) ?{ () -> untyped } -> untyped
+      def explain: (*untyped, **untyped) ?{ () -> untyped } -> untyped
+    end
+  end
+end

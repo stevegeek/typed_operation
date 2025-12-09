@@ -1,0 +1,6 @@
+# Generated from lib/typed_operation/version.rb with RBS::Inline
+
+module TypedOperation
+  # : String
+  VERSION: ::String
+end

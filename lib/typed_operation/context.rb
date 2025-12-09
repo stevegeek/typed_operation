@@ -53,7 +53,9 @@ module TypedOperation
       self.class.new(@data.merge(coerce_to_hash(other)))
     end
 
-    #: (Symbol | String, *untyped) ?{ () -> untyped } -> untyped
+    #: (Symbol | String) -> untyped
+    #: [T] (Symbol | String, T) -> (untyped | T)
+    #: [T] (Symbol | String) { (Symbol) -> T } -> (untyped | T)
     def fetch(key, *args, &block)
       @data.fetch(key.to_sym, *args, &block)
     end
@@ -69,7 +71,7 @@ module TypedOperation
     end
 
     #: () -> Enumerator[[Symbol, untyped], self]
-    #: () { (Symbol, untyped) -> void } -> self
+    #: () { ([Symbol, untyped]) -> void } -> self
     def each(&block)
       return enum_for(:each) unless block_given?
       @data.each(&block)
@@ -174,7 +176,7 @@ module TypedOperation
     #     def to_h: () -> Hash[untyped, untyped]
     #   end
 
-    #: (_ToH | Hash[untyped, untyped] | Context) -> Hash[untyped, untyped]
+    #: (untyped) -> Hash[untyped, untyped]
     def coerce_to_hash(obj)
       case obj
       when Hash

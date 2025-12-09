@@ -1,0 +1,26 @@
+# Generated from lib/typed_operation/result/adapters/dry_monads.rb with RBS::Inline
+
+module TypedOperation
+  module Result
+    module Adapters
+      # Adapter for Dry::Monads Result type.
+      # Requires the dry-monads gem to be available.
+      # This is a lazy-loading adapter that only loads dry-monads when instantiated.
+      class DryMonads
+        # : () -> void
+        def initialize: () -> void
+
+        # Create a Success result using Dry::Monads.
+        # : (untyped) -> untyped
+        def success: (untyped) -> untyped
+
+        # Create a Failure result using Dry::Monads.
+        # : (untyped) -> untyped
+        def failure: (untyped) -> untyped
+
+        # : () -> String
+        def name: () -> String
+      end
+    end
+  end
+end

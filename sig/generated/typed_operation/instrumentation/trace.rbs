@@ -1,0 +1,50 @@
+# Generated from lib/typed_operation/instrumentation/trace.rb with RBS::Inline
+
+module TypedOperation
+  module Instrumentation
+    # Represents a single operation execution trace with timing and result data.
+    # Supports nested traces for operations that call other operations.
+    class Trace
+      attr_reader operation_class: untyped
+
+      attr_reader params: Hash[Symbol, untyped]
+
+      attr_reader start_time: Float
+
+      attr_reader children: Array[Trace]
+
+      attr_accessor end_time: Float?
+
+      attr_accessor result: untyped
+
+      attr_accessor exception: Exception?
+
+      attr_accessor pass_mode: Symbol?
+
+      attr_accessor extracted_params: Array[Symbol]?
+
+      attr_accessor fallback_used: bool
+
+      # : (operation_class: untyped, ?params: Hash[Symbol, untyped]) -> void
+      def initialize: (operation_class: untyped, ?params: Hash[Symbol, untyped]) -> void
+
+      # : (?result: untyped, ?exception: Exception?) -> self
+      def finish!: (?result: untyped, ?exception: Exception?) -> self
+
+      # : () -> (Float | Integer | nil)
+      def duration_ms: () -> (Float | Integer | nil)
+
+      # : () -> bool
+      def success?: () -> bool
+
+      # : () -> bool
+      def failure?: () -> bool
+
+      # : (Trace) -> void
+      def add_child: (Trace) -> void
+
+      # : () -> String
+      def operation_name: () -> String
+    end
+  end
+end

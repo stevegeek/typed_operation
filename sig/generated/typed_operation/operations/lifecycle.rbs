@@ -1,0 +1,12 @@
+# Generated from lib/typed_operation/operations/lifecycle.rb with RBS::Inline
+
+module TypedOperation
+  module Operations
+    # Hooks into Literal's initialization lifecycle to call #prepare if defined.
+    module Lifecycle
+      # This is called by Literal on initialization of underlying Struct/Data.
+      # : () -> void
+      def after_initialize: () -> void
+    end
+  end
+end

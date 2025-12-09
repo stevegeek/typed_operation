@@ -65,8 +65,9 @@ module TypedOperation
           line = "#{line} #{pass_info}"
         end
 
-        if trace.extracted_params&.any?
-          params_str = trace.extracted_params.join(", ")
+        extracted = trace.extracted_params
+        if extracted&.any?
+          params_str = extracted.join(", ")
           line = "#{line} #{colorize("← [#{params_str}]", :dim)}"
         end
 
@@ -105,7 +106,7 @@ module TypedOperation
         end
       end
 
-      #: (Float?) -> String
+      #: (Float | Integer | nil) -> String
       def format_duration(ms)
         return colorize("[--ms]", :dim) unless ms
         colorize("[#{ms}ms]", :dim)

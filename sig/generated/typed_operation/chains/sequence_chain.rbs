@@ -1,0 +1,22 @@
+# Generated from lib/typed_operation/chains/sequence_chain.rb with RBS::Inline
+
+module TypedOperation
+  # Sequential composition chain used by .then_passes
+  # Passes the success value (context) to the right operation/block.
+  # The result is merged back into context.
+  # Short-circuits on failure.
+  class SequenceChain < ChainedOperation
+    include Result::Mixin
+
+    # : (*untyped, **untyped) -> _Result[untyped, untyped]
+    def call: (*untyped, **untyped) -> _Result[untyped, untyped]
+
+    private
+
+    # : (untyped) -> Hash[Symbol, untyped]
+    def to_context: (untyped) -> Hash[Symbol, untyped]
+
+    # : (Hash[Symbol, untyped], untyped) -> Hash[Symbol, untyped]
+    def merge_into_context: (Hash[Symbol, untyped], untyped) -> Hash[Symbol, untyped]
+  end
+end

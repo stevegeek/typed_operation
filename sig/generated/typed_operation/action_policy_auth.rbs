@@ -1,0 +1,87 @@
+# Generated from lib/typed_operation/action_policy_auth.rb with RBS::Inline
+
+# An optional module to include in your operation to enable authorization via ActionPolicies.
+module TypedOperation
+  class MissingAuthentication < StandardError
+  end
+
+  module ActionPolicyAuth
+    # Base class for any action policy classes used by operations.
+    class OperationPolicy
+      include ActionPolicy::Policy::Core
+
+      include ActionPolicy::Policy::Authorization
+
+      include ActionPolicy::Policy::PreCheck
+
+      include ActionPolicy::Policy::Reasons
+
+      include ActionPolicy::Policy::Aliases
+
+      include ActionPolicy::Policy::Scoping
+
+      include ActionPolicy::Policy::Cache
+
+      include ActionPolicy::Policy::CachedApply
+    end
+
+    # : (Module) -> void
+    def self.included: (Module) -> void
+
+    # Class-level methods for configuring authorization on operations.
+    module ClassMethods
+      @_authorized_via_param: Array[Symbol]?
+
+      @_policy_method: Symbol?
+
+      @_policy_class: Class?
+
+      @_to_authorize_param: Symbol?
+
+      @_action_type: Symbol?
+
+      @_verify_authorized: bool?
+
+      # Configure the operation to use ActionPolicy for authorization.
+      # : (*Symbol, ?with: Class?, ?to: Symbol?, ?record: Symbol?) ?{ () -> bool } -> void
+      def authorized_via: (*Symbol, ?with: Class?, ?to: Symbol?, ?record: Symbol?) ?{ () -> bool } -> void
+
+      # : (?Symbol?) -> Symbol?
+      def action_type: (?Symbol?) -> Symbol?
+
+      # : () -> Symbol?
+      def operation_policy_method: () -> Symbol?
+
+      # : () -> Class?
+      def operation_policy_class: () -> Class?
+
+      # : () -> Symbol?
+      def operation_record_to_authorize: () -> Symbol?
+
+      # : () -> bool
+      def checks_authorization?: () -> bool
+
+      # You can use this on an operation base class to ensure subclasses always enable authorization.
+      # : () -> void
+      def verify_authorized!: () -> void
+
+      # : () -> bool
+      def verify_authorized?: () -> bool
+
+      # : (Class) -> void
+      def inherited: (Class) -> void
+    end
+
+    private
+
+    # : () -> untyped
+    def execute_operation: () -> untyped
+
+    # : () -> void
+    def operation_check_authorized!: () -> void
+
+    # A hook for subclasses to override to do something on an authorization failure.
+    # : (ActionPolicy::Unauthorized) -> void
+    def on_authorization_failure: (ActionPolicy::Unauthorized) -> void
+  end
+end

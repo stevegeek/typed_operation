@@ -1,0 +1,13 @@
+# Generated from lib/typed_operation/pipeline/empty_pipeline_chain.rb with RBS::Inline
+
+module TypedOperation
+  class Pipeline
+    # Handles empty pipelines - just passes through input as Success.
+    class EmptyPipelineChain
+      include Result::Mixin
+
+      # : (*untyped, **untyped) -> untyped
+      def call: (*untyped, **untyped) -> untyped
+    end
+  end
+end

@@ -1,0 +1,65 @@
+# Generated from lib/typed_operation/partially_applied.rb with RBS::Inline
+
+module TypedOperation
+  # Represents an operation with some, but not all, required parameters provided.
+  # Allows incrementally building operation arguments before execution.
+  class PartiallyApplied
+    include Operations::Composition
+
+    @keyword_args: Hash[Symbol, untyped]
+
+    @positional_args: Array[untyped]
+
+    @operation_class: untyped
+
+    attr_reader positional_args: Array[untyped]
+
+    attr_reader keyword_args: Hash[Symbol, untyped]
+
+    attr_reader operation_class: untyped
+
+    # : (untyped, *untyped, **untyped) -> void
+    def initialize: (untyped, *untyped, **untyped) -> void
+
+    # : (*untyped, **untyped) -> (PartiallyApplied | Prepared)
+    def with: (*untyped, **untyped) -> (PartiallyApplied | Prepared)
+
+    # : () -> Curried
+    def curry: () -> Curried
+
+    # : (*untyped, **untyped) -> untyped
+    def call: (*untyped, **untyped) -> untyped
+
+    # : () -> untyped
+    def operation: () -> untyped
+
+    # : () -> false
+    def prepared?: () -> false
+
+    # : () -> Proc
+    def to_proc: () -> Proc
+
+    # : () -> Array[untyped]
+    def deconstruct: () -> Array[untyped]
+
+    # : (Array[Symbol]?) -> Hash[Symbol, untyped]
+    def deconstruct_keys: (Array[Symbol]?) -> Hash[Symbol, untyped]
+
+    private
+
+    # : () -> Array[Symbol]
+    def required_positional_parameters: () -> Array[Symbol]
+
+    # : () -> Array[Symbol]
+    def required_keyword_parameters: () -> Array[Symbol]
+
+    # : () -> Array[Symbol]
+    def positional_parameters: () -> Array[Symbol]
+
+    # : (Integer) -> void
+    def validate_positional_arg_count!: (Integer) -> void
+
+    # : (Array[untyped], Hash[Symbol, untyped]) -> bool
+    def partially_applied?: (Array[untyped], Hash[Symbol, untyped]) -> bool
+  end
+end

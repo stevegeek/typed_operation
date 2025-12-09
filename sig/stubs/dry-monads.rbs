@@ -1,0 +1,19 @@
+module Dry
+  module Monads
+    def self.Success: (untyped) -> Success[untyped]
+    def self.Failure: (untyped) -> Failure[untyped]
+
+    class Result[T]
+      def success?: () -> bool
+      def failure?: () -> bool
+      def value!: () -> T
+      def failure: () -> untyped
+    end
+
+    class Success[T] < Result[T]
+    end
+
+    class Failure[T] < Result[T]
+    end
+  end
+end

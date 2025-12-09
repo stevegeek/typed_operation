@@ -1,0 +1,64 @@
+# Generated from lib/typed_operation/pipeline.rb with RBS::Inline
+
+module TypedOperation
+  # DSL for building declarative pipelines of operations.
+  # Pipeline is syntactic sugar over the composition/chaining system.
+  # Internally builds chains, adding named steps, conditions, and error attribution.
+  class Pipeline
+    @chain: untyped
+
+    attr_reader steps: Array[Hash[Symbol, untyped]]
+
+    attr_reader failure_handler: (^(untyped, Symbol) -> untyped)?
+
+    # Build a new pipeline using the DSL.
+    # : () { () -> void } -> Pipeline
+    def self.build: () { () -> void } -> Pipeline
+
+    # : (?Array[Hash[Symbol, untyped]], ?(^(untyped, Symbol) -> untyped)?) -> void
+    def initialize: (?Array[Hash[Symbol, untyped]], ?(^(untyped, Symbol) -> untyped)?) -> void
+
+    # Execute the pipeline by delegating to the internal chain.
+    # : (*untyped, **untyped) -> untyped
+    def call: (*untyped, **untyped) -> untyped
+
+    # Append an operation as a new step, returning a new Pipeline.
+    # : (untyped, ?name: Symbol?, ?if: (^(untyped) -> boolish)?) -> Pipeline
+    def append: (untyped, ?name: Symbol?, ?if: (^(untyped) -> boolish)?) -> Pipeline
+
+    # Compose with another pipeline, merging steps.
+    # : (Pipeline, ?on_failure: (:left | :right | ^(untyped, Symbol) -> untyped)?) -> Pipeline
+    def compose: (Pipeline, ?on_failure: (:left | :right | ^(untyped, Symbol) -> untyped)?) -> Pipeline
+
+    # Smart composition operator.
+    # : (Pipeline | untyped) -> Pipeline
+    def +: (Pipeline | untyped) -> Pipeline
+
+    # Convert to a bare chain for full Composition flexibility.
+    # : () -> ChainableWrapper
+    def to_chain: () -> ChainableWrapper
+
+    private
+
+    # : () -> untyped
+    def chain: () -> untyped
+
+    # : () -> untyped
+    def build_chain: () -> untyped
+
+    # : (untyped, Hash[Symbol, untyped], untyped) -> untyped
+    def combine_into_chain: (untyped, Hash[Symbol, untyped], untyped) -> untyped
+
+    # : (Hash[Symbol, untyped], ?first_step: bool) -> untyped
+    def wrap_step: (Hash[Symbol, untyped], ?first_step: bool) -> untyped
+
+    # : (Hash[Symbol, untyped]) -> untyped
+    def wrap_fallback: (Hash[Symbol, untyped]) -> untyped
+
+    # : (Pipeline, (:left | :right | ^(untyped, Symbol) -> untyped)?) -> (^(untyped, Symbol) -> untyped)?
+    def resolve_failure_handlers: (Pipeline, (:left | :right | ^(untyped, Symbol) -> untyped)?) -> (^(untyped, Symbol) -> untyped)?
+
+    # : (untyped) -> Symbol
+    def derive_name: (untyped) -> Symbol
+  end
+end

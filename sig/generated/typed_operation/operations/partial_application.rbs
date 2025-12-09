@@ -1,0 +1,14 @@
+# Generated from lib/typed_operation/operations/partial_application.rb with RBS::Inline
+
+module TypedOperation
+  module Operations
+    # Enables partial application of operation parameters via #with and currying via #curry.
+    module PartialApplication
+      # : (*untyped, **untyped) -> PartiallyApplied
+      def with: (*untyped, **untyped) -> PartiallyApplied
+
+      # : () -> Curried
+      def curry: () -> Curried
+    end
+  end
+end

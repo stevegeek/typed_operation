@@ -1,3 +1,7 @@
+# rbs_inline: enabled
+# frozen_string_literal: true
+
 module TypedOperation
-  VERSION = "1.0.0.beta3"
+  #: String
+  VERSION = "1.0.0"
 end

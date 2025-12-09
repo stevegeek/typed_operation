@@ -1,0 +1,33 @@
+module ActionPolicy
+  module Behaviour
+  end
+
+  class Unauthorized < StandardError
+  end
+
+  module Policy
+    module Core
+    end
+
+    module Authorization
+    end
+
+    module PreCheck
+    end
+
+    module Reasons
+    end
+
+    module Aliases
+    end
+
+    module Scoping
+    end
+
+    module Cache
+    end
+
+    module CachedApply
+    end
+  end
+end

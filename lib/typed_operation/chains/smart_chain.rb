@@ -156,7 +156,7 @@ module TypedOperation
       end
     end
 
-    #: (_Callable) -> (Class | nil)
+    #: (_Callable) -> untyped
     def extract_operation_class(operation)
       case operation
       when Class then operation

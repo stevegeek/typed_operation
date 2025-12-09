@@ -1,0 +1,14 @@
+# Generated from lib/typed_operation.rb with RBS::Inline
+
+# TypedOperation provides a framework for defining type-safe, composable operations
+# with support for partial application, currying, and parameter validation.
+module TypedOperation
+  class InvalidOperationError < StandardError
+  end
+
+  class MissingParameterError < ArgumentError
+  end
+
+  class ParameterError < TypeError
+  end
+end

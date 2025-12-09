@@ -1,0 +1,30 @@
+# Generated from lib/typed_operation/operations/composition.rb with RBS::Inline
+
+module TypedOperation
+  module Operations
+    # Provides composition methods for chaining operations together.
+    # Included in operation classes and composed operations (ChainedOperation, Pipeline).
+    module Composition
+      # Smart sequential composition with context accumulation.
+      # Auto-detects whether to spread kwargs or pass as single value.
+      # : (?(singleton(Base) | Proc), **untyped) ?{ (untyped) -> untyped } -> SmartChain
+      def then: (?singleton(Base) | Proc, **untyped) ?{ (untyped) -> untyped } -> SmartChain
+
+      # Spreads the context as **kwargs to the next operation.
+      # : (?(singleton(Base) | Proc)) ?{ (untyped) -> untyped } -> SplatChain
+      def then_spreads: (?singleton(Base) | Proc) ?{ (untyped) -> untyped } -> SplatChain
+
+      # Passes the context as a single positional argument to the next operation.
+      # : (?(singleton(Base) | Proc)) ?{ (untyped) -> untyped } -> SequenceChain
+      def then_passes: (?singleton(Base) | Proc) ?{ (untyped) -> untyped } -> SequenceChain
+
+      # Transforms the success value, replacing the context entirely.
+      # : () { (untyped) -> untyped } -> MapChain
+      def transform: () { (untyped) -> untyped } -> MapChain
+
+      # Provides a fallback when the operation fails.
+      # : (?(singleton(Base) | Proc)) ?{ (untyped) -> untyped } -> FallbackChain
+      def or_else: (?singleton(Base) | Proc) ?{ (untyped) -> untyped } -> FallbackChain
+    end
+  end
+end

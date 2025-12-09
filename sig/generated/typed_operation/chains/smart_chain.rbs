@@ -1,0 +1,52 @@
+# Generated from lib/typed_operation/chains/smart_chain.rb with RBS::Inline
+
+module TypedOperation
+  # Smart chain created by .then
+  # Accumulates context across chain steps and extracts required params for each operation.
+  class SmartChain < ChainedOperation
+    include Result::Mixin
+
+    @prefilled_params: Hash[Symbol, untyped]
+
+    @required_params: Array[Symbol]
+
+    @uses_kwargs: bool
+
+    @extra_kwargs: Hash[Symbol, untyped]
+
+    # : (_Callable, _Callable, ?Hash[Symbol, untyped]) -> void
+    def initialize: (_Callable, _Callable, ?Hash[Symbol, untyped]) -> void
+
+    # : (*untyped, **untyped) -> _Result[untyped, untyped]
+    def call: (*untyped, **untyped) -> _Result[untyped, untyped]
+
+    private
+
+    # : (untyped) -> Hash[Symbol, untyped]
+    def to_context: (untyped) -> Hash[Symbol, untyped]
+
+    # : (Hash[Symbol, untyped], untyped) -> Hash[Symbol, untyped]
+    def merge_into_context: (Hash[Symbol, untyped], untyped) -> Hash[Symbol, untyped]
+
+    # : (Hash[Symbol, untyped]) -> _Result[untyped, untyped]
+    def call_right: (Hash[Symbol, untyped]) -> _Result[untyped, untyped]
+
+    # : (Hash[Symbol, untyped], Array[Symbol]) -> Hash[Symbol, untyped]
+    def extract_from_context: (Hash[Symbol, untyped], Array[Symbol]) -> Hash[Symbol, untyped]
+
+    # : (Hash[Symbol, untyped]) -> void
+    def validate_required_params!: (Hash[Symbol, untyped]) -> void
+
+    # : (_Callable) -> bool
+    def uses_kwargs?: (_Callable) -> bool
+
+    # : (_Callable) -> Array[Symbol]
+    def extract_required_params: (_Callable) -> Array[Symbol]
+
+    # : (_Callable) -> Hash[Symbol, untyped]
+    def extract_prefilled_params: (_Callable) -> Hash[Symbol, untyped]
+
+    # : (_Callable) -> untyped
+    def extract_operation_class: (_Callable) -> untyped
+  end
+end

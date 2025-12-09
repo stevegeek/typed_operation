@@ -1,0 +1,29 @@
+# Generated from lib/typed_operation/curried.rb with RBS::Inline
+
+module TypedOperation
+  # Wraps an operation to support automatic currying, allowing parameters to be
+  # provided one at a time. Returns a new Curried instance until all required
+  # parameters are satisfied, then executes the operation.
+  class Curried
+    @operation_class: untyped
+
+    @partial_operation: PartiallyApplied | Prepared
+
+    # : (untyped, ?(PartiallyApplied | Prepared)) -> void
+    def initialize: (untyped, ?PartiallyApplied | Prepared) -> void
+
+    # : (untyped) -> (Curried | untyped)
+    def call: (untyped) -> (Curried | untyped)
+
+    # : () -> Proc
+    def to_proc: () -> Proc
+
+    private
+
+    # : () -> Symbol?
+    def next_keyword_parameter: () -> Symbol?
+
+    # : () -> bool
+    def next_parameter_positional?: () -> bool
+  end
+end

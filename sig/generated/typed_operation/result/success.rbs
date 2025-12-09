@@ -1,0 +1,46 @@
+# Generated from lib/typed_operation/result/success.rb with RBS::Inline
+
+module TypedOperation
+  module Result
+    # Represents a successful result. Immutable value object.
+    class Success
+      @value: untyped
+
+      attr_reader value: untyped
+
+      # : (untyped) -> void
+      def initialize: (untyped) -> void
+
+      # : () -> true
+      def success?: () -> true
+
+      # : () -> false
+      def failure?: () -> false
+
+      # Returns the wrapped value.
+      # : () -> untyped
+      def value!: () -> untyped
+
+      # Returns nil for Success.
+      # : () -> nil
+      def failure: () -> nil
+
+      # Pattern matching support - array destructuring.
+      # : () -> [untyped]
+      def deconstruct: () -> [ untyped ]
+
+      # Pattern matching support - hash destructuring.
+      # : (Array[Symbol]?) -> Hash[Symbol, untyped]
+      def deconstruct_keys: (Array[Symbol]?) -> Hash[Symbol, untyped]
+
+      # : (untyped) -> bool
+      def ==: (untyped) -> bool
+
+      # : () -> Integer
+      def hash: () -> Integer
+
+      # : () -> String
+      def inspect: () -> String
+    end
+  end
+end

@@ -1,0 +1,54 @@
+# Generated from lib/typed_operation/instrumentation/tree_formatter.rb with RBS::Inline
+
+module TypedOperation
+  module Instrumentation
+    # Formats execution traces as a visual chain for console output.
+    # Shows operation flow with arrows and pass mode indicators.
+    class TreeFormatter
+      ARROW: String
+
+      FALLBACK_ARROW: String
+
+      SUCCESS_MARK: String
+
+      FAILURE_MARK: String
+
+      SKIPPED_MARK: String
+
+      PASS_MODES: Hash[Symbol, String]
+
+      COLORS: Hash[Symbol, String]
+
+      @color: bool
+
+      # : (?color: bool?) -> void
+      def initialize: (?color: bool?) -> void
+
+      # : (Trace) -> String
+      def format: (Trace) -> String
+
+      private
+
+      # : (Trace, Array[String], ?depth: Integer, ?is_fallback: bool) -> void
+      def format_chain: (Trace, Array[String], ?depth: Integer, ?is_fallback: bool) -> void
+
+      # : (Trace) -> String
+      def format_status: (Trace) -> String
+
+      # : (Float | Integer | nil) -> String
+      def format_duration: (Float | Integer | nil) -> String
+
+      # : (Trace) -> String?
+      def format_pass_mode: (Trace) -> String?
+
+      # : (Exception?) -> String
+      def format_exception: (Exception?) -> String
+
+      # : (String, Symbol) -> String
+      def colorize: (String, Symbol) -> String
+
+      # : () -> bool
+      def detect_color_support: () -> bool
+    end
+  end
+end

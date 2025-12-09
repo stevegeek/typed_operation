@@ -1,0 +1,107 @@
+# Generated from lib/typed_operation/context.rb with RBS::Inline
+
+module TypedOperation
+  # Context objects are for passing data through pipelines and chains.
+  #
+  # This particular implementation wraps a Hash but provides dot access for cleaner syntax.
+  # Its underlying store is mutable.
+  #
+  # Users can subclass or provide their own context that implements the same interface.
+  #
+  # Required interface for custom contexts:
+  #   - #[](key)        - read a value
+  #   - #[]=(key, value) - write a value (if mutable)
+  #   - #key?(key)      - check if key exists
+  #   - #to_h           - convert to Hash (for kwargs extraction)
+  #   - #merge(other)   - combine with another context/hash, returns new context
+  #
+  # Dot access is not required. It's up to you if you prefer to have it in your operation usage.
+  class Context
+    @data: Hash[Symbol, untyped]
+
+    # : (?Hash[Symbol | String, untyped] | Context | _ToH) -> void
+    def initialize: (?Hash[Symbol | String, untyped] | Context | _ToH) -> void
+
+    # : (Symbol | String) -> untyped
+    def []: (Symbol | String) -> untyped
+
+    # : (Symbol | String, untyped) -> untyped
+    def []=: (Symbol | String, untyped) -> untyped
+
+    # : (Symbol | String) -> bool
+    def key?: (Symbol | String) -> bool
+
+    # : () -> Hash[Symbol, untyped]
+    def to_h: () -> Hash[Symbol, untyped]
+
+    # : (Hash[Symbol | String, untyped] | Context | _ToH) -> Context
+    def merge: (Hash[Symbol | String, untyped] | Context | _ToH) -> Context
+
+    # : (Symbol | String) -> untyped
+    # : [T] (Symbol | String, T) -> (untyped | T)
+    # : [T] (Symbol | String) { (Symbol) -> T } -> (untyped | T)
+    def fetch: (Symbol | String) -> untyped
+             | [T] (Symbol | String, T) -> (untyped | T)
+             | [T] (Symbol | String) { (Symbol) -> T } -> (untyped | T)
+
+    # : () -> Array[Symbol]
+    def keys: () -> Array[Symbol]
+
+    # : () -> Array[untyped]
+    def values: () -> Array[untyped]
+
+    # : () -> Enumerator[[Symbol, untyped], self]
+    # : () { ([Symbol, untyped]) -> void } -> self
+    def each: () -> Enumerator[[ Symbol, untyped ], self]
+            | () { ([ Symbol, untyped ]) -> void } -> self
+
+    # : () { (Symbol, untyped) -> boolish } -> Context
+    def select: () { (Symbol, untyped) -> boolish } -> Context
+
+    # : () { (Symbol, untyped) -> boolish } -> Context
+    def reject: () { (Symbol, untyped) -> boolish } -> Context
+
+    # : () { (untyped) -> untyped } -> Context
+    def transform_values: () { (untyped) -> untyped } -> Context
+
+    # : (*(Symbol | String)) -> Context
+    def slice: (*Symbol | String) -> Context
+
+    # : (*(Symbol | String)) -> Context
+    def except: (*Symbol | String) -> Context
+
+    # : () -> bool
+    def empty?: () -> bool
+
+    # : () -> Integer
+    def size: () -> Integer
+
+    # : (untyped) -> bool
+    def ==: (untyped) -> bool
+
+    # Provide dot access for reading and writing values.
+    # : (Symbol, *untyped) ?{ (*untyped) -> untyped } -> untyped
+    def method_missing: (Symbol, *untyped) ?{ (*untyped) -> untyped } -> untyped
+
+    # : (Symbol, ?bool) -> bool
+    def respond_to_missing?: (Symbol, ?bool) -> bool
+
+    # : () -> String
+    def inspect: () -> String
+
+    private
+
+    # : (Symbol) -> untyped
+    def read_value: (Symbol) -> untyped
+
+    # : (Symbol, untyped) -> untyped
+    def write_value: (Symbol, untyped) -> untyped
+
+    interface _ToH
+      def to_h: () -> Hash[untyped, untyped]
+    end
+
+    # : (untyped) -> Hash[untyped, untyped]
+    def coerce_to_hash: (untyped) -> Hash[untyped, untyped]
+  end
+end

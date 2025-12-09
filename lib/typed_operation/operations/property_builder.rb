@@ -10,14 +10,14 @@ module TypedOperation
     class PropertyBuilder
       include Literal::Types
 
-      # @rbs @typed_operation: singleton(Base) | singleton(ImmutableBase)
+      # @rbs @typed_operation: untyped
       # @rbs @name: Symbol
-      # @rbs @signature: Literal::Types::_Matchable
+      # @rbs @signature: untyped
       # @rbs @optional: bool?
       # @rbs @positional: bool?
       # @rbs @reader: Symbol
       # @rbs @has_default: bool
-      # @rbs @default: D?
+      # @rbs @default: untyped
 
       #: (singleton(Base) | singleton(ImmutableBase), Symbol, Literal::Types::_Matchable, Hash[Symbol, untyped]) -> void
       def initialize(typed_operation, parameter_name, type_signature, options)
@@ -62,7 +62,7 @@ module TypedOperation
 
       #: () -> bool
       def needs_to_be_nilable?
-        @optional && !type_nilable?
+        !!(@optional && !type_nilable?)
       end
 
       #: () -> bool

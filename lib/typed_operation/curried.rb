@@ -6,10 +6,10 @@ module TypedOperation
   # provided one at a time. Returns a new Curried instance until all required
   # parameters are satisfied, then executes the operation.
   class Curried
-    # @rbs @operation_class: singleton(TypedOperation::Base)
+    # @rbs @operation_class: untyped
     # @rbs @partial_operation: PartiallyApplied | Prepared
 
-    #: (singleton(TypedOperation::Base), ?(PartiallyApplied | Prepared)) -> void
+    #: (untyped, ?(PartiallyApplied | Prepared)) -> void
     def initialize(operation_class, partial_operation = nil)
       @operation_class = operation_class
       @partial_operation = partial_operation || operation_class.with
@@ -22,7 +22,8 @@ module TypedOperation
       next_partially_applied = if next_parameter_positional?
         @partial_operation.with(arg)
       else
-        @partial_operation.with(next_keyword_parameter => arg)
+        key = next_keyword_parameter or raise ArgumentError, "No keyword parameter available"
+        @partial_operation.with(key => arg)
       end
       if next_partially_applied.prepared?
         next_partially_applied.call

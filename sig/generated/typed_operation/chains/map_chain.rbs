@@ -1,0 +1,18 @@
+# Generated from lib/typed_operation/chains/map_chain.rb with RBS::Inline
+
+module TypedOperation
+  # Functor map chain created by .transform
+  # Block receives context, return value replaces context (wrapped in Success).
+  # Short-circuits on failure.
+  class MapChain < ChainedOperation
+    include Result::Mixin
+
+    # : (*untyped, **untyped) -> _Result[untyped, untyped]
+    def call: (*untyped, **untyped) -> _Result[untyped, untyped]
+
+    private
+
+    # : (untyped) -> Hash[Symbol, untyped]
+    def to_context: (untyped) -> Hash[Symbol, untyped]
+  end
+end

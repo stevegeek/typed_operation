@@ -1,0 +1,29 @@
+module Literal
+  class Struct
+  end
+
+  class Data
+  end
+
+  module Types
+    class NilableType
+      def initialize: (untyped) -> void
+    end
+
+    interface _Matchable
+      def ===: (untyped) -> boolish
+    end
+
+    def _Union: (*untyped) -> untyped
+  end
+
+  module Null
+  end
+
+  interface _Property
+    def name: () -> Symbol
+    def positional?: () -> bool
+    def keyword?: () -> bool
+    def required?: () -> bool
+  end
+end

@@ -1,0 +1,29 @@
+# Generated from lib/typed_operation/operations/introspection.rb with RBS::Inline
+
+module TypedOperation
+  module Operations
+    # Introspection methods for querying operation parameters.
+    module Introspection
+      # : () -> Array[Symbol]
+      def positional_parameters: () -> Array[Symbol]
+
+      # : () -> Array[Symbol]
+      def keyword_parameters: () -> Array[Symbol]
+
+      # : () -> Array[Literal::_Property]
+      def required_parameters: () -> Array[Literal::_Property]
+
+      # : () -> Array[Symbol]
+      def required_positional_parameters: () -> Array[Symbol]
+
+      # : () -> Array[Symbol]
+      def required_keyword_parameters: () -> Array[Symbol]
+
+      # : () -> Array[Symbol]
+      def optional_positional_parameters: () -> Array[Symbol]
+
+      # : () -> Array[Symbol]
+      def optional_keyword_parameters: () -> Array[Symbol]
+    end
+  end
+end

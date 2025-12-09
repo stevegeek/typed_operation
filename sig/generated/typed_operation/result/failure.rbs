@@ -1,0 +1,50 @@
+# Generated from lib/typed_operation/result/failure.rb with RBS::Inline
+
+module TypedOperation
+  # Error raised when trying to unwrap a Failure result.
+  class UnwrapError < StandardError
+  end
+
+  module Result
+    # Represents a failed result. Immutable value object.
+    class Failure
+      @error: untyped
+
+      attr_reader error: untyped
+
+      # : (untyped) -> void
+      def initialize: (untyped) -> void
+
+      # : () -> false
+      def success?: () -> false
+
+      # : () -> true
+      def failure?: () -> true
+
+      # Raises UnwrapError since this is a Failure.
+      # : () -> bot
+      def value!: () -> bot
+
+      # Returns the wrapped error.
+      # : () -> untyped
+      def failure: () -> untyped
+
+      # Pattern matching support - array destructuring.
+      # : () -> [untyped]
+      def deconstruct: () -> [ untyped ]
+
+      # Pattern matching support - hash destructuring.
+      # : (Array[Symbol]?) -> Hash[Symbol, untyped]
+      def deconstruct_keys: (Array[Symbol]?) -> Hash[Symbol, untyped]
+
+      # : (untyped) -> bool
+      def ==: (untyped) -> bool
+
+      # : () -> Integer
+      def hash: () -> Integer
+
+      # : () -> String
+      def inspect: () -> String
+    end
+  end
+end

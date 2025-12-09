@@ -1,0 +1,21 @@
+# Generated from lib/typed_operation/result/adapters/built_in.rb with RBS::Inline
+
+module TypedOperation
+  module Result
+    module Adapters
+      # Default adapter using built-in Success/Failure classes.
+      class BuiltIn
+        # Create a Success result.
+        # : (untyped) -> Result::Success
+        def success: (untyped) -> Result::Success
+
+        # Create a Failure result.
+        # : (untyped) -> Result::Failure
+        def failure: (untyped) -> Result::Failure
+
+        # : () -> String
+        def name: () -> String
+      end
+    end
+  end
+end
