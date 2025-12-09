@@ -77,6 +77,14 @@ module TypedOperation
         # Check for missing required params
         validate_required_params!(call_kwargs)
 
+        # Set trace context if tracing
+        if Instrumentation.tracing?
+          Instrumentation.set_chain_context(
+            pass_mode: :kwargs_splat,
+            extracted_params: extracted.keys
+          )
+        end
+
         @right.call(**call_kwargs)
       else
         # Positional param operation - pass full context

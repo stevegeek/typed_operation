@@ -49,7 +49,6 @@ module TypedOperation
       raise MissingParameterError, "Cannot call PartiallyApplied operation #{operation_class.name}, are you expecting it to be Prepared?"
     end
 
-
     #: () -> untyped
     def operation
       raise MissingParameterError, "Cannot instantiate Operation #{operation_class.name}, as it is only partially applied."

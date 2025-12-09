@@ -14,6 +14,14 @@ module TypedOperation
       result = @left.call(*args, **kwargs)
       return result if result.success?
 
+      if Instrumentation.tracing?
+        Instrumentation.set_chain_context(
+          pass_mode: :fallback,
+          extracted_params: nil,
+          fallback_used: true
+        )
+      end
+
       if @right.is_a?(Proc)
         @right.call(result.failure)
       else

@@ -14,5 +14,13 @@ module TypedOperation
     def prepared?
       true
     end
+
+    #: () -> untyped
+    def explain
+      unless operation_class.respond_to?(:explain)
+        raise InvalidOperationError, "#{operation_class.name} does not support .explain. Include TypedOperation::Explainable in your operation class."
+      end
+      operation_class.explain(*@positional_args, **@keyword_args)
+    end
   end
 end

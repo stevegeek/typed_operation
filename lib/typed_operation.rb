@@ -1,3 +1,5 @@
+# rbs_inline: enabled
+
 require "literal"
 
 require "typed_operation/version"
@@ -12,6 +14,8 @@ require "typed_operation/operations/property_builder"
 require "typed_operation/operations/executable"
 require "typed_operation/operations/composition"
 require "typed_operation/curried"
+require "typed_operation/instrumentation"
+require "typed_operation/explainable"
 require "typed_operation/immutable_base"
 require "typed_operation/base"
 require "typed_operation/partially_applied"
