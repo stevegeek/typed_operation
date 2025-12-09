@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # Simple routes for demo app
+  resources :products, only: [:index, :create]
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  resources :orders, only: [:index, :create] do
+    post :via_pipeline, on: :collection, action: :create_via_pipeline
+  end
 end

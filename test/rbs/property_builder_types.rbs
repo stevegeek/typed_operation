@@ -1,0 +1,9 @@
+# RBS declarations for type test files
+
+module TypedOperation
+  module Operations
+    class TestOperation < TypedOperation::Base
+      def perform: () -> void
+    end
+  end
+end
