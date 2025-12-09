@@ -154,7 +154,7 @@ partially_applied.curry.("2").(3)
 
 # > TestOperation.with("1").with(bar: "2").call
 # => Raises an error because it is PartiallyApplied and so can't be called (it is missing required args)
-#      "Cannot call PartiallyApplied operation TestOperation (key: test_operation), are you expecting it to be Prepared? (TypedOperation::MissingParameterError)"
+#      "Cannot call PartiallyApplied operation TestOperation, are you expecting it to be Prepared? (TypedOperation::MissingParameterError)"
 
 TestOperation.with("1").with(bar: "2").with(baz: 3).operation
 # same as > TestOperation.new("1", bar: "2", baz: 3)
@@ -162,7 +162,7 @@ TestOperation.with("1").with(bar: "2").with(baz: 3).operation
 
 # > TestOperation.with(foo: "1").with(bar: "2").operation
 # => Raises an error because it is PartiallyApplied so operation can't be instantiated
-#      "Cannot instantiate Operation TestOperation (key: test_operation), as it is only partially applied. (TypedOperation::MissingParameterError)"
+#      "Cannot instantiate Operation TestOperation, as it is only partially applied. (TypedOperation::MissingParameterError)"
 ```
 
 ## Documentation
@@ -722,7 +722,7 @@ class MyOperation < ::TypedOperation::Base
 
   param :account_name, String
   param :owner, ::Owner
-  
+
   def perform
     account = yield create_account(account_name)
     yield AnotherOperation.call(account, owner)
@@ -731,7 +731,7 @@ class MyOperation < ::TypedOperation::Base
   end
 
   private
-  
+
   def create_account(account_name)
     # returns Success(account) or Failure(:cant_create)
   end
