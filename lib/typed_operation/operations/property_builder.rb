@@ -1,3 +1,4 @@
+# rbs_inline: enabled
 # frozen_string_literal: true
 
 module TypedOperation
@@ -7,7 +8,6 @@ module TypedOperation
     class PropertyBuilder
       include Literal::Types
 
-      NULL_PROC = -> {}
 
       def initialize(typed_operation, parameter_name, type_signature, options)
         @typed_operation = typed_operation
@@ -19,7 +19,7 @@ module TypedOperation
         @default_key = options.key?(:default)
         @default = options[:default]
 
-        prepare_type_signature_for_literal
+        prepare_type_signature
       end
 
       def define(&converter)
@@ -33,7 +33,7 @@ module TypedOperation
           @name,
           @signature,
           @positional ? :positional : :keyword,
-          default: default_value_for_literal,
+          default: resolved_default,
           reader: @reader,
           &coerce_by
         )
@@ -41,46 +41,49 @@ module TypedOperation
 
       private
 
-      def prepare_type_signature_for_literal
+      #: () -> void
+      def prepare_type_signature
         @signature = Literal::Types::NilableType.new(@signature) if needs_to_be_nilable?
         union_with_nil_to_support_nil_default
-        validate_positional_order_params! if @positional
+        validate_positional_order! if @positional
       end
 
+      #: () -> bool
       def needs_to_be_nilable?
         @optional && !type_nilable?
       end
 
+      #: () -> bool
       def type_nilable?
         @signature.is_a?(Literal::Types::NilableType)
       end
 
+      #: () -> void
       def union_with_nil_to_support_nil_default
-        @signature = _Union(@signature, NilClass) if has_default_value_nil?
+        @signature = _Union(@signature, NilClass) if has_nil_default?
       end
 
-      def has_default_value_nil?
+      #: () -> bool
+      def has_nil_default?
         default_provided? && @default.nil?
       end
 
-      def validate_positional_order_params!
-        # Optional ones can always be added after required ones, or before any others, but required ones must be first
+      #: () -> void
+      def validate_positional_order!
         unless type_nilable? || @typed_operation.optional_positional_parameters.empty?
           raise ParameterError, "Cannot define required positional parameter '#{@name}' after optional positional parameters"
         end
       end
 
+      #: () -> bool
       def default_provided?
         @default_key
       end
 
-      def default_value_for_literal
-        if has_default_value_nil?
-          NULL_PROC
-        elsif default_provided?
-          @default
-        elsif type_nilable?
-          NULL_PROC
+      #: () -> untyped
+      def resolved_default
+        if has_nil_default? || type_nilable?
+          -> {}
         else
           @default
         end
