@@ -1,3 +1,4 @@
+# rbs_inline: enabled
 # frozen_string_literal: true
 
 module TypedOperation
@@ -8,6 +9,7 @@ module TypedOperation
   class SequenceChain < ChainedOperation
     include Result::Mixin
 
+    #: (*untyped, **untyped) -> _Result[untyped, untyped]
     def call(...)
       result = @left.call(...)
       return result if result.failure?
@@ -27,6 +29,7 @@ module TypedOperation
 
     private
 
+    #: (untyped) -> Hash[Symbol, untyped]
     def to_context(value)
       if value.respond_to?(:to_hash)
         value.to_hash
@@ -37,6 +40,7 @@ module TypedOperation
       end
     end
 
+    #: (Hash[Symbol, untyped], untyped) -> Hash[Symbol, untyped]
     def merge_into_context(context, value)
       if value.respond_to?(:to_hash)
         context.merge(value.to_hash)

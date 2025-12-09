@@ -7,6 +7,8 @@ gemspec
 gem "literal", "~> 1.0"
 
 gem "standard"
+gem "steep", require: false
+gem "rbs-inline", require: false
 gem "simplecov", require: false, group: :test
 gem "rubycritic", require: false
 gem "simplecov-small-badge", require: false
@@ -17,6 +19,8 @@ gem "rails"
 gem "sqlite3"
 gem "dry-monads"
 gem "action_policy"
+gem "bcrypt"
+gem "puma"
 
 gem "appraisal", require: false
 

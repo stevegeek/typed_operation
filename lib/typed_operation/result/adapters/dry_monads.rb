@@ -15,13 +15,13 @@ module TypedOperation
         end
 
         # Create a Success result using Dry::Monads.
-        #: (untyped) -> Dry::Monads::Success[untyped]
+        #: [Value] (Value) -> Dry::Monads::Success[Value]
         def success(value)
           Success(value)
         end
 
         # Create a Failure result using Dry::Monads.
-        #: (untyped) -> Dry::Monads::Failure[untyped]
+        #: [Error] (Error) -> Dry::Monads::Failure[Error]
         def failure(error)
           Failure(error)
         end

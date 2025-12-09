@@ -5,10 +5,21 @@ module TypedOperation
   module Operations
     # Builds typed properties for operations, handling optional parameters,
     # defaults, and type conversions with Literal types.
+    #
+    # @rbs generic D -- type of default value
     class PropertyBuilder
       include Literal::Types
 
+      # @rbs @typed_operation: singleton(Base) | singleton(ImmutableBase)
+      # @rbs @name: Symbol
+      # @rbs @signature: Literal::Types::_Matchable
+      # @rbs @optional: bool?
+      # @rbs @positional: bool?
+      # @rbs @reader: Symbol
+      # @rbs @has_default: bool
+      # @rbs @default: D?
 
+      #: (singleton(Base) | singleton(ImmutableBase), Symbol, Literal::Types::_Matchable, Hash[Symbol, untyped]) -> void
       def initialize(typed_operation, parameter_name, type_signature, options)
         @typed_operation = typed_operation
         @name = parameter_name
@@ -16,14 +27,15 @@ module TypedOperation
         @optional = options[:optional]
         @positional = options[:positional]
         @reader = options[:reader] || :public
-        @default_key = options.key?(:default)
+        @has_default = options.key?(:default)
         @default = options[:default]
 
         prepare_type_signature
       end
 
+      #: () { (untyped) -> untyped } -> void
+      #: () -> void
       def define(&converter)
-        # If nilable, then converter should not attempt to call the type converter block if the value is nil
         coerce_by = if type_nilable? && converter
           ->(value) { (value == Literal::Null || value.nil?) ? value : converter.call(value) }
         else
@@ -63,11 +75,6 @@ module TypedOperation
         @signature = _Union(@signature, NilClass) if has_nil_default?
       end
 
-      #: () -> bool
-      def has_nil_default?
-        default_provided? && @default.nil?
-      end
-
       #: () -> void
       def validate_positional_order!
         unless type_nilable? || @typed_operation.optional_positional_parameters.empty?
@@ -77,13 +84,18 @@ module TypedOperation
 
       #: () -> bool
       def default_provided?
-        @default_key
+        @has_default
       end
 
-      #: () -> untyped
+      #: () -> bool
+      def has_nil_default?
+        default_provided? && @default.nil?
+      end
+
+      #: () -> (D | Proc | nil)
       def resolved_default
-        if has_nil_default? || type_nilable?
-          -> {}
+        if has_nil_default? || (type_nilable? && !default_provided?)
+          -> {} # 'nil' as in a proc that returns nil
         else
           @default
         end

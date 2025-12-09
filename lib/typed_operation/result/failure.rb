@@ -7,12 +7,14 @@ module TypedOperation
 
   module Result
     # Represents a failed result. Immutable value object.
+    #
+    # @rbs generic Error
     class Failure
-      # @rbs @error: untyped
+      # @rbs @error: Error
 
-      attr_reader :error #: untyped
+      attr_reader :error #: Error
 
-      #: (untyped) -> void
+      #: (Error) -> void
       def initialize(error)
         @error = error
         freeze
@@ -35,19 +37,19 @@ module TypedOperation
       end
 
       # Returns the wrapped error.
-      #: () -> untyped
+      #: () -> Error
       def failure
         @error
       end
 
       # Pattern matching support - array destructuring.
-      #: () -> Array[untyped]
+      #: () -> [Error]
       def deconstruct
         [@error]
       end
 
       # Pattern matching support - hash destructuring.
-      #: (Array[Symbol]?) -> Hash[Symbol, untyped]
+      #: (Array[Symbol]?) -> Hash[Symbol, Error]
       def deconstruct_keys(keys)
         h = {error: @error, failure: @error}
         keys ? h.slice(*keys) : h

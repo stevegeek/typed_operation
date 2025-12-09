@@ -1,3 +1,4 @@
+# rbs_inline: enabled
 # frozen_string_literal: true
 
 module TypedOperation
@@ -9,11 +10,16 @@ module TypedOperation
   class ChainedOperation
     include Operations::Composition
 
+    # @rbs @left: _Callable
+    # @rbs @right: _Callable
+
+    #: (_Callable, _Callable) -> void
     def initialize(left, right)
       @left = left
       @right = right
     end
 
+    #: (*untyped, **untyped) -> _Result[untyped, untyped]
     def call(...)
       raise NotImplementedError, "Subclasses must implement #call"
     end

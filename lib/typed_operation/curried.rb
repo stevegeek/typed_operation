@@ -1,3 +1,4 @@
+# rbs_inline: enabled
 # frozen_string_literal: true
 
 module TypedOperation
@@ -5,11 +6,16 @@ module TypedOperation
   # provided one at a time. Returns a new Curried instance until all required
   # parameters are satisfied, then executes the operation.
   class Curried
+    # @rbs @operation_class: singleton(TypedOperation::Base)
+    # @rbs @partial_operation: PartiallyApplied | Prepared
+
+    #: (singleton(TypedOperation::Base), ?(PartiallyApplied | Prepared)) -> void
     def initialize(operation_class, partial_operation = nil)
       @operation_class = operation_class
       @partial_operation = partial_operation || operation_class.with
     end
 
+    #: (untyped) -> (Curried | untyped)
     def call(arg)
       raise ArgumentError, "A prepared operation should not be curried" if @partial_operation.prepared?
 
@@ -25,17 +31,20 @@ module TypedOperation
       end
     end
 
+    #: () -> Proc
     def to_proc
       method(:call).to_proc
     end
 
     private
 
+    #: () -> Symbol?
     def next_keyword_parameter
       remaining = @operation_class.required_keyword_parameters - @partial_operation.keyword_args.keys
       remaining.first
     end
 
+    #: () -> bool
     def next_parameter_positional?
       @partial_operation.positional_args.size < @operation_class.required_positional_parameters.size
     end

@@ -1,13 +1,14 @@
+# rbs_inline: enabled
 # frozen_string_literal: true
 
 require "action_policy"
 
-# An optional module to include in your operation to enable authorization via ActionPolicies
+# An optional module to include in your operation to enable authorization via ActionPolicies.
 module TypedOperation
   class MissingAuthentication < StandardError; end
 
   module ActionPolicyAuth
-    # Base class for any action policy classes used by operations
+    # Base class for any action policy classes used by operations.
     class OperationPolicy
       include ActionPolicy::Policy::Core
       include ActionPolicy::Policy::Authorization
@@ -19,6 +20,7 @@ module TypedOperation
       include ActionPolicy::Policy::CachedApply
     end
 
+    #: (Module) -> void
     def self.included(base)
       base.include ::ActionPolicy::Behaviour
       base.extend ClassMethods
@@ -26,7 +28,15 @@ module TypedOperation
 
     # Class-level methods for configuring authorization on operations.
     module ClassMethods
-      # Configure the operation to use ActionPolicy for authorization
+      # @rbs @_authorized_via_param: Array[Symbol]?
+      # @rbs @_policy_method: Symbol?
+      # @rbs @_policy_class: Class?
+      # @rbs @_to_authorize_param: Symbol?
+      # @rbs @_action_type: Symbol?
+      # @rbs @_verify_authorized: bool?
+
+      # Configure the operation to use ActionPolicy for authorization.
+      #: (*Symbol, ?with: Class?, ?to: Symbol?, ?record: Symbol?) ?{ () -> bool } -> void
       def authorized_via(*via, with: nil, to: nil, record: nil, &auth_block)
         raise ArgumentError, "You must not provide a policy class or method when using a block" if auth_block && (with || to)
 
@@ -58,44 +68,52 @@ module TypedOperation
           @_to_authorize_param = record
         end
 
-        # Configure action policy to use the param named in via as the context when instantiating the policy
-        # ::ActionPolicy::Behaviour does not provide a authorize(*ids) method, so we have call once per param
+        # Configure action policy to use the param named in via as the context when instantiating the policy.
+        # ::ActionPolicy::Behaviour does not provide a authorize(*ids) method, so we have call once per param.
         via.each do |param|
           authorize param
         end
       end
 
+      #: (?Symbol?) -> Symbol?
       def action_type(type = nil)
         @_action_type = type.to_sym if type
         @_action_type
       end
 
+      #: () -> Symbol?
       def operation_policy_method
         @_policy_method
       end
 
+      #: () -> Class?
       def operation_policy_class
         @_policy_class
       end
 
+      #: () -> Symbol?
       def operation_record_to_authorize
         @_to_authorize_param
       end
 
+      #: () -> bool
       def checks_authorization?
         !(@_authorized_via_param.nil? || @_authorized_via_param.empty?)
       end
 
-      # You can use this on an operation base class to ensure and subclasses always enable authorization
+      # You can use this on an operation base class to ensure subclasses always enable authorization.
+      #: () -> void
       def verify_authorized!
         return if verify_authorized?
         @_verify_authorized = true
       end
 
+      #: () -> bool
       def verify_authorized?
         @_verify_authorized
       end
 
+      #: (Class) -> void
       def inherited(subclass)
         super
         subclass.instance_variable_set(:@_authorized_via_param, @_authorized_via_param)
@@ -108,7 +126,7 @@ module TypedOperation
 
     private
 
-    # Redefine it as private
+    #: () -> untyped
     def execute_operation
       operation_class = self.class
       checks_auth = operation_class.checks_authorization?
@@ -119,6 +137,7 @@ module TypedOperation
       super
     end
 
+    #: () -> void
     def operation_check_authorized!
       operation_class = self.class
       policy = operation_class.operation_policy_class
@@ -133,7 +152,8 @@ module TypedOperation
       raise error
     end
 
-    # A hook for subclasses to override to do something on an authorization failure
+    # A hook for subclasses to override to do something on an authorization failure.
+    #: (ActionPolicy::Unauthorized) -> void
     def on_authorization_failure(_authorization_error)
       # noop
     end

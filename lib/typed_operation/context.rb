@@ -1,3 +1,4 @@
+# rbs_inline: enabled
 # frozen_string_literal: true
 
 module TypedOperation
@@ -18,97 +19,100 @@ module TypedOperation
   # Dot access is not required. It's up to you if you prefer to have it in your operation usage.
   #
   class Context
-    # Create a new context from a hash or another context.
+    # @rbs @data: Hash[Symbol, untyped]
+
+    #: (?Hash[Symbol | String, untyped] | Context | _ToH) -> void
     def initialize(data = {})
       @data = coerce_to_hash(data).transform_keys(&:to_sym)
     end
 
-    # Read a value by key.
+    #: (Symbol | String) -> untyped
     def [](key)
       read_value(key.to_sym)
     end
 
-    # Write a value by key.
+    #: (Symbol | String, untyped) -> untyped
     def []=(key, value)
       write_value(key.to_sym, value)
     end
 
-    # Check if a key exists.
+    #: (Symbol | String) -> bool
     def key?(key)
       @data.key?(key.to_sym)
     end
     alias_method :has_key?, :key?
 
-    # Convert to a Hash.
+    #: () -> Hash[Symbol, untyped]
     def to_h
       @data.dup
     end
     alias_method :to_hash, :to_h
 
-    # Merge with another context or hash, returning a new Context.
+    #: (Hash[Symbol | String, untyped] | Context | _ToH) -> Context
     def merge(other)
       self.class.new(@data.merge(coerce_to_hash(other)))
     end
 
-    # Fetch a value with a default or block.
+    #: (Symbol | String, *untyped) ?{ () -> untyped } -> untyped
     def fetch(key, *args, &block)
       @data.fetch(key.to_sym, *args, &block)
     end
 
-    # Get all keys.
+    #: () -> Array[Symbol]
     def keys
       @data.keys
     end
 
-    # Get all values.
+    #: () -> Array[untyped]
     def values
       @data.values
     end
 
-    # Iterate over key-value pairs.
+    #: () -> Enumerator[[Symbol, untyped], self]
+    #: () { (Symbol, untyped) -> void } -> self
     def each(&block)
       return enum_for(:each) unless block_given?
       @data.each(&block)
       self
     end
 
-    # Select entries matching a condition.
+    #: () { (Symbol, untyped) -> boolish } -> Context
     def select(&block)
       self.class.new(@data.select(&block))
     end
 
-    # Reject entries matching a condition.
+    #: () { (Symbol, untyped) -> boolish } -> Context
     def reject(&block)
       self.class.new(@data.reject(&block))
     end
 
-    # Transform values.
+    #: () { (untyped) -> untyped } -> Context
     def transform_values(&block)
       self.class.new(@data.transform_values(&block))
     end
 
-    # Slice to only the specified keys.
+    #: (*(Symbol | String)) -> Context
     def slice(*keys)
       self.class.new(@data.slice(*keys.map(&:to_sym)))
     end
 
-    # Get subset excluding specified keys.
+    #: (*(Symbol | String)) -> Context
     def except(*keys)
       self.class.new(@data.except(*keys.map(&:to_sym)))
     end
 
-    # Check if context is empty.
+    #: () -> bool
     def empty?
       @data.empty?
     end
 
-    # Get the number of entries.
+    #: () -> Integer
     def size
       @data.size
     end
     alias_method :length, :size
 
-    # Equality check.
+    #: (untyped) -> bool
     def ==(other)
       case other
       when Context
@@ -121,25 +125,24 @@ module TypedOperation
     end
 
     # Provide dot access for reading and writing values.
+    #: (Symbol, *untyped) ?{ (*untyped) -> untyped } -> untyped
     def method_missing(name, *args, &block)
       name_str = name.to_s
 
       if name_str.end_with?("=")
-        # Setter: ctx.foo = value
         key = name_str.chomp("=").to_sym
         write_value(key, args.first)
       elsif name_str.end_with?("?")
-        # Predicate: ctx.validated?
         key = name_str.chomp("?").to_sym
         !!read_value(key)
       elsif args.empty? && !block
-        # Getter: ctx.foo
         read_value(name)
       else
         super
       end
     end
 
+    #: (Symbol, ?bool) -> bool
     def respond_to_missing?(name, include_private = false)
       name_str = name.to_s
       name_str.end_with?("=", "?") ||
@@ -147,7 +150,7 @@ module TypedOperation
         super
     end
 
-    # String representation for debugging.
+    #: () -> String
     def inspect
       "#<#{self.class.name} #{@data.inspect}>"
     end
@@ -156,18 +159,22 @@ module TypedOperation
 
     private
 
-    # Read a value from the underlying data store.
-    # Override this in subclasses to customize read behavior (e.g., lazy loading).
+    #: (Symbol) -> untyped
     def read_value(key)
       @data[key]
     end
 
-    # Write a value to the underlying data store.
-    # Override this in subclasses to customize write behavior (e.g., validation).
+    #: (Symbol, untyped) -> untyped
     def write_value(key, value)
       @data[key] = value
     end
 
+    # @rbs!
+    #   interface _ToH
+    #     def to_h: () -> Hash[untyped, untyped]
+    #   end
+
+    #: (_ToH | Hash[untyped, untyped] | Context) -> Hash[untyped, untyped]
     def coerce_to_hash(obj)
       case obj
       when Hash

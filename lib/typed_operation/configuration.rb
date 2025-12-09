@@ -4,7 +4,7 @@
 module TypedOperation
   # Global configuration for TypedOperation.
   class Configuration
-    # @rbs @result_adapter: Result::Adapters::BuiltIn | Result::Adapters::DryMonads | untyped
+    # @rbs @result_adapter: (Result::Adapters::BuiltIn | Result::Adapters::DryMonads | untyped)?
 
     #: () -> void
     def initialize
@@ -29,6 +29,8 @@ module TypedOperation
   end
 
   class << self
+    # @rbs @configuration: Configuration?
+
     # Get the global configuration instance.
     #: () -> Configuration
     def configuration

@@ -46,4 +46,22 @@ rescue LoadError
   end
 end
 
+desc "Generate RBS from inline annotations"
+task :rbs do
+  sh "bundle exec rbs-inline --output lib/"
+end
+
+desc "Run Steep type check on library"
+task steep: :rbs do
+  sh "bundle exec steep check --group=lib"
+end
+
+desc "Run Steep type check on RBS test files"
+task :steep_tests do
+  sh "bundle exec steep check --group=rbs_tests"
+end
+
+desc "Run all Steep type checks"
+task steep_all: [:steep, :steep_tests]
+
 task default: [:test, :rails_test]

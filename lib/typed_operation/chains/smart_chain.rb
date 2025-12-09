@@ -5,6 +5,13 @@ module TypedOperation
   # Smart chain created by .then
   # Accumulates context across chain steps and extracts required params for each operation.
   class SmartChain < ChainedOperation
+    include Result::Mixin
+    # @rbs @extra_kwargs: Hash[Symbol, untyped]
+    # @rbs @uses_kwargs: bool
+    # @rbs @required_params: Array[Symbol]
+    # @rbs @prefilled_params: Hash[Symbol, untyped]
+
+    #: (_Callable, _Callable, ?Hash[Symbol, untyped]) -> void
     def initialize(left, right, extra_kwargs = {})
       super(left, right)
       @extra_kwargs = extra_kwargs
@@ -13,6 +20,7 @@ module TypedOperation
       @prefilled_params = extract_prefilled_params(right)
     end
 
+    #: (*untyped, **untyped) -> _Result[untyped, untyped]
     def call(*args, **kwargs)
       # Execute left side
       result = @left.call(*args, **kwargs)
@@ -35,6 +43,7 @@ module TypedOperation
 
     private
 
+    #: (untyped) -> Hash[Symbol, untyped]
     def to_context(value)
       if value.respond_to?(:to_hash)
         value.to_hash
@@ -45,6 +54,7 @@ module TypedOperation
       end
     end
 
+    #: (Hash[Symbol, untyped], untyped) -> Hash[Symbol, untyped]
     def merge_into_context(context, value)
       if value.respond_to?(:to_hash)
         context.merge(value.to_hash)
@@ -55,6 +65,7 @@ module TypedOperation
       end
     end
 
+    #: (Hash[Symbol, untyped]) -> _Result[untyped, untyped]
     def call_right(context)
       if @uses_kwargs
         # Extract only the params the operation needs from context
@@ -80,12 +91,16 @@ module TypedOperation
       end
     end
 
+    #: (Hash[Symbol, untyped], Array[Symbol]) -> Hash[Symbol, untyped]
     def extract_from_context(context, params)
-      params.each_with_object({}) do |key, hash|
-        hash[key] = context[key] if context.key?(key)
+      result = {} #: Hash[Symbol, untyped]
+      params.each do |key|
+        result[key] = context[key] if context.key?(key)
       end
+      result
     end
 
+    #: (Hash[Symbol, untyped]) -> void
     def validate_required_params!(kwargs)
       op_class = extract_operation_class(@right)
       return unless op_class.respond_to?(:required_keyword_parameters)
@@ -100,6 +115,7 @@ module TypedOperation
       end
     end
 
+    #: (_Callable) -> bool
     def uses_kwargs?(operation)
       op_class = extract_operation_class(operation)
       return false unless op_class.respond_to?(:positional_parameters)
@@ -115,12 +131,14 @@ module TypedOperation
       keywords.any?
     end
 
+    #: (_Callable) -> Array[Symbol]
     def extract_required_params(operation)
       op_class = extract_operation_class(operation)
       return [] unless op_class.respond_to?(:keyword_parameters)
       op_class.keyword_parameters
     end
 
+    #: (_Callable) -> Hash[Symbol, untyped]
     def extract_prefilled_params(operation)
       case operation
       when TypedOperation::PartiallyApplied
@@ -130,6 +148,7 @@ module TypedOperation
       end
     end
 
+    #: (_Callable) -> (Class | nil)
     def extract_operation_class(operation)
       case operation
       when Class then operation

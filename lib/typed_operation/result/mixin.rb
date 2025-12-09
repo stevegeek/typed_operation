@@ -9,13 +9,13 @@ module TypedOperation
       private
 
       # Create a Success result using the configured adapter.
-      #: (untyped) -> untyped
+      #: [Value] (Value) -> (Result::Success[Value] | Dry::Monads::Success[Value])
       def Success(value)
         TypedOperation.configuration.result_adapter.success(value)
       end
 
       # Create a Failure result using the configured adapter.
-      #: (untyped) -> untyped
+      #: [Error] (Error) -> (Result::Failure[Error] | Dry::Monads::Failure[Error])
       def Failure(error)
         TypedOperation.configuration.result_adapter.failure(error)
       end

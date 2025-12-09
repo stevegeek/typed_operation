@@ -1,3 +1,4 @@
+# rbs_inline: enabled
 # frozen_string_literal: true
 
 module TypedOperation
@@ -8,6 +9,7 @@ module TypedOperation
   # For blocks: passes the failure value.
   # For operations: passes the original call arguments (so fallback can retry).
   class FallbackChain < ChainedOperation
+    #: (*untyped, **untyped) -> _Result[untyped, untyped]
     def call(*args, **kwargs)
       result = @left.call(*args, **kwargs)
       return result if result.success?

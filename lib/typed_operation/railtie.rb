@@ -1,3 +1,6 @@
+# rbs_inline: enabled
+# frozen_string_literal: true
+
 module TypedOperation
   # Rails integration for TypedOperation, registers generators.
   class Railtie < ::Rails::Railtie

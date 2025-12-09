@@ -7,13 +7,13 @@ module TypedOperation
       # Default adapter using built-in Success/Failure classes.
       class BuiltIn
         # Create a Success result.
-        #: (untyped) -> Result::Success
+        #: [Value] (Value) -> Result::Success[Value]
         def success(value)
           Result::Success.new(value)
         end
 
         # Create a Failure result.
-        #: (untyped) -> Result::Failure
+        #: [Error] (Error) -> Result::Failure[Error]
         def failure(error)
           Result::Failure.new(error)
         end

@@ -16,3 +16,4 @@ Gemfile.lock
 badges/
 .tool-versions
 gemfiles/*.lock
+.gem_rbs_collection
