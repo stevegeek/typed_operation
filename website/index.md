@@ -166,10 +166,14 @@ end
 
 Explore the documentation to learn more:
 
-- [Core Concepts](/docs/core/)
+- [Getting Started](/docs/getting-started/)
+- [API Reference](/docs/api/)
 - [Integrations](/docs/integrations/)
-- [Guides & Best Practices](/docs/guides/)
-- [Compared to Other Gems](/docs/similar/compared-to)
+- [Best Practices](/docs/best-practices/)
+- [Examples](/docs/examples/)
+- [Pipelines](/docs/pipelines/)
+- [Instrumentation](/docs/instrumentation/)
+- [Compared to Other Gems](/docs/similar-gems/)
 
 ## Installation
 
