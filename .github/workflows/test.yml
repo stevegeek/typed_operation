@@ -1,31 +1,67 @@
-name: test
+name: Test
 
 on: [push, pull_request]
 
 jobs:
   tests:
-    name: Run tests for (${{ matrix.ruby }} / Rails ${{ matrix.rails }}
+    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         ruby: [ "3.2", "3.3", "3.4" ]
-        rails: [ "7.2", "8.0" ]
+        rails: [ "7.2", "8.0", "8.1" ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
       - name: Install gems
-        env:
-          MATRIX_RAILS_VERSION: ${{ matrix.rails }}
         run: |
           gem install bundler
           bundle install
-          export BUNDLE_GEMFILE="${GITHUB_WORKSPACE}/gemfiles/rails_${MATRIX_RAILS_VERSION}.gemfile"
-          bundle install --jobs 4 --retry 3
+          bundle exec appraisal install --jobs 4 --retry 3
       - name: Run tests
-        run: bundle exec ./bin/test
-      - name: Run tests w. Rails stuff
-        run: bundle exec ./bin/rails_test
+        env:
+          MATRIX_RAILS_VERSION: ${{ matrix.rails }}
+        run: bundle exec appraisal rails-${MATRIX_RAILS_VERSION} rake test
+
+  # typecheck:
+  #   name: Type checking with Steep
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Set up Ruby
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: "3.4"
+  #         bundler-cache: true
+  #     - name: Install gems
+  #       run: |
+  #         gem install bundler
+  #         bundle install
+  #     - name: Install RBS collection
+  #       run: bundle exec rbs collection install
+  #     - name: Generate RBS signatures
+  #       run: bundle exec rbs-inline --output lib
+  #     - name: Run Steep type checking
+  #       run: bundle exec steep check
+
+  lint:
+    name: Lint with StandardRB
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+      - name: Install gems
+        run: |
+          gem install bundler
+          bundle install
+      - name: Run StandardRB
+        run: bundle exec standardrb
