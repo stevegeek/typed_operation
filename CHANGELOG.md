@@ -1,3 +1,26 @@
+## [1.0.0.beta4] - 2025/12/10
+
+### Added
+
+- **Operation chaining**: Chain operations with `.then`, `.then_spreads`, `.then_passes`, `.transform`, and `.or_else` for composable workflows
+- **Pipeline DSL**: Declarative `TypedOperation::Pipeline.build` for multi-step workflows with named steps, conditional execution (`if:`), transforms, and failure handling
+- **Instrumentation**: Trace operation execution with `.explain` and `TypedOperation::Instrumentation.with_output` for debugging
+- **Built-in Result types**: `TypedOperation::Result::Mixin` provides `Success`/`Failure` without external dependencies
+- **Configurable result adapter**: `TypedOperation.configure { |c| c.result_adapter = :dry_monads }` for Dry::Monads integration
+
+### Changed
+
+- Dry::Monads is now optional - use built-in Result types or configure the adapter
+- Improved `deconstruct` and `deconstruct_keys` for pattern matching
+- Added inline RBS type annotations
+
+### Fixed
+
+- Compatibility with latest Literal gem
+
+### Removed
+
+- Removed `Callable` module (redundant)
 
 ## [1.0.0.beta3] - 2025/04/08
 
