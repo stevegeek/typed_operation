@@ -718,7 +718,8 @@ class IntegrationExampleTest < Minitest::Test
         subtotal: ctx[:subtotal] * 1.1  # Apply 10% markup
       )
     end
-      .then(CalculateShipping)
+
+    chain = chain.then(CalculateShipping)
       .transform { |ctx| ctx.merge(priority_shipping: ctx[:vip_customer] && ctx[:subtotal] > 50) }
       .then(ApplyDiscount)
 

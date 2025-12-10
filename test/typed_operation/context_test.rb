@@ -263,11 +263,11 @@ class ContextTest < Minitest::Test
   def test_can_be_used_as_kwargs_splat
     ctx = TypedOperation::Context.new(name: "Alice", age: 30)
 
-    def receiver(name:, age:)
+    receiver = ->(name:, age:) do
       "#{name} is #{age}"
     end
 
-    result = receiver(**ctx.to_h)
+    result = receiver.call(**ctx.to_h)
 
     assert_equal "Alice is 30", result
   end
