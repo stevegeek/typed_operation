@@ -4,10 +4,11 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 # Specify your gem's dependencies in typed_operation.gemspec.
 gemspec
 
-gem "literal", "~> 1.0"
+gem "literal", "~> 1.9"
 
 gem "standard"
 gem "steep", require: false
+gem "rbs", "~> 3.9", require: false
 gem "rbs-inline", require: false
 gem "simplecov", require: false, group: :test
 gem "rubycritic", require: false

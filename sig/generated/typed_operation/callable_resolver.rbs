@@ -1,0 +1,13 @@
+# Generated from lib/typed_operation/callable_resolver.rb with RBS::Inline
+
+module TypedOperation
+  # Utility module for resolving callable objects (operations, procs, chains)
+  # and determining how to invoke them (kwargs vs positional).
+  module CallableResolver
+    # : (_Callable) -> untyped
+    def extract_operation_class: (_Callable) -> untyped
+
+    # : (_Callable) -> bool
+    def uses_kwargs?: (_Callable) -> bool
+  end
+end

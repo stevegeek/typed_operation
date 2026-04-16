@@ -6,6 +6,8 @@ module TypedOperation
     class StepWrapper
       include Result::Mixin
 
+      include CallableResolver
+
       @operation: untyped
 
       @name: Symbol
@@ -15,6 +17,8 @@ module TypedOperation
       @failure_handler: (^(untyped, Symbol) -> untyped)?
 
       @first_step: bool
+
+      @uses_kwargs: bool
 
       # : (untyped, name: Symbol, condition: (^(untyped) -> bool)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void
       def initialize: (untyped, name: Symbol, condition: (^(untyped) -> bool)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void

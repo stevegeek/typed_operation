@@ -26,10 +26,11 @@ module TypedOperation
       def failure: () -> nil
 
       # Pattern matching support - array destructuring.
-      # : () -> [untyped]
-      def deconstruct: () -> [ untyped ]
+      # : () -> Array[untyped]
+      def deconstruct: () -> Array[untyped]
 
       # Pattern matching support - hash destructuring.
+      # Delegates to the inner value if it responds to deconstruct_keys.
       # : (Array[Symbol]?) -> Hash[Symbol, untyped]
       def deconstruct_keys: (Array[Symbol]?) -> Hash[Symbol, untyped]
 

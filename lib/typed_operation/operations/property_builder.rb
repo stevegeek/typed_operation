@@ -37,7 +37,7 @@ module TypedOperation
       #: () -> void
       def define(&converter)
         coerce_by = if type_nilable? && converter
-          ->(value) { (value == Literal::Null || value.nil?) ? value : converter.call(value) }
+          ->(value) { (value == Literal::Undefined || value.nil?) ? value : converter.call(value) }
         else
           converter
         end

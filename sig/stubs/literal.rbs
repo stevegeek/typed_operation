@@ -17,7 +17,7 @@ module Literal
     def _Union: (*untyped) -> untyped
   end
 
-  module Null
+  module Undefined
   end
 
   interface _Property

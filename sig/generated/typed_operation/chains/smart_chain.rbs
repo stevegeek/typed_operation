@@ -6,6 +6,8 @@ module TypedOperation
   class SmartChain < ChainedOperation
     include Result::Mixin
 
+    include CallableResolver
+
     @prefilled_params: Hash[Symbol, untyped]
 
     @required_params: Array[Symbol]
@@ -45,8 +47,5 @@ module TypedOperation
 
     # : (_Callable) -> Hash[Symbol, untyped]
     def extract_prefilled_params: (_Callable) -> Hash[Symbol, untyped]
-
-    # : (_Callable) -> untyped
-    def extract_operation_class: (_Callable) -> untyped
   end
 end

@@ -1,3 +1,15 @@
+## [1.0.0] - 2026/04/16
+
+First stable release. API frozen; subsequent changes will follow semver.
+
+### Fixed
+
+- Compatibility with `literal` 1.9.0: `Literal::Null` sentinel was renamed to `Literal::Undefined`, which broke coercion blocks on any param (#7).
+
+### Changed
+
+- Minimum `literal` version bumped to `>= 1.9.0`.
+
 ## [1.0.0.beta4] - 2025/12/10
 
 ### Added

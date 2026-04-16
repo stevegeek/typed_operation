@@ -3,5 +3,5 @@
 
 module TypedOperation
   #: String
-  VERSION = "1.0.0.beta4"
+  VERSION = "1.0.0"
 end

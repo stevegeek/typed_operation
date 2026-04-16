@@ -20,6 +20,14 @@ module TypedOperation
       end
     end
 
+    class TestOptionalHelperWithNilDefault < ::TypedOperation::Base
+      param :at, optional(Time), default: nil
+
+      def perform
+        at
+      end
+    end
+
     def test_nilable_with_explicit_default
       result = TestNilableWithDefault.call
       assert_equal "foo", result
@@ -38,6 +46,15 @@ module TypedOperation
     def test_optional_can_be_set_to_nil
       result = TestOptionalWithDefault.call(name: nil)
       assert_nil result
+    end
+
+    def test_optional_helper_with_nil_default_loads
+      assert_nil TestOptionalHelperWithNilDefault.call
+    end
+
+    def test_optional_helper_with_nil_default_accepts_value
+      now = Time.now
+      assert_equal now, TestOptionalHelperWithNilDefault.call(at: now)
     end
   end
 end
