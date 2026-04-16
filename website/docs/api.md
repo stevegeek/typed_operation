@@ -110,7 +110,8 @@ Define a keyword parameter.
 ```ruby
 param :email, String                        # Required
 param :role, String, default: "user"        # With default
-param :bio, optional(String)                # Optional (nilable)
+param :bio, optional(String)                # Optional (nilable) via helper
+param :phone, String, optional: true        # Optional (nilable) via option — equivalent
 param :count, Integer, &:to_i               # With coercion
 ```
 
@@ -120,7 +121,7 @@ param :count, Integer, &:to_i               # With coercion
 |--------|------|-------------|
 | `positional` | Boolean | If `true`, parameter is positional (default: `false`) |
 | `default` | Any/Proc | Default value or proc for lazy evaluation |
-| `optional` | Boolean | If `true`, wraps type in `_Nilable` |
+| `optional` | Boolean | If `true`, wraps type in `_Nilable`. Equivalent to wrapping the type with `optional(...)` — use whichever reads better |
 | `reader` | Symbol | Visibility: `:public`, `:private`, `:protected` |
 
 **Coercion block:** Called with the input value before type checking.
@@ -143,7 +144,8 @@ Alias for `param` with `positional: false`. Explicit keyword parameter.
 Wraps a type to accept `nil`. Returns `Literal::Types::NilableType`.
 
 ```ruby
-param :nickname, optional(String)  # Equivalent to _Nilable(String)
+param :nickname, optional(String)       # Equivalent to _Nilable(String)
+param :nickname, String, optional: true # Equivalent form using the option
 ```
 
 ---

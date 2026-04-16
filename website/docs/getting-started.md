@@ -20,6 +20,8 @@ A comprehensive guide to TypedOperation covering all core concepts.
 
 ## Installation
 
+Requires Ruby >= 3.2.
+
 Add to your Gemfile:
 
 ```ruby
