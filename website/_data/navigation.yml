@@ -1,0 +1,11 @@
+- title: Introduction
+  url: /introduction/getting-started/
+  collections: [introduction]
+- title: Guides
+  url: /guides/pipelines/
+  collections: [guides]
+- title: Reference
+  url: /reference/api/
+  collections: [reference]
+- title: Changelog
+  url: https://github.com/stevegeek/typed_operation/blob/main/CHANGELOG.md

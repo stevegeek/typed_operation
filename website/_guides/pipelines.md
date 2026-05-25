@@ -1,20 +1,9 @@
 ---
-layout: default
 title: Pipelines
-nav_order: 4
-permalink: /pipelines
+nav_order: 1
 ---
 
 # Pipelines
-{: .no_toc }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
-
----
 
 Pipelines provide a declarative DSL for building multi-step operation workflows. They are syntactic sugar over the composition/chaining system, adding named steps, conditional execution, and structured error handling.
 

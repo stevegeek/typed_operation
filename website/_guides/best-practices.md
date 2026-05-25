@@ -1,20 +1,9 @@
 ---
-layout: default
 title: Best Practices
-nav_order: 7
-permalink: /best-practices
+nav_order: 4
 ---
 
 # Best Practices
-{: .no_toc }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
-
----
 
 Guidelines for testing, error handling, and organizing operations.
 

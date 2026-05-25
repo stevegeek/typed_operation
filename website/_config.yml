@@ -1,51 +1,70 @@
-# Site settings
 title: TypedOperation
-email: your-email@example.com
+tagline: A command pattern for Ruby with typed parameters
 description: >-
-  A Command Pattern implementation for Ruby with typed parameters, partial application,
-  and seamless integration with Rails, Dry::Monads, and ActionPolicy.
+  A Command pattern implementation for Ruby with typed parameters, partial
+  application, currying, and operation composition. Integrates with Rails,
+  Dry::Monads, and Action Policy.
+url: "https://typed-operation-gem.diaconou.com"
 baseurl: ""
-url: ""
 github_username: stevegeek
 github_repo: typed_operation
 
-# Build settings
-theme: just-the-docs
+theme: jekyll-vitepress-theme
 plugins:
+  - jekyll-vitepress-theme
   - jekyll-feed
+  - jekyll-sitemap
 
-# Just the Docs settings
-aux_links:
-  "TypedOperation on GitHub":
-    - "//github.com/stevegeek/typed_operation"
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+permalink: pretty
 
-# Color scheme supports "light" (default) and "dark"
-color_scheme: light
+collections:
+  introduction:
+    output: true
+    permalink: /introduction/:path/
+  guides:
+    output: true
+    permalink: /guides/:path/
+  reference:
+    output: true
+    permalink: /reference/:path/
 
-# Enable search
-search_enabled: true
+defaults:
+  - scope: { path: "", type: "introduction" }
+    values: { layout: "default" }
+  - scope: { path: "", type: "guides" }
+    values: { layout: "default" }
+  - scope: { path: "", type: "reference" }
+    values: { layout: "default" }
 
-# Enable copy code button
-enable_copy_code_button: true
+jekyll_vitepress:
+  branding:
+    site_title: TypedOperation
+  syntax:
+    light_theme: github
+    dark_theme: github.dark
+  edit_link:
+    pattern: "https://github.com/stevegeek/typed_operation/edit/main/website/:path"
+    text: Edit this page on GitHub
+  footer:
+    message: 'Released under the MIT License.'
+    copyright: "Copyright © 2023–present Stephen Ierodiaconou"
+  tokens:
+    light:
+      "--vp-c-brand-1": "#059669"
+      "--vp-c-brand-2": "#047857"
+      "--vp-c-brand-3": "#065f46"
+    dark:
+      "--vp-c-brand-1": "#34d399"
+      "--vp-c-brand-2": "#10b981"
+      "--vp-c-brand-3": "#059669"
 
-# Heading anchor links
-heading_anchors: true
-
-# Footer content
-footer_content: "TypedOperation | Copyright &copy Stephen Ierodiaconou; 2025. Licensed under the <a href=\"https://github.com/stevegeek/typed_operation/blob/main/LICENSE.txt\">MIT License</a>."
-
-# Back to top link
-back_to_top: true
-back_to_top_text: "Back to top"
-
-# Callouts
-callouts:
-  note:
-    title: Note
-    color: blue
-  warning:
-    title: Warning
-    color: yellow
-  important:
-    title: Important
-    color: red
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - node_modules/
+  - README.md

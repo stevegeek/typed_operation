@@ -1,8 +1,6 @@
 ---
-layout: default
 title: Examples
-nav_order: 8
-permalink: /examples
+nav_order: 2
 ---
 
 Comprehensive examples demonstrating TypedOperation features.

@@ -1,20 +1,9 @@
 ---
-layout: default
 title: Instrumentation
-nav_order: 6
-permalink: /instrumentation
+nav_order: 3
 ---
 
 # Instrumentation
-{: .no_toc }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
-
----
 
 Runtime tracing and debugging for operations and chains.
 

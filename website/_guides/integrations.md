@@ -1,20 +1,9 @@
 ---
-layout: default
 title: Integrations
-nav_order: 5
-permalink: /integrations
+nav_order: 2
 ---
 
 # Integrations
-{: .no_toc }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
-
----
 
 TypedOperation provides first-class integrations with Rails, Dry::Monads, and ActionPolicy.
 
@@ -366,7 +355,7 @@ authorized_via :current_owner, :new_owner { current_owner.active? && new_owner.a
 - `record:` uses the specified parameter or method to get the record
 - Multiple context params supported for complex authorization
 - Authorization is inherited by subclasses
-- See [API reference](/api#actionpolicy-authorization) for complete details
+- See [API reference](/reference/api/#actionpolicy-authorization) for complete details
 
 ### Requiring Authorization
 
@@ -381,7 +370,7 @@ end
 
 Operations without authorization will raise `MissingAuthentication`.
 
-Override `on_authorization_failure(error)` for logging or side effects when authorization fails. See [API reference](/api#actionpolicy-authorization) for details.
+Override `on_authorization_failure(error)` for logging or side effects when authorization fails. See [API reference](/reference/api/#actionpolicy-authorization) for details.
 
 ### Handling Authorization Errors
 

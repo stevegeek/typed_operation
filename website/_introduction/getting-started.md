@@ -1,20 +1,9 @@
 ---
-layout: default
 title: Getting Started
-nav_order: 2
-permalink: /getting-started
+nav_order: 1
 ---
 
 # Getting Started
-{: .no_toc }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
-
----
 
 A comprehensive guide to TypedOperation covering all core concepts.
 

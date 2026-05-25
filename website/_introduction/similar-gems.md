@@ -1,20 +1,9 @@
 ---
-layout: default
 title: Similar Gems
-nav_order: 9
-permalink: /similar-gems
+nav_order: 2
 ---
 
 # Similar Gems Comparison
-{: .no_toc }
-
-## Table of contents
-{: .no_toc .text-delta }
-
-1. TOC
-{:toc}
-
----
 
 ## This is Not a Value Judgment
 
