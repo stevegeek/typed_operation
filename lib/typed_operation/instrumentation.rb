@@ -106,7 +106,7 @@ module TypedOperation
       def pop_trace
         stack = Thread.current[THREAD_KEY]
         stack&.pop
-        Thread.current[THREAD_KEY] = nil if stack&.empty?
+        Thread.current[THREAD_KEY] = nil if stack.nil? || stack.empty?
       end
 
       #: () -> void
