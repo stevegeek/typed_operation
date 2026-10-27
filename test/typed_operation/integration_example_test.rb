@@ -712,11 +712,11 @@ class IntegrationExampleTest < Minitest::Test
     chain = ValidateOrder
       .then(CheckInventory)
       .transform do |ctx|
-        # Add new computed key AND modify existing key
-        ctx.merge(
-          vip_customer: ctx[:customer_id] < 100,
-          subtotal: ctx[:subtotal] * 1.1  # Apply 10% markup
-        )
+      # Add new computed key AND modify existing key
+      ctx.merge(
+        vip_customer: ctx[:customer_id] < 100,
+        subtotal: ctx[:subtotal] * 1.1  # Apply 10% markup
+      )
     end
 
     chain = chain.then(CalculateShipping)
