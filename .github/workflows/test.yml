@@ -26,7 +26,7 @@ jobs:
       - name: Run tests
         env:
           MATRIX_RAILS_VERSION: ${{ matrix.rails }}
-        run: bundle exec appraisal rails-${MATRIX_RAILS_VERSION} rake test
+        run: bundle exec appraisal rails-${MATRIX_RAILS_VERSION} rake test rails_test
 
   # typecheck:
   #   name: Type checking with Steep
