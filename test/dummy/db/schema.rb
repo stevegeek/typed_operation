@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_09_145927) do
+ActiveRecord::Schema[7.2].define(version: 2025_12_09_145927) do
   create_table "orders", force: :cascade do |t|
     t.integer "user_id", null: false
     t.decimal "total", precision: 10, scale: 2, default: "0.0", null: false
