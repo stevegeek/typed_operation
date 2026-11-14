@@ -9,5 +9,16 @@ module TypedOperation
 
     # : (_Callable) -> bool
     def uses_kwargs?: (_Callable) -> bool
+
+    private
+
+    # : (_Callable) -> Array[Symbol]
+    def extract_required_params: (_Callable) -> Array[Symbol]
+
+    # : (_Callable) -> Hash[Symbol, untyped]
+    def extract_prefilled_params: (_Callable) -> Hash[Symbol, untyped]
+
+    # : (Hash[Symbol, untyped], Array[Symbol]) -> Hash[Symbol, untyped]
+    def extract_from_context: (Hash[Symbol, untyped], Array[Symbol]) -> Hash[Symbol, untyped]
   end
 end

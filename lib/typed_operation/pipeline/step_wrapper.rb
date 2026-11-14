@@ -14,6 +14,8 @@ module TypedOperation
       # @rbs @failure_handler: (^(untyped, Symbol) -> untyped)?
       # @rbs @first_step: bool
       # @rbs @uses_kwargs: bool
+      # @rbs @required_params: Array[Symbol]
+      # @rbs @prefilled_params: Hash[Symbol, untyped]
 
       #: (untyped, name: Symbol, condition: (^(untyped) -> bool)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void
       def initialize(operation, name:, condition:, failure_handler:, first_step: false)
@@ -23,6 +25,8 @@ module TypedOperation
         @failure_handler = failure_handler
         @first_step = first_step
         @uses_kwargs = uses_kwargs?(operation)
+        @required_params = extract_required_params(operation)
+        @prefilled_params = extract_prefilled_params(operation)
       end
 
       #: (*untyped, **untyped) -> untyped
@@ -66,7 +70,8 @@ module TypedOperation
         end
 
         result = if @uses_kwargs && context.is_a?(Hash)
-          @operation.call(**context)
+          extracted = extract_from_context(context, @required_params)
+          @operation.call(**extracted.merge(@prefilled_params))
         else
           @operation.call(context)
         end

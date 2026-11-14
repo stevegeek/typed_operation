@@ -26,5 +26,33 @@ module TypedOperation
 
       keywords.any? && positional.empty?
     end
+
+    private
+
+    #: (_Callable) -> Array[Symbol]
+    def extract_required_params(operation)
+      op_class = extract_operation_class(operation)
+      return [] unless op_class.respond_to?(:keyword_parameters)
+      op_class.keyword_parameters
+    end
+
+    #: (_Callable) -> Hash[Symbol, untyped]
+    def extract_prefilled_params(operation)
+      case operation
+      when TypedOperation::PartiallyApplied
+        operation.keyword_args
+      else
+        {}
+      end
+    end
+
+    #: (Hash[Symbol, untyped], Array[Symbol]) -> Hash[Symbol, untyped]
+    def extract_from_context(context, params)
+      result = {} #: Hash[Symbol, untyped]
+      params.each do |key|
+        result[key] = context[key] if context.key?(key)
+      end
+      result
+    end
   end
 end

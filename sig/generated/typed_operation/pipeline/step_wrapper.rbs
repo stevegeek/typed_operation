@@ -20,6 +20,10 @@ module TypedOperation
 
       @uses_kwargs: bool
 
+      @required_params: Array[Symbol]
+
+      @prefilled_params: Hash[Symbol, untyped]
+
       # : (untyped, name: Symbol, condition: (^(untyped) -> bool)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void
       def initialize: (untyped, name: Symbol, condition: (^(untyped) -> bool)?, failure_handler: (^(untyped, Symbol) -> untyped)?, ?first_step: bool) -> void
 

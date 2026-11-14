@@ -33,19 +33,10 @@ module TypedOperation
     # : (Hash[Symbol, untyped]) -> _Result[untyped, untyped]
     def call_right: (Hash[Symbol, untyped]) -> _Result[untyped, untyped]
 
-    # : (Hash[Symbol, untyped], Array[Symbol]) -> Hash[Symbol, untyped]
-    def extract_from_context: (Hash[Symbol, untyped], Array[Symbol]) -> Hash[Symbol, untyped]
-
     # : (Hash[Symbol, untyped]) -> void
     def validate_required_params!: (Hash[Symbol, untyped]) -> void
 
     # : (_Callable) -> bool
     def uses_kwargs?: (_Callable) -> bool
-
-    # : (_Callable) -> Array[Symbol]
-    def extract_required_params: (_Callable) -> Array[Symbol]
-
-    # : (_Callable) -> Hash[Symbol, untyped]
-    def extract_prefilled_params: (_Callable) -> Hash[Symbol, untyped]
   end
 end
