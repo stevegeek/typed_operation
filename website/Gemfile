@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 # Jekyll site generator. The vitepress theme requires Jekyll 4.3+ and Ruby 3.1+.
 gem "jekyll", "~> 4.4"
-gem "jekyll-vitepress-theme"
+gem "jekyll-vitepress-theme", ">= 1.7"
 
 group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.17"
