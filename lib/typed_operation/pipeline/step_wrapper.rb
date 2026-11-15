@@ -81,7 +81,7 @@ module TypedOperation
       #: (untyped) -> untyped
       def handle_failure(result)
         if result.failure? && @failure_handler
-          return @failure_handler.call(result.failure, @name)
+          return @failure_handler.call(Result.failure_value(result), @name)
         end
         result
       end

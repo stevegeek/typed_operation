@@ -1,0 +1,23 @@
+# Generated from lib/typed_operation/result/adapters/literal.rb with RBS::Inline
+
+module TypedOperation
+  module Result
+    module Adapters
+      # Adapter for Literal's Result type (Literal::Success and Literal::Failure).
+      # Results are created with untyped success and failure types; use
+      # Literal::Result(success_type, failure_type) directly for typed results.
+      class Literal
+        # Create a Success result using Literal.
+        # : (untyped) -> ::Literal::Success
+        def success: (untyped) -> ::Literal::Success
+
+        # Create a Failure result using Literal.
+        # : (untyped) -> ::Literal::Failure
+        def failure: (untyped) -> ::Literal::Failure
+
+        # : () -> String
+        def name: () -> String
+      end
+    end
+  end
+end

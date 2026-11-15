@@ -4,8 +4,8 @@ module TypedOperation
   # Result types for representing success and failure outcomes.
   #
   # TypedOperation provides built-in Success and Failure types that work
-  # out of the box. You can also configure it to use Dry::Monads or a
-  # custom adapter.
+  # out of the box. You can also configure it to use Dry::Monads,
+  # Literal's Result type, or a custom adapter.
   #
   # @example Default usage (built-in types)
   #   result = MyPipeline.call(input)
@@ -27,5 +27,10 @@ module TypedOperation
   module Result
     # Alias for easy access to UnwrapError from Result module
     UnwrapError: untyped
+
+    # Returns the error wrapped by a failed result. Literal::Failure exposes it
+    # as +error!+ rather than +failure+.
+    # : (untyped) -> untyped
+    def self.failure_value: (untyped) -> untyped
   end
 end

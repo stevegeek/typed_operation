@@ -23,7 +23,7 @@ module TypedOperation
       end
 
       if @right.is_a?(Proc)
-        @right.call(result.failure)
+        @right.call(Result.failure_value(result))
       else
         @right.call(*args, **kwargs)
       end
