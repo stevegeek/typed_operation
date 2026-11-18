@@ -213,6 +213,29 @@ module TypedOperation
       assert_equal 2, trace_output.scan("SimpleOperation").count
     end
 
+    def test_explaining_block_keeps_tracing_across_nested_explain
+      standalone = StringIO.new
+      TypedOperation::Instrumentation.with_output(standalone, color: false) do
+        SimpleOperation.explain(value: 1)
+      end
+
+      output = StringIO.new
+      tracing_after_explain = nil
+
+      TypedOperation::Instrumentation.with_output(output, color: false) do
+        TypedOperation::Instrumentation.explaining do
+          SimpleOperation.explain(value: 1)
+          tracing_after_explain = TypedOperation::Instrumentation.tracing?
+          ChildOperation.call(y: 2)
+        end
+      end
+
+      assert tracing_after_explain
+      trace_output = output.string
+      assert_equal standalone.string.scan("SimpleOperation").count, trace_output.scan("SimpleOperation").count
+      assert_equal 1, trace_output.scan("ChildOperation").count
+    end
+
     def test_explaining_block_returns_block_result
       output = StringIO.new
 

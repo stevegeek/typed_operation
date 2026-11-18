@@ -189,6 +189,7 @@ module TypedOperation
     module Explainable
       #: (*untyped, **untyped) ?{ () -> untyped } -> untyped
       def explain(*args, **kwargs, &block)
+        nested = Instrumentation.tracing?
         trace = Trace.new(operation_class: self, params: kwargs.merge(positional: args))
         Instrumentation.push_trace(trace)
 
@@ -204,10 +205,12 @@ module TypedOperation
 
         trace.finish!(result: result, exception: exception)
 
-        formatter = TreeFormatter.new(color: Instrumentation.color)
-        Instrumentation.output.puts formatter.format(trace)
-
-        Instrumentation.clear_trace!
+        # A nested trace is printed by the enclosing one, as one of its children.
+        unless nested
+          formatter = TreeFormatter.new(color: Instrumentation.color)
+          Instrumentation.output.puts formatter.format(trace)
+          Instrumentation.clear_trace!
+        end
 
         raise exception if exception
         result
