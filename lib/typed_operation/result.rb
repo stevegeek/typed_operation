@@ -43,5 +43,11 @@ module TypedOperation
     def self.failure_value(result)
       result.is_a?(::Literal::Failure) ? result.error! : result.failure
     end
+
+    # Whether +failure_value+ can read an error from the result.
+    #: (untyped) -> bool
+    def self.failure_value?(result)
+      result.is_a?(::Literal::Failure) || result.respond_to?(:failure)
+    end
   end
 end

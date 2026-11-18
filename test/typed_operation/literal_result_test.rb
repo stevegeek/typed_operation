@@ -102,6 +102,12 @@ class LiteralResultTest < Minitest::Test
     assert_equal :oops, TypedOperation::Result.failure_value(TypedOperation::Result::Failure.new(:oops))
   end
 
+  def test_failure_value_predicate
+    assert TypedOperation::Result.failure_value?(AgeResult.failure(:too_young))
+    assert TypedOperation::Result.failure_value?(TypedOperation::Result::Failure.new(:oops))
+    refute TypedOperation::Result.failure_value?(Object.new)
+  end
+
   def test_then_chains_literal_results
     result = ValidateAgeOperation.then(GreetOperation).call(age: 21)
 

@@ -32,5 +32,9 @@ module TypedOperation
     # as +error!+ rather than +failure+.
     # : (untyped) -> untyped
     def self.failure_value: (untyped) -> untyped
+
+    # Whether +failure_value+ can read an error from the result.
+    # : (untyped) -> bool
+    def self.failure_value?: (untyped) -> bool
   end
 end
