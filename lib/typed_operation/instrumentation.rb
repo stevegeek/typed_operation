@@ -58,10 +58,11 @@ module TypedOperation
           result = block.call
         rescue => e
           exception = e
+        ensure
+          pop_trace
         end
 
         trace_root.finish!(result: result, exception: exception)
-        pop_trace
 
         formatter = TreeFormatter.new(color: color)
         trace_root.children.each do |child_trace|
@@ -162,10 +163,11 @@ module TypedOperation
           result = super
         rescue => e
           exception = e
+        ensure
+          Instrumentation.pop_trace
         end
 
         trace.finish!(result: result, exception: exception)
-        Instrumentation.pop_trace
 
         raise exception if exception
         result
@@ -196,10 +198,11 @@ module TypedOperation
           result = call(*args, **kwargs, &block)
         rescue => e
           exception = e
+        ensure
+          Instrumentation.pop_trace
         end
 
         trace.finish!(result: result, exception: exception)
-        Instrumentation.pop_trace
 
         formatter = TreeFormatter.new(color: Instrumentation.color)
         Instrumentation.output.puts formatter.format(trace)

@@ -26,6 +26,22 @@ module TypedOperation
       end
     end
 
+    class ThrowingOperation < ExplainableOperation
+      param :value, Integer
+
+      def perform
+        throw :done, value
+      end
+    end
+
+    class NotImplementedOperation < ExplainableOperation
+      param :value, Integer
+
+      def perform
+        raise NotImplementedError
+      end
+    end
+
     class ParentOperation < ExplainableOperation
       param :x, Integer
 
@@ -221,6 +237,88 @@ module TypedOperation
       end
 
       assert_equal "block error", error.message
+    end
+
+    def test_explain_stops_tracing_after_throw
+      output = StringIO.new
+
+      result = TypedOperation::Instrumentation.with_output(output) do
+        catch(:done) { ThrowingOperation.explain(value: 1) }
+      end
+
+      assert_equal 1, result
+      refute TypedOperation::Instrumentation.tracing?
+    end
+
+    def test_explain_stops_tracing_after_script_error
+      output = StringIO.new
+
+      assert_raises(NotImplementedError) do
+        TypedOperation::Instrumentation.with_output(output) do
+          NotImplementedOperation.explain(value: 1)
+        end
+      end
+
+      refute TypedOperation::Instrumentation.tracing?
+    end
+
+    def test_explaining_block_stops_tracing_after_throw
+      output = StringIO.new
+
+      TypedOperation::Instrumentation.with_output(output) do
+        catch(:done) do
+          TypedOperation::Instrumentation.explaining { throw :done }
+        end
+      end
+
+      refute TypedOperation::Instrumentation.tracing?
+    end
+
+    def test_explaining_block_stops_tracing_after_script_error
+      output = StringIO.new
+
+      assert_raises(NotImplementedError) do
+        TypedOperation::Instrumentation.with_output(output) do
+          TypedOperation::Instrumentation.explaining { raise NotImplementedError }
+        end
+      end
+
+      refute TypedOperation::Instrumentation.tracing?
+    end
+
+    def test_traced_operation_pops_its_trace_after_throw
+      output = StringIO.new
+      root = nil
+      current = nil
+
+      TypedOperation::Instrumentation.with_output(output) do
+        TypedOperation::Instrumentation.explaining do
+          root = TypedOperation::Instrumentation.current_trace
+          catch(:done) { ThrowingOperation.call(value: 1) }
+          current = TypedOperation::Instrumentation.current_trace
+        end
+      end
+
+      assert_same root, current
+    end
+
+    def test_traced_operation_pops_its_trace_after_script_error
+      output = StringIO.new
+      root = nil
+      current = nil
+
+      TypedOperation::Instrumentation.with_output(output) do
+        TypedOperation::Instrumentation.explaining do
+          root = TypedOperation::Instrumentation.current_trace
+          begin
+            NotImplementedOperation.call(value: 1)
+          rescue NotImplementedError
+          end
+          current = TypedOperation::Instrumentation.current_trace
+        end
+      end
+
+      assert_same root, current
     end
 
     # Tree formatting
