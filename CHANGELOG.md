@@ -1,3 +1,9 @@
+## [Unreleased]
+
+### Fixed
+
+- `Pipeline` keyword steps after the first now receive only their declared params from the context, as `.then` steps do.
+
 ## [1.0.0] - 2026/04/16
 
 First stable release. API frozen; subsequent changes will follow semver.

@@ -419,4 +419,71 @@ class PipelineTest < Minitest::Test
     assert_includes result.value![:consumed], :input
     assert_includes result.value![:consumed], :validated
   end
+
+  class KwargsShoutOperation < TypedOperation::Base
+    include Dry::Monads[:result]
+
+    param :input, String
+
+    def perform
+      Success(shout: "#{input.upcase}!")
+    end
+  end
+
+  class KwargsGreetingOperation < TypedOperation::Base
+    include Dry::Monads[:result]
+
+    param :input, String
+    param :greeting, String
+
+    def perform
+      Success(message: "#{greeting} #{input}")
+    end
+  end
+
+  def test_pipeline_kwargs_step_receives_only_its_declared_params
+    pipeline = TypedOperation::Pipeline.build do
+      step :validate, KwargsValidateOperation
+      step :shout, KwargsShoutOperation
+    end
+
+    result = pipeline.call(input: "test")
+
+    assert result.success?, "Expected success but got: #{result.inspect}"
+    assert_equal({input: "test", validated: true, shout: "TEST!"}, result.value!)
+  end
+
+  def test_pipeline_kwargs_step_merges_partially_applied_params
+    pipeline = TypedOperation::Pipeline.build do
+      step :validate, KwargsValidateOperation
+      step :greet, KwargsGreetingOperation.with(greeting: "Hello")
+    end
+
+    result = pipeline.call(input: "test")
+
+    assert result.success?, "Expected success but got: #{result.inspect}"
+    assert_equal({input: "test", validated: true, message: "Hello test"}, result.value!)
+  end
+
+  def test_pipeline_kwargs_step_partially_applied_params_take_precedence_over_context
+    pipeline = TypedOperation::Pipeline.build do
+      step :validate, KwargsValidateOperation
+      step :greet, KwargsGreetingOperation.with(input: "world", greeting: "Hello")
+    end
+
+    result = pipeline.call(input: "test")
+
+    assert result.success?, "Expected success but got: #{result.inspect}"
+    assert_equal "Hello world", result.value![:message]
+  end
+
+  def test_pipeline_kwargs_step_missing_required_param_raises
+    pipeline = TypedOperation::Pipeline.build do
+      step :validate, KwargsValidateOperation
+      step :greet, KwargsGreetingOperation
+    end
+
+    error = assert_raises(ArgumentError) { pipeline.call(input: "test") }
+    assert_match(/greeting/, error.message)
+  end
 end
