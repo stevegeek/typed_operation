@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+### Changed
+
+- Minimum Ruby 3.3 (3.2 is end-of-life).
+
 ### Fixed
 
 - `Pipeline` keyword steps after the first now receive only their declared params from the context, as `.then` steps do.
