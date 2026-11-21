@@ -1,0 +1,44 @@
+# Generated from lib/typed_operation/result/wrapper.rb with RBS::Inline
+
+module TypedOperation
+  module Result
+    # A common interface over the result types an operation may return:
+    # TypedOperation's own Success/Failure, Dry::Monads, Literal's Result, or
+    # any custom type with +success?+, +failure?+, +value!+ and +failure+.
+    # Build one with Result.wrap; +unwrap+ returns the original result.
+    class Wrapper
+      # : (untyped) -> void
+      def initialize: (untyped) -> void
+
+      # : () -> untyped
+      def unwrap: () -> untyped
+
+      # : () -> bool
+      def success?: () -> bool
+
+      # : () -> bool
+      def failure?: () -> bool
+
+      # : () -> untyped
+      def value!: () -> untyped
+
+      # The error carried by a failed result.
+      # : () -> untyped
+      def error: () -> untyped
+
+      # Whether +error+ can be read from the result.
+      # : () -> bool
+      def error?: () -> bool
+    end
+
+    # Wrapper for Literal::Success and Literal::Failure, which expose the
+    # error as +error!+ rather than +failure+.
+    class LiteralWrapper < Wrapper
+      # @rbs override
+      def error: ...
+
+      # @rbs override
+      def error?: ...
+    end
+  end
+end

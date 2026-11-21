@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+### Added
+
+- Support for Literal's Result type, with a `:literal` result adapter.
+
 ### Changed
 
 - Minimum Ruby 3.3 (3.2 is end-of-life).

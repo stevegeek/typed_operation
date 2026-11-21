@@ -4,7 +4,7 @@
 module TypedOperation
   # Global configuration for TypedOperation.
   class Configuration
-    # @rbs @result_adapter: (Result::Adapters::BuiltIn | Result::Adapters::DryMonads | untyped)?
+    # @rbs @result_adapter: (Result::Adapters::BuiltIn | Result::Adapters::DryMonads | Result::Adapters::Literal | untyped)?
 
     #: () -> void
     def initialize
@@ -12,17 +12,18 @@ module TypedOperation
     end
 
     # Get the current result adapter. Defaults to BuiltIn.
-    #: () -> (Result::Adapters::BuiltIn | Result::Adapters::DryMonads | untyped)
+    #: () -> (Result::Adapters::BuiltIn | Result::Adapters::DryMonads | Result::Adapters::Literal | untyped)
     def result_adapter
       @result_adapter ||= Result::Adapters::BuiltIn.new
     end
 
     # Set the result adapter.
-    #: (:built_in | :dry_monads | untyped) -> void
+    #: (:built_in | :dry_monads | :literal | untyped) -> void
     def result_adapter=(adapter)
       @result_adapter = case adapter
       when :built_in then Result::Adapters::BuiltIn.new
       when :dry_monads then Result::Adapters::DryMonads.new
+      when :literal then Result::Adapters::Literal.new
       else adapter
       end
     end

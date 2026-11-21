@@ -70,6 +70,7 @@ Get or set the result adapter used for `Success()` and `Failure()` helpers.
 **Options:**
 - `:built_in` (default) - Uses `TypedOperation::Result::Success` and `TypedOperation::Result::Failure`
 - `:dry_monads` - Uses `Dry::Monads::Success` and `Dry::Monads::Failure` (requires dry-monads gem)
+- `:literal` - Uses `Literal::Success` and `Literal::Failure`, with untyped success and failure types
 
 ```ruby
 # Set via configure block
@@ -87,6 +88,7 @@ TypedOperation.configuration.result_adapter = :built_in
 |---------|----------|
 | `:built_in` | Default. No external dependencies. Sufficient for most cases. |
 | `:dry_monads` | Already using dry-monads in your project. Want ecosystem integration. |
+| `:literal` | Want Literal's Result type, which the gem already depends on. |
 
 ---
 

@@ -5,14 +5,16 @@ require_relative "result/success"
 require_relative "result/failure"
 require_relative "result/adapters/built_in"
 require_relative "result/adapters/dry_monads"
+require_relative "result/adapters/literal"
+require_relative "result/wrapper"
 require_relative "result/mixin"
 
 module TypedOperation
   # Result types for representing success and failure outcomes.
   #
   # TypedOperation provides built-in Success and Failure types that work
-  # out of the box. You can also configure it to use Dry::Monads or a
-  # custom adapter.
+  # out of the box. You can also configure it to use Dry::Monads,
+  # Literal's Result type, or a custom adapter.
   #
   # @example Default usage (built-in types)
   #   result = MyPipeline.call(input)
@@ -35,5 +37,11 @@ module TypedOperation
   module Result
     # Alias for easy access to UnwrapError from Result module
     UnwrapError = TypedOperation::UnwrapError
+
+    # Wraps any supported result in a common interface.
+    #: (untyped) -> Wrapper
+    def self.wrap(result)
+      result.is_a?(::Literal::Result) ? LiteralWrapper.new(result) : Wrapper.new(result)
+    end
   end
 end

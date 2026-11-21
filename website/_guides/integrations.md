@@ -5,7 +5,7 @@ nav_order: 2
 
 # Integrations
 
-TypedOperation provides first-class integrations with Rails, Dry::Monads, and ActionPolicy.
+TypedOperation provides first-class integrations with Rails, Dry::Monads, Literal Result types, and ActionPolicy.
 
 ## Rails
 
@@ -257,6 +257,34 @@ class ParseJson < ApplicationOperation
   def perform
     Try { JSON.parse(json_string) }.to_result
   end
+end
+```
+
+---
+
+## Literal Result
+
+[Literal](https://literal.fun) has its own `Literal::Success` and `Literal::Failure` result types. Operations can return them, and chains (`.then`, `.or_else`), pipelines and `.explain` handle them like the built-in types: the error of a `Literal::Failure` (its `error!`) is what `.or_else` blocks and `on_failure` handlers receive.
+
+Return typed results directly from `perform`:
+
+```ruby
+class ValidateAge < TypedOperation::Base
+  AgeResult = Literal::Result(Integer, Symbol)
+
+  param :age, Integer
+
+  def perform
+    (age >= 18) ? AgeResult.success(age) : AgeResult.failure(:too_young)
+  end
+end
+```
+
+Or configure the adapter so that `Result::Mixin` creates Literal results (with untyped success and failure types):
+
+```ruby
+TypedOperation.configure do |config|
+  config.result_adapter = :literal
 end
 ```
 

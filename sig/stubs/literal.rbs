@@ -15,6 +15,22 @@ module Literal
     end
 
     def _Union: (*untyped) -> untyped
+    def self._Any?: () -> untyped
+  end
+
+  class Result
+    def success?: () -> bool
+    def failure?: () -> bool
+    def value!: () -> untyped
+    def error!: () -> untyped
+  end
+
+  class Success < Result
+    def initialize: (untyped, success_type: untyped, failure_type: untyped) -> void
+  end
+
+  class Failure < Result
+    def initialize: (untyped, success_type: untyped, failure_type: untyped) -> void
   end
 
   module Undefined

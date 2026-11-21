@@ -10,7 +10,7 @@ A Command pattern implementation for Ruby with typed parameters, partial applica
 - **Type-safe parameters** - Runtime validation using the [`literal`](https://github.com/joeldrapper/literal) gem
 - **Partial application & currying** - Build specialized operations from general ones
 - **Operation composition** - Chain operations together with `.then`, pipelines, and railway-oriented error handling
-- **Result types** - Built-in Success/Failure types, or use [`Dry::Monads`](https://dry-rb.org/gems/dry-monads/)
+- **Result types** - Built-in Success/Failure types, or use [`Dry::Monads`](https://dry-rb.org/gems/dry-monads/) or Literal's Result type
 - **Rails integration** - Generators and Action Policy authorization support
 
 ## Installation
