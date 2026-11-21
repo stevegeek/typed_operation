@@ -28,13 +28,8 @@ module TypedOperation
     # Alias for easy access to UnwrapError from Result module
     UnwrapError: untyped
 
-    # Returns the error wrapped by a failed result. Literal::Failure exposes it
-    # as +error!+ rather than +failure+.
-    # : (untyped) -> untyped
-    def self.failure_value: (untyped) -> untyped
-
-    # Whether +failure_value+ can read an error from the result.
-    # : (untyped) -> bool
-    def self.failure_value?: (untyped) -> bool
+    # Wraps any supported result in a common interface.
+    # : (untyped) -> Wrapper
+    def self.wrap: (untyped) -> Wrapper
   end
 end

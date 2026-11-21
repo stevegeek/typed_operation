@@ -6,6 +6,7 @@ require_relative "result/failure"
 require_relative "result/adapters/built_in"
 require_relative "result/adapters/dry_monads"
 require_relative "result/adapters/literal"
+require_relative "result/wrapper"
 require_relative "result/mixin"
 
 module TypedOperation
@@ -37,17 +38,10 @@ module TypedOperation
     # Alias for easy access to UnwrapError from Result module
     UnwrapError = TypedOperation::UnwrapError
 
-    # Returns the error wrapped by a failed result. Literal::Failure exposes it
-    # as +error!+ rather than +failure+.
-    #: (untyped) -> untyped
-    def self.failure_value(result)
-      result.is_a?(::Literal::Failure) ? result.error! : result.failure
-    end
-
-    # Whether +failure_value+ can read an error from the result.
-    #: (untyped) -> bool
-    def self.failure_value?(result)
-      result.is_a?(::Literal::Failure) || result.respond_to?(:failure)
+    # Wraps any supported result in a common interface.
+    #: (untyped) -> Wrapper
+    def self.wrap(result)
+      result.is_a?(::Literal::Result) ? LiteralWrapper.new(result) : Wrapper.new(result)
     end
   end
 end

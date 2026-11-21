@@ -75,9 +75,8 @@ module TypedOperation
 
         if trace.exception
           lines << "#{indent}  #{colorize("└ Exception: #{trace.exception.class}: #{trace.exception.message}", :red)}"
-        elsif trace.failure? && Result.failure_value?(trace.result)
-          failure_info = Result.failure_value(trace.result)
-          lines << "#{indent}  #{colorize("└ Failure: #{failure_info.inspect}", :red)}"
+        elsif trace.failure? && (result = Result.wrap(trace.result)).error?
+          lines << "#{indent}  #{colorize("└ Failure: #{result.error.inspect}", :red)}"
         end
 
         trace.children.each_with_index do |child, index|

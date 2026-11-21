@@ -94,18 +94,39 @@ class LiteralResultTest < Minitest::Test
     assert_equal 10, result.value![:result]
   end
 
-  def test_failure_value_reads_literal_failure
-    assert_equal :too_young, TypedOperation::Result.failure_value(AgeResult.failure(:too_young))
+  def test_wrap_reads_literal_failure
+    wrapped = TypedOperation::Result.wrap(AgeResult.failure(:too_young))
+
+    assert_instance_of TypedOperation::Result::LiteralWrapper, wrapped
+    assert wrapped.failure?
+    refute wrapped.success?
+    assert wrapped.error?
+    assert_equal :too_young, wrapped.error
   end
 
-  def test_failure_value_reads_built_in_failure
-    assert_equal :oops, TypedOperation::Result.failure_value(TypedOperation::Result::Failure.new(:oops))
+  def test_wrap_reads_literal_success
+    result = AgeResult.success({age: 21})
+    wrapped = TypedOperation::Result.wrap(result)
+
+    assert wrapped.success?
+    refute wrapped.error?
+    assert_equal({age: 21}, wrapped.value!)
+    assert_same result, wrapped.unwrap
   end
 
-  def test_failure_value_predicate
-    assert TypedOperation::Result.failure_value?(AgeResult.failure(:too_young))
-    assert TypedOperation::Result.failure_value?(TypedOperation::Result::Failure.new(:oops))
-    refute TypedOperation::Result.failure_value?(Object.new)
+  def test_wrap_reads_built_in_failure
+    result = TypedOperation::Result::Failure.new(:oops)
+    wrapped = TypedOperation::Result.wrap(result)
+
+    assert_instance_of TypedOperation::Result::Wrapper, wrapped
+    assert wrapped.failure?
+    assert wrapped.error?
+    assert_equal :oops, wrapped.error
+    assert_same result, wrapped.unwrap
+  end
+
+  def test_wrap_of_object_without_failure_has_no_error
+    refute TypedOperation::Result.wrap(Object.new).error?
   end
 
   def test_then_chains_literal_results
