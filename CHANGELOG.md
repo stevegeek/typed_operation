@@ -12,6 +12,7 @@
 
 - `Pipeline` keyword steps after the first now receive only their declared params from the context, as `.then` steps do.
 - Tracing now stops when an explained operation exits via `throw` or a non-`StandardError` exception.
+- `explain` inside `Instrumentation.explaining` no longer ends the enclosing trace or prints its tree twice.
 
 ## [1.0.0] - 2026/04/16
 
